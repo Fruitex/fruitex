@@ -157,3 +157,8 @@ LOGGING = {
         },
     }
 }
+
+
+TEMPLATE_DIRS = (
+    Config.TEMPLATE_DIR
+)
