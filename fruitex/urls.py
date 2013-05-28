@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'fruitex.views.home', name='home'),
     # url(r'^fruitex/', include('fruitex.foo.urls')),
+                       
+    url(r'^home/', include('items.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
