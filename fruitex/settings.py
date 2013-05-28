@@ -162,3 +162,5 @@ LOGGING = {
 TEMPLATE_DIRS = (
     Config.TEMPLATE_DIR
 )
+
+STATIC_URL = '/static/'

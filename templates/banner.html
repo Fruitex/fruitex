@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<
+<style>
+    .banner {
+        background-color: #f4f4f4;
+        border-bottom: 1px #d5d5d5 solid;
+        height: 55px;
+    }
+    .logo {
+        float: left;
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+    .btn_cart {
+        float: right;
+        margin-right: 20px;
+    }
+</style>
+<div class="banner">
+        <img class="logo" src={% static "imgs/logo.png" %}>
+        <img class="btn_cart" src={% static "imgs/btn_cart.png" %}>
+</div>
