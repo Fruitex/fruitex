@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  #itemlist {
+    width: 1200px; 
+  }
+
+  .item {
+    float: left;
+    width: 300px;
+    height: 200px;
+    margin:20px;
+  }
+</style>
+<div id='itemlist'>
+  {% for item in itemList %}
+    <table class = "item">
+      <tr>
+        <td> name </td>
+        <td> {{ item.name }} </td>
+      </tr>
+      <tr>
+        <td> price </td>
+        <td> {{ item.price }} </td>
+      </tr>
+      <tr>
+        <td> category </td>
+        <td> {{ item.category }} </td>
+      </tr>
+    <table>
+  {% endfor %}
+</div>
+{% endblock %}
