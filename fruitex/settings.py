@@ -1,5 +1,6 @@
 # Django settings for fruitex project.
-from config import Config
+import config
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -13,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': Config.DatabaseName,
+        'NAME': os.path.join(config.BASE_DIR, 'fruitex.db'),
         # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
@@ -74,6 +75,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(config.BASE_DIR, "static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -113,6 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(config.BASE_DIR, "static"),
 )
 
 INSTALLED_APPS = (
@@ -160,7 +163,6 @@ LOGGING = {
 
 
 TEMPLATE_DIRS = (
-    Config.TEMPLATE_DIR
+    os.path.join(config.BASE_DIR, 'templates')
 )
 
-STATIC_URL = '/static/'
