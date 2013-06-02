@@ -1,5 +1,7 @@
 {% load staticfiles %}
 <link rel="stylesheet" type="text/css" href={% static "styles/global.css" %}/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+
 <style>
     #banner {
         background-color: #f4f4f4;
@@ -16,11 +18,11 @@
         margin-right: 20px;
     }
 </style>
-<div class="banner">
+<div id="banner">
         <a href="/home/"/>
-            <img class="logo" src={% static "imgs/logo.png" %}>
+            <img id="logo" src={% static "imgs/logo.png" %}>
         </a>
         <a href="#">
-            <img class="btn_cart" src={% static "imgs/btn_cart.png" %}>
+            <img id="btn_cart" src={% static "imgs/btn_cart.png" %}>
         </a>
 </div>

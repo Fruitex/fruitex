@@ -6,32 +6,83 @@ category
 ad
 {% endblock %}
 {% block items %}
+{% load staticfiles %}
 <style>
-  #itemlist {
+  #item-list {
   }
-
-  .item {
-    background: gray;
+  
+  .item-container {
     display: inline;
-    width: 180px;
-    height: 300px;
-    margin:10px;
+    width: 175px;
+    height: 290px;
+    margin-left:20px;
+    margin-top:10px;
     float: left;
+    border: 1px solid #D3D3D3;
+    position: relative;
   }
-</style>
-<div id='itemlist'>
+  
+  .item-info-wrapper {
+    padding: 10px;
+  }
+  
+  .item-image {
+    margin-bottom: 10px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  
+  .item-name {
+    font-weight: bold;
+    height: 30px;
+    
+  }
+  
+  .item-price {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  
+  .item-category {
+    font-size: 10px;
+    color: gray;
+  }
+  
+  .btn-add-container {
+    position: absolute;
+    height: 40px;
+    margin: -1px;
+    width: 100%;
+    background: #f4f4f4;
+    bottom: 0px;
+    border: 1px solid #D3D3D3;
+    display: none;
+    
+  }
+  
+  .btn-add {
+    margin-top: 8px;
+    margin-left: 48px;
+    }
+  </style>
+<div id='item-list'>
   {% for item in itemList %}
-    <table class = "item">
-      <tr>
-        <td> {{ item.name }} </td>
-      </tr>
-      <tr>
-        <td> {{ item.price }} $ </td>
-      </tr>
-      <tr>
-        <td> {{ item.category }} </td>
-      </tr>
-    <table>
+  <div class = "item-container">
+    <div class="item-info-wrapper">
+      <!-- Hard code for item image -->
+      <div class = "item-image" style='width: 150px; height: 200px; background: #f4f4f4;'></div>
+      <div class = "item-name"> {{ item.name }} </div>
+      <p class = "item-price"> ${{ item.price }} </p>
+      <p class = "item-category"> {{ item.category }} </p>
+      </div>
+    <div class="btn-add-container">
+      <img class="btn-add" src= {% static "imgs/btn_add.png" %}>
+    </div>
+  </div>
   {% endfor %}
 </div>
+<script src={% static "javascript/itemlist.js"%}></script>
 {% endblock %}
+
+
