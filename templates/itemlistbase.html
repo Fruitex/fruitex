@@ -17,11 +17,10 @@
   #ad {
     height: 200px;
     width: 800px;
-    border: dotted;
+    padding: 0px 8px;
   }
 
   #items {
-    border: dotted;
     height: 400px;
     width: 800px;
 
@@ -31,8 +30,6 @@
 <div id='ad-and-items'>
   <div id='ad'>
   {% block ad %}
-  {% load static %}
-    <img src={% static "imgs/ad_sobeys.png"%}>
   {% endblock %}
   </div>
   <div id='items'> {% block items %} {% endblock %} </div> 
