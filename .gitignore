@@ -219,3 +219,6 @@ config.py
 
 #local database
 *.db
+
+#files for local testing
+test.*
