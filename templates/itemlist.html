@@ -1,7 +1,100 @@
 {% extends "itemlistbase.html" %}
 {% block category %}
+<style>
+  #cate-list {
+    list-style-type : none;
+  }
+
+  .cate {
+    padding-top : 30px;
+    padding-bottom : 30px;
+    font-weight : bold;
+    font-size : large;
+  }
+
+  #category {
+    position : relative;
+  }
+
+  .sub-cate {
+    left : 200px;
+    position : absolute;
+    height : 400px;
+    background-color : white;
+    z-index : 10;
+  }
+
+  .cate-sub-list {
+    list-style-type : none;
+  }
+
+  .cate-sub-list-item {
+    padding-top : 5px;
+  }
+
+  .cate-sub-list-header {
+    font-weight : bold;
+    padding-top : 10px;
+  }
+  
+</style>
 <script>
-  var cate = {{category}};
+  function getCategoryId(s) {
+    return 'cate-' + s.toLowerCase().replace(/[^a-z]/g, '');
+  }
+
+  function getCateHoverInHandler(c) {
+    return function () {
+      $('.sub-cate').hide();
+      $('#' + getCategoryId(c)).show();
+    };
+  }
+
+  function getCateHoverOutHandler() {
+    return function () {
+      $('.sub-cate').hide();
+    };
+  }
+
+  (function (cate) {
+    function getCateNum(c) {
+      var res = 0;
+      for (var sc in cate[c]) {
+        res += cate[c][sc].length;
+      }
+      return res;
+    }
+    var cate_lst = $('<ul>').attr('id', 'cate-list');
+    for (var c in cate) {
+      cate_lst.append($('<li>').attr('class', 'cate').text(c).hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
+      var sub_cate = $('<div>').attr('class', 'sub-cate')
+        .attr('id', getCategoryId(c)).hide()
+        .hover(function(){$(this).show();}, function(){$(this).hide()});
+      $('#category').append(sub_cate);
+      var columnNum = Math.ceil(getCateNum(c)/15);
+      console.log(columnNum);
+      var containers = [];
+      sub_cate.css('width', ((150 + 30) * columnNum) + 'px');
+      for (var i = 0; i < columnNum ; i++) {
+        var col = $('<div>').css({'float': 'left', 'width': '150px', 'height': '100%'});
+        sub_cate.append(col);
+        containers.push(col);
+      }
+      var idx = 0;
+      for (var sc in cate[c]) {
+        var cate_sub_lst = $('<ul>').attr('class', 'cate-sub-list');
+        containers[idx].append(cate_sub_lst);
+        idx = (idx + 1) % columnNum;
+        cate_sub_lst.append($('<li>').attr('class', 'cate-sub-list-header').text(sc))
+        for (var i in cate[c][sc]) {
+          cate_sub_lst.append($('<li>')
+              .attr('class', 'cate-sub-list-item')
+              .text(cate[c][sc][i]));
+        }
+      }
+    }
+    $('#category').append(cate_lst);
+  })({{category | safe}});
 </script>
 {% endblock %}
 {% block ad %}
@@ -23,7 +116,7 @@ ad
     border: 1px solid #D3D3D3;
     position: relative;
   }
-  
+
   .item-info-wrapper {
     padding: 10px;
   }
