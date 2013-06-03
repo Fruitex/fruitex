@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <style>
   #category {
     height: 600px;
@@ -28,7 +29,12 @@
 </style>
 <div id='category'> {% block category %} {% endblock %} </div>
 <div id='ad-and-items'>
-  <div id='ad'> {% block ad %} {% endblock %} </div>
+  <div id='ad'>
+  {% block ad %}
+  {% load static %}
+    <img src={% static "imgs/ad_sobeys.png"%}>
+  {% endblock %}
+  </div>
   <div id='items'> {% block items %} {% endblock %} </div> 
 </div>
 {% endblock %}
