@@ -1,6 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 {% load static %}
+<style>
+  #category {
+    height: 600px;
+    width: 200px;
+    float: left;
+    border: dotted;
+    position : relative;
+  }
+
+  #ad-and-items {
+    width:800px;
+    float:right;
+  }
+
+  #ad {
+    height: 200px;
+    width: 800px;
+    padding: 0px 8px;
+  }
+
+  #items {
+    height: 400px;
+    width: 800px;
+
+  }
+</style>
 <div id='category'> {% block category %} {% endblock %} </div>
 <div id='ad-and-items'>
   <div id='ad'>

@@ -143,7 +143,60 @@
       }
     }
     $('#category').append(cate_lst);
-  })({{category | safe}});
+  })({{category | safe}}); // render category
+
+  /*
+  <div class = "item-container">
+    <div class="item-info-wrapper">
+      <!-- Hard code for item image -->
+      <div class = "item-image"></div>
+      <div class = "item-name"> {{ item.name }} </div>
+      <p class = "item-price"> ${{ item.price }} </p>
+      <p class = "item-category"> {{ item.category }} </p>
+      </div>
+    <div class="btn-add-container">
+      <img class="btn-add" src= {% static "imgs/btn_add.png" %}>
+    </div>
+  </div>
+  */
+  var showItems = function (items) {
+    var itemList = $('#item-list').empty();
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var itemContainer = $('<div>').attr('class', 'item-container');
+      itemList.append(itemContainer);
+      var itemInfo = $('<div>').attr('class', 'item-info-wrapper')
+          .append($('<div>').attr('class', 'item-image'))
+          .append($('<div>').attr('class', 'item-name').text(item.name))
+          .append($('<div>').attr('class', 'item-price').text(item.price))
+          .append($('<div>').attr('class', 'item-category').text(item.category));
+      var btn = $('<div>').attr('class', 'btn-add-container')
+          .append($('<img>')
+              .attr('class', 'btn-add')
+              .attr('src', '{% static "imgs/btn_add.png" %}'));
+      itemContainer.append(itemInfo).append(btn);
+    }
+  };
+  var getAndShowItems = function(query, startId, num) {
+    $.post('/items/getItems',
+        {'startId' : startId, 'num' : num, 'query' : JSON.stringify(query)}, 
+        function(data) {
+          if (data.length > 0) {
+            showItems(data);
+            $('#navigator-prev').unbind('click').click(function() {
+              if (startId > 0) {
+                getAndShowItems(query, startId - num, num);
+              }
+            });
+            $('#navigator-next').unbind('click').click(function() {
+              getAndShowItems(query, startId + num, num)
+            });
+          }
+        }, 'json');
+  };
+  $(document).ready(function() { 
+    getAndShowItems({}, 0, 4);
+  });
 </script>
 {% endblock %}
 {% block ad %}
@@ -155,6 +208,19 @@
   #item-list {
   }
   
+  #navigator-prev {
+    float : right;
+    padding : 3px;
+    margin-right : 5px;
+    border : solid;
+  }
+  #navigator-next {
+    float : right;
+    padding : 3px;
+    margin-left : 5px;
+    border : solid;
+  }
+
   .item-container {
     display: inline;
     width: 188px;
@@ -174,6 +240,9 @@
     margin-bottom: 10px;
     margin-right: auto;
     margin-left: auto;
+    width: 165px;
+    height: 212px;
+    background: #f4f4f4;
   }
   
   .item-name {
@@ -208,23 +277,13 @@
   .btn-add {
     margin-top: 6px;
     margin-left: 40px;
-    }
-  </style>
-<div id='item-list'>
-  {% for item in itemList %}
-  <div class = "item-container">
-    <div class="item-info-wrapper">
-      <!-- Hard code for item image -->
-      <div class = "item-image" style='width: 165px; height: 212px; background: #f4f4f4;'></div>
-      <div class = "item-name"> {{ item.name }} </div>
-      <p class = "item-price"> ${{ item.price }} </p>
-      <p class = "item-category"> {{ item.category }} </p>
-      </div>
-    <div class="btn-add-container">
-      <img class="btn-add" src= {% static "imgs/btn_add.png" %}>
-    </div>
-  </div>
-  {% endfor %}
+  }
+</style>
+<div id = 'item-list'>
+</div>
+<div id = 'navigator'>
+  <div id = 'navigator-next'>next</div>
+  <div id = 'navigator-prev'>prev</div>
 </div>
 <script src={% static "javascript/itemlist.js"%}></script>
 {% endblock %}

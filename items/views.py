@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template import Context, loader
 from items.models import Store, Item
@@ -186,5 +187,22 @@ category = {
 
 def itemlist(request):
     template = loader.get_template('itemlist.html')
-    context = Context({'itemList' : Item.objects.all()[:4], 'category' : json.dumps(category)})
+    context = Context({'category' : json.dumps(category)})
     return HttpResponse(template.render(context))
+
+def getItemsFromBackend(startId, num):
+  items = []
+  for it in Item.objects.all()[startId : startId + num]:
+    items.append({'name' : it.name, 'price' : it.price, 'category' : it.category})
+  return items
+
+@csrf_exempt
+def getItems(request):
+  if request.method == 'POST':
+    startId = int(request.POST['startId'])
+    num = int(request.POST['num'])
+    return HttpResponse(json.dumps(getItemsFromBackend(startId, num)))
+  else:
+    return HttpResponse('error')
+
+
