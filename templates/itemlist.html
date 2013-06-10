@@ -2,42 +2,86 @@
 {% load static %}
 {% block category %}
 <style>
+  #category {
+    width: 200px;
+    float: left;
+    position: relative;
+    border: 1px solid #D3D3D3;
+  }
+  
   #cate-list {
-    list-style-type : none;
+    list-style-type: none;
+  }
+  
+  #cate-head {
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    background-color: #93d033;
+    padding: 10px 10px;
+    border: 1px solid #D3D3D3;
+    margin: -1px;
   }
 
   .cate {
-    padding-top : 30px;
-    padding-bottom : 30px;
-    font-weight : bold;
-    font-size : large;
+    padding: 10px 10px;
+    border: 1px solid #D3D3D3;
+    margin: -1px;
   }
-
-  #category {
-    position : relative;
+  
+  .cate:hover {
+    background-color: #e6ffbc;
   }
 
   .sub-cate {
-    left : 200px;
-    position : absolute;
-    height : 400px;
-    background-color : white;
-    z-index : 10;
+    left: 200px;
+    position: absolute;
+    background-color: white;
+    z-index: 10;
+    border: 1px solid #D3D3D3;
+    padding: 5px 10px;
+    top: -1px;
   }
-
+  
+  .cate-sub-header {
+    width: 100%;
+    height: 5px;
+    margin-bottom: 10px;
+  }
   .cate-sub-list {
-    list-style-type : none;
+    list-style-type: none;
+    margin-right: 10px;
+    padding-bottom: 10px;
   }
 
   .cate-sub-list-item {
-    padding-top : 5px;
+    padding-top: 5px;
+    color: #6E6E6E;
   }
 
   .cate-sub-list-header {
-    font-weight : bold;
-    padding-top : 10px;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    
   }
   
+  #ad-and-items {
+    width: 800px;
+    float: right;
+  }
+
+  #ad {
+    height: 200px;
+    width: 800px;
+    padding: 0px 8px;
+  }
+
+  #items {
+    height: 400px;
+    width: 800px;
+  }
 </style>
 <script>
   function getCategoryId(s) {
@@ -66,6 +110,7 @@
       return res;
     }
     var cate_lst = $('<ul>').attr('id', 'cate-list');
+    cate_lst.append($('<li>').attr('id', 'cate-head').text("Category"));
     for (var c in cate) {
       cate_lst.append($('<li>').attr('class', 'cate').text(c).hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
       var sub_cate = $('<div>').attr('class', 'sub-cate')
@@ -73,9 +118,12 @@
         .hover(function(){$(this).show();}, function(){$(this).hide()});
       $('#category').append(sub_cate);
       var columnNum = Math.ceil(getCateNum(c)/15);
-      console.log(columnNum);
       var containers = [];
-      sub_cate.css('width', ((150 + 30) * columnNum) + 'px');
+      sub_cate.css('width', ((150 + 8) * columnNum) + 'px');
+   
+      var cate_sub_header = $('<div>').attr('class', 'cate-sub-header').css('background-color', '#b4f943');
+      sub_cate.append(cate_sub_header);
+   
       for (var i = 0; i < columnNum ; i++) {
         var col = $('<div>').css({'float': 'left', 'width': '150px', 'height': '100%'});
         sub_cate.append(col);
