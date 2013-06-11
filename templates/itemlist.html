@@ -177,6 +177,12 @@
           .append($('<img>')
               .attr('class', 'btn-add')
               .attr('src', '{% static "imgs/btn_add.png" %}'));
+      itemContainer.hover(
+        function () {
+          $(this).children('.btn-add-container').slideDown('fast');
+      }, function () {
+          $(this).children('.btn-add-container').slideUp('fast');
+      });  
       itemContainer.append(itemInfo).append(btn);
     }
   };
