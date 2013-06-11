@@ -2,9 +2,22 @@
 {% load static %}
 {% block category %}
 <style>
-  #category {
+  #left-side-container {
     width: 200px;
     float: left;
+  }
+
+  #ad-left {
+    width: 202px;
+    margin-top: 20px;
+  }
+
+  #ad-left img {
+    width: 100%;
+  }
+
+  #category {
+    width: 100%;
     position: relative;
     border: 1px solid #D3D3D3;
   }
@@ -208,9 +221,15 @@
   });
 </script>
 {% endblock %}
+
+{% block adleft %}
+<img src={% static "imgs/ad_side.png"%}>
+{% endblock %}
+
 {% block ad %}
 <img src={% static "imgs/ad_sobeys.png"%}>
 {% endblock %}
+
 {% block items %}
 {% load staticfiles %}
 <style>
@@ -285,6 +304,7 @@
   .btn-add {
     margin-top: 6px;
     margin-left: 40px;
+    cursor: pointer;
   }
 </style>
 <div id='item-list'>

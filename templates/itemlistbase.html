@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 {% load static %}
-<div id='category'> {% block category %} {% endblock %} </div>
+<div id='left-side-container'>
+	<div id='category'> {% block category %} {% endblock %} </div>
+	<div id='ad-left'> {% block adleft %} {% endblock %} </div>
+</div>
 <div id='ad-and-items'>
   <div id='ad'>
   {% block ad %}
