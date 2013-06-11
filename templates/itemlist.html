@@ -27,6 +27,7 @@
     padding: 10px 10px;
     border: 1px solid #D3D3D3;
     margin: -1px;
+    cursor: pointer;
   }
   
   .cate:hover {
@@ -69,7 +70,9 @@
   
   #ad-and-items {
     width: 800px;
-    float: right;
+    display: inline-block;
+    margin-left: 10px;
+
   }
 
   #ad {
@@ -195,7 +198,7 @@
         }, 'json');
   };
   $(document).ready(function() { 
-    getAndShowItems({}, 0, 4);
+    getAndShowItems({}, 0, 12);
   });
 </script>
 {% endblock %}
@@ -208,17 +211,16 @@
   #item-list {
   }
   
-  #navigator-prev {
+  .navigator {
     float : right;
-    padding : 3px;
-    margin-right : 5px;
-    border : solid;
+    padding : 3px 15px;
+    margin-right : -1px;
+    border: 1px solid #D3D3D3;
+    cursor: pointer;
   }
-  #navigator-next {
-    float : right;
-    padding : 3px;
-    margin-left : 5px;
-    border : solid;
+
+  .navigator:hover {
+    background-color: #e6ffbc;
   }
 
   .item-container {
@@ -279,11 +281,15 @@
     margin-left: 40px;
   }
 </style>
-<div id = 'item-list'>
+<div id='item-list'>
 </div>
-<div id = 'navigator'>
-  <div id = 'navigator-next'>next</div>
-  <div id = 'navigator-prev'>prev</div>
+<div id='navigator'>
+  <div id='navigator-next' class='navigator'>
+    <img src={% static "imgs/arrow_right.png"%}>
+  </div>
+  <div id='navigator-prev' class='navigator'>
+    <img src={% static "imgs/arrow_left.png"%}>
+  </div>
 </div>
 <script src={% static "javascript/itemlist.js"%}></script>
 {% endblock %}
