@@ -5,6 +5,10 @@
     font-family: 'Open Sans',sans-serif;
 }
 
+.body {
+    background: #f3f3f3;
+}
+
 .transparent-white {
     /* Fallback for web browsers that don't support RGBa */
     background-color: rgb(255, 255, 255);

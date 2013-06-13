@@ -19,7 +19,7 @@
   #category {
     width: 100%;
     position: relative;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
   }
   
   #cate-list {
@@ -27,24 +27,30 @@
   }
   
   #cate-head {
-    font-weight: bold;
     font-size: 14px;
-    color: white;
-    background-color: #93d033;
+    color: #49660f;
+    background-color: #cfee71;
     padding: 10px 10px;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
     margin: -1px;
   }
 
   .cate {
-    padding: 10px 10px;
-    border: 1px solid #D3D3D3;
+    padding: 5px;
+    border: 1px solid #e6e6e6;
     margin: -1px;
     cursor: pointer;
   }
+
+  .cate span {
+    font-size: 13px;
+    position: relative;
+    top: -11px;
+    margin-left: 5px;
+  }
   
   .cate:hover {
-    background-color: #e6ffbc;
+    background-color: #f3fbe7;
   }
 
   .sub-cate {
@@ -52,7 +58,7 @@
     position: absolute;
     background-color: white;
     z-index: 10;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
     padding: 5px 10px;
     top: -1px;
   }
@@ -117,7 +123,7 @@
     };
   }
 
-  (function (cate) {
+  (function (cate, labels) {
     function getCateNum(c) {
       var res = 0;
       for (var sc in cate[c]) {
@@ -128,7 +134,12 @@
     var cate_lst = $('<ul>').attr('id', 'cate-list');
     cate_lst.append($('<li>').attr('id', 'cate-head').text("Category"));
     for (var c in cate) {
-      cate_lst.append($('<li>').attr('class', 'cate').text(c).hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
+      console.log(labels[c]);
+      var label = $('<img>').attr('src', '{% static "imgs/" %}' + labels[c]);
+      console.log(label);
+      cate_lst.append($('<li>').attr('class', 'cate').append(label)
+        .append($('<span>').text(c))
+        .hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
       var sub_cate = $('<div>').attr('class', 'sub-cate')
         .attr('id', getCategoryId(c)).hide()
         .hover(function(){$(this).show();}, function(){$(this).hide()});
@@ -159,7 +170,7 @@
       }
     }
     $('#category').append(cate_lst);
-  })({{category | safe}}); // render category
+  })({{category | safe}}, {{labels | safe}}); // render category
 
   /*
   <div class = "item-container">
@@ -240,12 +251,12 @@
     float : right;
     padding : 3px 15px;
     margin-right : -1px;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
     cursor: pointer;
   }
 
   .navigator:hover {
-    background-color: #e6ffbc;
+    background-color: #f3fbe7;
   }
 
   .item-container {
@@ -255,7 +266,7 @@
     margin-left:10px;
     margin-bottom:10px;
     float: left;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
     position: relative;
   }
 
@@ -296,7 +307,7 @@
     width: 100%;
     background: #f4f4f4;
     bottom: 0px;
-    border: 1px solid #D3D3D3;
+    border: 1px solid #e6e6e6;
     display: none;
     
   }

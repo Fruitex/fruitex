@@ -4,6 +4,15 @@ from django.template import Context, loader
 from items.models import Store, Item
 import json
 
+labels = {
+  'Produce': 'cate_label_produce.png',
+  'Home & Lifestyle': 'cate_label_home.png',
+  'Groceries': 'cate_label_grocery.png', 
+  'Snacks & Candies': 'cate_label_candy.png',
+  'Beverage':'cate_label_beverage.png'
+}
+
+
 category = {
   'Produce' : {
     'Vegetables': [
@@ -160,7 +169,7 @@ category = {
 			"Others",
     ],
   },
-  'Personal Care' : {
+  'Home & Lifestyle' : {
     'Hair Care' : [
       "Hair Enhancement",
       "Oral Care",
@@ -187,7 +196,10 @@ category = {
 
 def itemlist(request):
     template = loader.get_template('itemlist.html')
-    context = Context({'category' : json.dumps(category)})
+    context = Context({
+      'category' : json.dumps(category),
+      'labels' : json.dumps(labels)
+      })
     return HttpResponse(template.render(context))
 
 def getItemsFromBackend(startId, num):
