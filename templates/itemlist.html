@@ -171,20 +171,6 @@
     $('#category').append(cate_lst);
   })({{category | safe}}, {{labels | safe}}); // render category
 
-  /*
-  <div class = "item-container">
-    <div class="item-info-wrapper">
-      <!-- Hard code for item image -->
-      <div class = "item-image"></div>
-      <div class = "item-name"> {{ item.name }} </div>
-      <p class = "item-price"> ${{ item.price }} </p>
-      <p class = "item-category"> {{ item.category }} </p>
-      </div>
-    <div class="btn-add-container">
-      <img class="btn-add" src= {% static "imgs/btn_add.png" %}>
-    </div>
-  </div>
-  */
   var showItems = function (items) {
     var itemList = $('#item-list').empty();
     for (var i = 0; i < items.length; i++) {

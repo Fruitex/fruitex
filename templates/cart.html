@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  #items-in-cart {
+  }
+  #check-out-button {
+    
+  }
+  .item-in-cart {
+    border: 1px solid #e6e6e6;
+    height : 130px;
+    width : 600px;
+  }
+  .item-in-cart-img {
+    height : 80px;
+    width : 80px;
+    float : left;
+    background-color : #e6e6e6;
+    margin : 20px;
+  }
+  .item-in-cart-name {
+    width : 500px;
+    margin : 20px;
+  }
+  .item-in-cart-price {
+    height : 20px;
+    width : 500px;
+  }
+
+  #cart-header {
+    height : 30px;
+    width : 600px;
+    font-size : 14px;
+    border: 1px solid #e6e6e6;
+  }
+
+  #items-in-cart-summary {
+    background-color : rgb(245,252,245);
+    border: 1px solid #e6e6e6;
+    width : 600px;
+    height : 100px;
+  }
+
+  #cart-footer {
+    width : 600px;
+    height : 100px;
+  }
+
+</style>
+<script>
+  var loadItemsInCart= function() {
+    var itemIds = $.cookie('cart');
+    $.post('/items/getItems',
+        {'ids' : itemIds}, 
+        function(data) {
+          if (data.length > 0) {
+            showItemsInCart(data);
+          }
+        }, 'json');
+  };
+
+  var showItemsInCart = function(items) {
+    var container = $('#items-in-cart');
+    container.append($('<div>').attr('id', 'cart-header').text('Your Cart'));
+    for (var i = 0; i < items.length; i++) {
+      container.append(createItemInCart(items[i]));
+    }
+    var itemsSummary = $('<div>').attr('id', 'items-in-cart-summary');
+    container.append(itemsSummary);
+    $.post('/items/computeSummary',
+        {'ids' : JSON.stringify($.map(items, function(it) {return it.id;}))},
+        function(data) {
+          itemsSummary.append($('<div>').attr('id', 'summary-sum')
+              .append($('<div>').attr('class', 'summary-label').text('Sum : '))
+              .append($('<div>').attr('class', 'summary-value').text(data.sum.toFixed(2))))
+            .append($('<div>').attr('id', 'summary-tax')
+              .append($('<div>').attr('class', 'summary-label').text('tax : '))
+              .append($('<div>').attr('class', 'summary-value').text(data.tax.toFixed(2))))
+            .append($('<div>').attr('id', 'summary-delivery')
+              .append($('<div>').attr('class', 'summary-label').text('delivery : '))
+              .append($('<div>').attr('class', 'summary-value').text(data.delivery.toFixed(2))))
+            .append($('<div>').attr('id', 'summary-total')
+              .append($('<div>').attr('class', 'summary-label').text('total : '))
+              .append($('<div>').attr('class', 'summary-value').text(data.total.toFixed(2))));
+        }, 
+        'json');
+  };
+
+  var createItemInCart = function(item) {
+    return $('<div>').attr('class', 'item-in-cart')
+      .append($('<div>').attr('class', 'item-in-cart-img'))
+      .append($('<div>').attr('class', 'item-in-cart-name').text(item.name))
+      .append($('<div>').attr('class', 'item-in-cart-price').text(item.price));
+  };
+  $(document).ready(function() {
+    loadItemsInCart();
+  });
+</script>
+<div id = 'items-in-cart'> </div>
+<div id = 'cart-footer'>
+  <div id = 'check-out-button'>check-out</div>
+  <div>And get your delivery today.</div>
+</div>
+{% endblock %}

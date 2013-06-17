@@ -4,6 +4,8 @@ from django.template import Context, loader
 from items.models import Store, Item
 import json
 
+TAX_RATE = 0.13
+
 labels = {
   'Produce': 'cate_label_produce.png',
   'Home & Lifestyle': 'cate_label_home.png',
@@ -202,19 +204,52 @@ def itemlist(request):
       })
     return HttpResponse(template.render(context))
 
-def getItemsFromBackend(startId, num):
-  items = []
-  for it in Item.objects.all()[startId : startId + num]:
-    items.append({'id': it.id, 'name' : it.name, 'price' : it.price, 'category' : it.category})
-  return items
+def toStructuredItem(it):
+  return {'name' : it.name, 'price' : it.price, 'category' : it.category, 
+      'store' : it.store.id, 'id' : it.id, 'tax_class' : it.tax_class}
+
+def getItemsByRange(startId, num):
+  return map(toStructuredItem, Item.objects.all()[startId : startId + num])
+
+def getItemsByIds(ids):
+  return map(toStructuredItem, Item.objects.filter(id__in = ids))
+
+def computeTax(item):
+  if item['tax_class'] == 'zero-rate':
+    return 0
+  elif item['tax_class'] == 'standard-rate':
+    return TAX_RATE * item['price']
+
+def computeDelivery(item):
+  return 4.0
 
 @csrf_exempt
 def getItems(request):
   if request.method == 'POST':
-    startId = int(request.POST['startId'])
-    num = int(request.POST['num'])
-    return HttpResponse(json.dumps(getItemsFromBackend(startId, num)))
+    if 'startId' in request.POST:
+      startId = int(request.POST['startId'])
+      num = int(request.POST['num'])
+      return HttpResponse(json.dumps(getItemsByRange(startId, num)))
+    elif 'ids' in request.POST:
+      ids = json.loads(request.POST['ids'])
+      return HttpResponse(json.dumps(getItemsByIds(ids)))
+    else:
+      return HttpResponse('error')
   else:
     return HttpResponse('error')
 
-
+@csrf_exempt
+def computeSummary(request):
+  if request.method == 'POST':
+    ids = json.loads(request.POST['ids'])
+    items = getItemsByIds(ids)
+    d = computeDelivery(items)
+    s = 0.0
+    t = 0.0
+    for item in items:
+      s += item['price']
+      t += computeTax(item)
+    res = {'sum' : s, 'tax' : t, 'delivery' : d, 'total' : s + t + d}
+    return HttpResponse(json.dumps(res))
+  else:
+    return HttpResponse('error')
