@@ -205,7 +205,7 @@ def itemlist(request):
 def getItemsFromBackend(startId, num):
   items = []
   for it in Item.objects.all()[startId : startId + num]:
-    items.append({'name' : it.name, 'price' : it.price, 'category' : it.category})
+    items.append({'id': it.id, 'name' : it.name, 'price' : it.price, 'category' : it.category})
   return items
 
 @csrf_exempt

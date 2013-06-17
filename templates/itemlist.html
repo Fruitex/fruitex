@@ -24,6 +24,7 @@
   
   #cate-list {
     list-style-type: none;
+    background: white;
   }
   
   #cate-head {
@@ -134,9 +135,7 @@
     var cate_lst = $('<ul>').attr('id', 'cate-list');
     cate_lst.append($('<li>').attr('id', 'cate-head').text("Category"));
     for (var c in cate) {
-      console.log(labels[c]);
       var label = $('<img>').attr('src', '{% static "imgs/" %}' + labels[c]);
-      console.log(label);
       cate_lst.append($('<li>').attr('class', 'cate').append(label)
         .append($('<span>').text(c))
         .hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
@@ -201,6 +200,9 @@
           .append($('<img>')
               .attr('class', 'btn-add')
               .attr('src', '{% static "imgs/btn_add.png" %}'));
+      btn.click(function() {
+        addToCart(item.id);
+      });
       itemContainer.hover(
         function () {
           $(this).children('.btn-add-container').slideDown('fast');
@@ -210,6 +212,19 @@
       itemContainer.append(itemInfo).append(btn);
     }
   };
+
+  var addToCart = function(itemId) {
+    var cart;
+    if ($.cookie("cart") == undefined) {
+      cart = new Array();
+    } else {
+      cart = JSON.parse($.cookie("cart"));
+    }
+    cart.push(itemId);
+    $.cookie("cart", JSON.stringify(cart));
+    console.log($.cookie("cart"));
+  };
+
   var getAndShowItems = function(query, startId, num) {
     $.post('/items/getItems',
         {'startId' : startId, 'num' : num, 'query' : JSON.stringify(query)}, 
@@ -268,6 +283,7 @@
     float: left;
     border: 1px solid #e6e6e6;
     position: relative;
+    background: white;
   }
 
   .item-info-wrapper {
