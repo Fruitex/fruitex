@@ -95,7 +95,6 @@ jQuery.cookie = function(name, value, options) {
         return cookieValue;
     }
 };
-=======
 /*!
  * jQuery Cookie Plugin v1.3.1
  * https://github.com/carhartl/jquery-cookie

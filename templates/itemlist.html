@@ -186,9 +186,9 @@
           .append($('<img>')
               .attr('class', 'btn-add')
               .attr('src', '{% static "imgs/btn_add.png" %}'));
-      btn.click(function() {
-        addToCart(item.id);
-      });
+      btn.click((function(id) {
+        return function() { addToCart(id); }
+      })(item.id));
       itemContainer.hover(
         function () {
           $(this).children('.btn-add-container').slideDown('fast');
@@ -207,7 +207,7 @@
       cart = JSON.parse($.cookie("cart"));
     }
     cart.push(itemId);
-    $.cookie("cart", JSON.stringify(cart));
+    $.cookie("cart", JSON.stringify(cart), {path : '/'});
     console.log($.cookie("cart"));
   };
 
