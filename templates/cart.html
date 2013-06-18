@@ -1,51 +1,96 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <style>
-  #items-in-cart {
+  #cart-wrapper {
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border: 1px solid #d3d3d3;
   }
-  #check-out-button {
-    
+
+  #cart-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    margin-bottom: 20px;
+  }
+
+  #checkout-button {
+    margin-bottom: 10px;
+  }
+  .item-info-wrapper {
+    float: left;
+    padding-top: 5px;
+    width: 500px;
   }
   .item-in-cart {
-    border: 1px solid #e6e6e6;
-    height : 130px;
-    width : 600px;
+    height : 80px;
+    width : 580px;
+    padding: 10px;
   }
   .item-in-cart-img {
-    height : 80px;
-    width : 80px;
+    height : 70px;
+    width : 70px;
     float : left;
-    background-color : #e6e6e6;
-    margin : 20px;
+    background: #d3d3d3;
   }
   .item-in-cart-name {
-    width : 500px;
-    margin : 20px;
+    margin-left: 20px;
+    font-size: 13px;
+    width: 420px;
+    float: left;
   }
   .item-in-cart-price {
     height : 20px;
-    width : 500px;
+    float: left;
+    font-size: 16px;
   }
 
   #cart-header {
-    height : 30px;
-    width : 600px;
-    font-size : 14px;
-    border: 1px solid #e6e6e6;
+    font-size: 20px;
+    margin: 20px;
   }
 
-  #items-in-cart-summary {
+  #items-in-cart-summary-container {
     background-color : rgb(245,252,245);
-    border: 1px solid #e6e6e6;
-    width : 600px;
-    height : 100px;
+    border-top: 1px solid #e6e6e6;
+    height : 110px;
+    padding : 10px;
   }
+   #items-in-cart-summary-table {
+    width: 150px;
+    float: right;
+    margin-right: 75px;
 
+   }
+
+   #items-in-cart-summary-table tr td {
+    font-size: 15px;
+    text-align: right;
+    height: 25px;
+   }
   #cart-footer {
     width : 600px;
     height : 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-top: 20px;
+  }
+  #cart-footer p {
+    color: grey;
   }
 
+  #summary-tax, #summary-delivery {
+    color: grey;
+  }
+
+  #summary-total {
+    color: #375b1b;
+    font-weight: bold;
+  }
 </style>
 <script>
   var loadItemsInCart= function() {
@@ -60,28 +105,28 @@
   };
 
   var showItemsInCart = function(items) {
-    var container = $('#items-in-cart');
-    container.append($('<div>').attr('id', 'cart-header').text('Your Cart'));
+    var container = $('#cart-container');
     for (var i = 0; i < items.length; i++) {
       container.append(createItemInCart(items[i]));
     }
-    var itemsSummary = $('<div>').attr('id', 'items-in-cart-summary');
-    container.append(itemsSummary);
+    var itemsSummary = $('#items-in-cart-summary-container');
+    var table = $('<table>').attr('id', 'items-in-cart-summary-table');
+    itemsSummary.append(table);
     $.post('/items/computeSummary',
         {'ids' : JSON.stringify($.map(items, function(it) {return it.id;}))},
         function(data) {
-          itemsSummary.append($('<div>').attr('id', 'summary-sum')
-              .append($('<div>').attr('class', 'summary-label').text('Sum : '))
-              .append($('<div>').attr('class', 'summary-value').text(data.sum.toFixed(2))))
-            .append($('<div>').attr('id', 'summary-tax')
-              .append($('<div>').attr('class', 'summary-label').text('tax : '))
-              .append($('<div>').attr('class', 'summary-value').text(data.tax.toFixed(2))))
-            .append($('<div>').attr('id', 'summary-delivery')
-              .append($('<div>').attr('class', 'summary-label').text('delivery : '))
-              .append($('<div>').attr('class', 'summary-value').text(data.delivery.toFixed(2))))
-            .append($('<div>').attr('id', 'summary-total')
-              .append($('<div>').attr('class', 'summary-label').text('total : '))
-              .append($('<div>').attr('class', 'summary-value').text(data.total.toFixed(2))));
+          table.append($('<tr>').attr('id', 'summary-sum')
+              .append($('<td>').attr('class', 'summary-label').text('Sum : '))
+              .append($('<td>').attr('class', 'summary-value').text('$ ' + data.sum.toFixed(2))))
+            .append($('<tr>').attr('id', 'summary-tax')
+              .append($('<td>').attr('class', 'summary-label').text('Tax : '))
+              .append($('<td>').attr('class', 'summary-value').text('$ ' + data.tax.toFixed(2))))
+            .append($('<tr>').attr('id', 'summary-delivery')
+              .append($('<td>').attr('class', 'summary-label').text('Delivery : '))
+              .append($('<td>').attr('class', 'summary-value').text('$ ' + data.delivery.toFixed(2))))
+            .append($('<tr>').attr('id', 'summary-total')
+              .append($('<td>').attr('class', 'summary-label').text('Total : '))
+              .append($('<td>').attr('class', 'summary-value').text('$ ' + data.total.toFixed(2))));
         }, 
         'json');
   };
@@ -89,16 +134,22 @@
   var createItemInCart = function(item) {
     return $('<div>').attr('class', 'item-in-cart')
       .append($('<div>').attr('class', 'item-in-cart-img'))
-      .append($('<div>').attr('class', 'item-in-cart-name').text(item.name))
-      .append($('<div>').attr('class', 'item-in-cart-price').text(item.price));
+      .append($('<div>').attr('class', 'item-info-wrapper')
+        .append($('<span>').attr('class', 'item-in-cart-name').text(item.name))
+        .append($('<span>').attr('class', 'item-in-cart-price').text('$ ' + item.price)));
   };
   $(document).ready(function() {
     loadItemsInCart();
   });
 </script>
-<div id = 'items-in-cart'> </div>
-<div id = 'cart-footer'>
-  <div id = 'check-out-button'>check-out</div>
-  <div>And get your delivery today.</div>
+<div id='cart-wrapper'>
+  <p id="cart-header">Your cart</p>
+  <div id='cart-container'> 
+  </div>
+  <div id='items-in-cart-summary-container'></div>
+</div>
+<div id='cart-footer'>
+  <img id='checkout-button' src={% static "imgs/btn_checkout.png" %}></img>
+  <p>And get your delivery today.</p>
 </div>
 {% endblock %}
