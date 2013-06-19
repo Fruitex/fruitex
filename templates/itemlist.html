@@ -212,7 +212,7 @@
 
   var getAndShowItems = function(query, startId, num) {
     $.post('/items/getItems',
-        {'startId' : startId, 'num' : num, 'query' : JSON.stringify(query)}, 
+        {'startId' : startId, 'num' : num, 'query' : query}, 
         function(data) {
           if (data.length > 0) {
             showItems(data);
@@ -228,7 +228,8 @@
         }, 'json');
   };
   $(document).ready(function() { 
-    getAndShowItems({}, 0, 12);
+    var query = getURLParameter('query');
+    getAndShowItems(query, 0, 12);
   });
 </script>
 {% endblock %}

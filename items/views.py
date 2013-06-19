@@ -208,8 +208,9 @@ def toStructuredItem(it):
   return {'name' : it.name, 'price' : it.price, 'category' : it.category, 
       'store' : it.store.id, 'id' : it.id, 'tax_class' : it.tax_class}
 
-def getItemsByRange(startId, num):
-  return map(toStructuredItem, Item.objects.all()[startId : startId + num])
+def getItemsByRange(query, startId, num):
+  return map(toStructuredItem, 
+        Item.objects.all().filter(name__icontains=query)[startId : startId + num])
 
 def getItemsByIds(ids):
   return map(toStructuredItem, Item.objects.filter(id__in = ids))
@@ -227,9 +228,10 @@ def computeDelivery(item):
 def getItems(request):
   if request.method == 'POST':
     if 'startId' in request.POST:
+      query = request.POST['query']
       startId = int(request.POST['startId'])
       num = int(request.POST['num'])
-      return HttpResponse(json.dumps(getItemsByRange(startId, num)))
+      return HttpResponse(json.dumps(getItemsByRange(query, startId, num)))
     elif 'ids' in request.POST:
       ids = json.loads(request.POST['ids'])
       return HttpResponse(json.dumps(getItemsByIds(ids)))

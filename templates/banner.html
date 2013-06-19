@@ -250,4 +250,9 @@
       $( "#combobox" ).toggle();
     });
   });
+  $(document).ready(function() {
+    $('#search-btn').click(function() {
+      window.location = '/items/?query=' + encodeURIComponent($('#search-input')[0].value);
+    });
+  });
   </script>
