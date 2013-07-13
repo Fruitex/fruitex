@@ -171,6 +171,28 @@
             .append($('<tr>').attr('id', 'summary-total')
               .append($('<td>').attr('class', 'summary-label').text('Total : '))
               .append($('<td>').attr('class', 'summary-value').text('$ ' + data.total.toFixed(2))));
+
+          $('#checkout-button').click(function() {
+            var name = $('#delivery_name')[0].value;
+            var phone = $('#delivery_phone')[0].value;
+            var address = $('#delivery_address')[0].value;
+            var postcode = $('#delivery_postcode')[0].value;
+            var itemIds = $.cookie('cart');
+            $.post('/cart/checkout',
+                {
+                  'name' : name,
+                  'phone' : phone,
+                  'address' : address,
+                  'postcode' : postcode,
+                  'ids' : itemIds,
+                  'price' : data.sum,
+                  'tax' : data.tax,
+                  'shipping' : data.delivery
+                }, 
+                function(data) {
+                  alert(data);
+                }, 'json');
+          });
         }, 
         'json');
   };
@@ -206,19 +228,19 @@
       <tr>
         <td>Phone</td>
         <td>
-          <input type="text" id="delivery_name"></input>
+          <input type="text" id="delivery_phone"></input>
         </td>
       </tr>
       <tr>
         <td>Address</td>
         <td>
-          <input type="text" id="delivery_name"></input>
+          <input type="text" id="delivery_address"></input>
         </td>
       </tr>
       <tr>
         <td>Post Code</td>
         <td>
-          <input type="text" id="delivery_name"></input>
+          <input type="text" id="delivery_postcode"></input>
         </td>
       </tr>
     </table> 

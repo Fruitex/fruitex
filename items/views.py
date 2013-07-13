@@ -249,8 +249,9 @@ def computeSummary(request):
     s = 0.0
     t = 0.0
     for item in items:
-      s += item['price']
-      t += computeTax(item)
+      ct = ids.count(item['id'])
+      s += item['price'] * ct
+      t += computeTax(item) * ct
     res = {'sum' : s, 'tax' : t, 'delivery' : d, 'total' : s + t + d}
     return HttpResponse(json.dumps(res))
   else:
