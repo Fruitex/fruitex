@@ -222,3 +222,6 @@ config.py
 
 #files for local testing
 test.*
+
+#cache
+CACHE/

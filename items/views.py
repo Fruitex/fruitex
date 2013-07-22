@@ -5,7 +5,6 @@ from items.models import Store, Item
 import json
 
 TAX_RATE = 0.13
-
 labels = {
   'Produce': 'cate_label_produce.png',
   'Home & Lifestyle': 'cate_label_home.png',
