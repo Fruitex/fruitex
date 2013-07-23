@@ -117,3 +117,22 @@
   margin: 0 10px 5px 5px;
   padding: 0px 4px 1px 4px;  
 }
+#delivery-container-table tr td {
+  height: 30px;
+  padding: 10px;
+  font-size: 14px;
+  vertical-align:text-top; 
+}
+#delivery-container input {
+  border: 1px solid #d3d3d3;
+  line-height: 22px;
+}
+#delivery_postcode {
+  width: 80px;
+}
+#delivery_address {
+  width: 300px;
+}
+#time-window-container-table input {
+  margin-right: 5px;
+}

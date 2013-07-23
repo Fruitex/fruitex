@@ -12,9 +12,9 @@
   <div id='items-in-cart-summary-container'></div>
 </div>
 <div id='delivery-wrapper'>
-  <p id="delivery-header">Delivery</p>
+  <p id="delivery-header">Delivery Info</p>
   <div id='delivery-container'>
-    <table>
+    <table id="delivery-container-table">
       <tr>
         <td>Name</td>
         <td>
@@ -37,6 +37,47 @@
         <td>Post Code</td>
         <td>
           <input type="text" id="delivery_postcode"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Time Window</td>
+        <td>
+          <table id="time-window-container-table">
+            <tr>
+              <td>
+                Today:
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                10:00-12:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                14:00-17:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                19:00-21:00
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Tommorow:
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                10:00-12:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                14:00-17:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="today_morning">
+                19:00-21:00
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table> 
