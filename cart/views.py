@@ -12,6 +12,7 @@ def cart(request):
 
 @csrf_exempt
 def checkout(request):
+  response = {}
   if request.method == 'POST':
     name = request.POST['name']
     phone = request.POST['phone']
@@ -23,6 +24,8 @@ def checkout(request):
     shipping = float(request.POST['shipping'])
     Order(name=name, address=address, phone=phone, postcode=postcode,
         items=ids, price=price, tax=tax, shipping=shipping, status='pending').save()
-    return HttpResponse('success')
+    response["success"] = True
   else:
-    return HttpResponse('error')
+    response["success"] = False
+  return HttpResponse(json.dumps(response), content_type="application/json")
+

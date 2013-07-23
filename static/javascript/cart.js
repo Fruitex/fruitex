@@ -63,7 +63,13 @@ var showSummary = function() {
           'shipping' : data.delivery
         }, 
         function(data) {
-          alert(data);
+          if (data.success) {
+            $.cookie('cart', '[]', { path: '/' });
+            $("#cart-footer").slideUp(500);
+            $("#delivery-wrapper").slideUp(500);
+            $("#cart-wrapper").slideUp(500);
+            $("#success-container").show();
+          }
         }, 'json');
       });
     }, 

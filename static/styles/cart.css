@@ -6,6 +6,32 @@
   border: 1px solid #d3d3d3;
 }
 
+#success-container {
+  width: 540px;
+  height: 150px;
+  margin-top: 100px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  border: 1px solid #d3d3d3;
+  display: none;
+}
+
+#success-container p {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  font-size:14px;
+  line-height: 20px;
+}
+
+#success-container img {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+}
+
 #delivery-wrapper {
   width: 700px;
   margin-left: auto;
