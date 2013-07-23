@@ -83,9 +83,29 @@ var createItemInCart = function(item, count) {
   .append($('<div>').attr('class', 'item-in-cart-img'))
   .append($('<div>').attr('class', 'item-info-wrapper')
     .append($('<span>').attr('class', 'item-in-cart-name').text(item.name))
-    .append($('<input>').attr('class', 'num-spinner').attr('value', count))
+    .append($('<input>').attr('class', 'num-spinner').attr('value', count).attr('id', item.id))
     .append($('<span>').attr('class', 'item-in-cart-price').text('$ ' + item.price)));
 };
+
+var writeToCookie = function() {
+  var ItemsIds = [];
+  for (var j = 0; j < $(".ui-spinner-input").length; j++) {
+    var spinner = $(".ui-spinner-input")[j];
+    for (var i = 0; i < spinner.value; i++) {
+      ItemsIds.push(parseInt(spinner.id));
+    }
+  }
+  $.cookie('cart', JSON.stringify(ItemsIds), { path: '/' });
+}
+
 $(document).ready(function() {
   loadItemsInCart();
+  $('body').on('change', '.num-spinner', 
+    function (evt) {
+      writeToCookie();
+  });
+  $('body').on('spinstop', '.num-spinner', 
+    function (evt) {
+      writeToCookie();
+  });
 });
