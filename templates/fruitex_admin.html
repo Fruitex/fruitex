@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% for o in orders %}
+    {{ o.invoice }}<br>
+{% endfor %}
+
+{% endblock %}

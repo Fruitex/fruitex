@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+Your Order:<br>
+{{ order.name }}<br>
+{{ order.invoice }}<br>
+{{ order.items }}<br>
+{{ order.price }}<br>
+{% endblock %}

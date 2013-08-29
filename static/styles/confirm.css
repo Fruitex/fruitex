@@ -1,0 +1,32 @@
+#order-confirm-header {
+  font-size: 20px;
+}
+
+#order-confirm-wrapper {
+  width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  border: 1px solid #d3d3d3;
+  padding: 20px;
+}
+
+#order-confirm-table tr td {
+  height: 30px;
+  padding: 10px;
+  font-size: 14px;
+  max-width: 400px;
+  vertical-align:text-top; 
+  word-wrap: break-word;
+}
+#order-confirm-invoice {
+	color: #629b12;
+	margin-top: 10px;
+	font-size: 16px;
+	border-bottom: 1px solid #d3d3d3;
+	padding-bottom: 10px;
+}
+
+#paypal-container {
+	text-align: center;
+}

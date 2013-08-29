@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href={% static "styles/order_manager.css" %}/>
+<link rel="stylesheet" type="text/css" href={% static "styles/itemlist.css" %}/>
+<script src={% static "javascript/order_manager.js" %}></script>
+<script src={% static "javascript/itemlist.js" %}></script>
+
+<div id='orders-wrapper'>
+  <p id="order-header">Orders</p>
+</div>
+
+<script>
+$(document).ready(function() {
+  var orders = {{ orders | safe }};
+  for (i in orders) {
+    $("#orders-wrapper").append(createOrder(orders[i]));
+  }}
+  );
+</script>
+
+{% endblock %}

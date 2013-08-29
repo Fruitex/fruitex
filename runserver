@@ -1,0 +1,3 @@
+killall uwsgi
+./daemon uwsgi --socket 127.0.0.1:3031  --chdir /fruitex -w wsgi 2>> err.log
+
