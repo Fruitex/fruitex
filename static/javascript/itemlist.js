@@ -25,7 +25,8 @@ var ItemList = function (itemIds, editable) {
 	  } else {
 	  	itemInfo.append($('<span>').attr('class', 'item-in-cart-count').text('Quatity: ' + count).attr('id', item.id));
 	  }
-	  itemInfo.append($('<span>').attr('class', 'item-in-cart-price').text('$ ' + count * item.price))
+	  var cost = count * item.price;
+	  itemInfo.append($('<span>').attr('class', 'item-in-cart-price').text('$ ' + cost.toFixed(2)));
 	  itemWrapper.append(itemInfo);
 	  return itemWrapper;
 	};
