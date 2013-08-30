@@ -22,10 +22,14 @@ var showSummary = function() {
     'json');
 };
 
-var loadItemsInCart= function() {
+var loadItemsInCart = function() {
   var itemIds = JSON.parse($.cookie('cart'));
   ItemList(itemIds, true).generate($("#cart-container"), showSummary);
 };
+
+var isCartEmpty = function() {
+  return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
+}
 
 var writeToCookie = function() {
   var ItemsIds = [];
@@ -47,15 +51,22 @@ var isValidUserInput = function () {
 }
 
 $(document).ready(function() {
-  loadItemsInCart();
-  $('body').on('change', '.num-spinner', 
-    function (evt) {
-      writeToCookie();
-      showSummary();
-    });
-  $('body').on('spinstop', '.num-spinner', 
-    function (evt) {
-      writeToCookie();
-      showSummary();
-    });
+  if (!isCartEmpty()) {
+    loadItemsInCart();
+    $('body').on('change', '.num-spinner', 
+      function (evt) {
+        writeToCookie();
+        showSummary();
+      });
+    $('body').on('spinstop', '.num-spinner', 
+      function (evt) {
+        writeToCookie();
+        showSummary();
+      });
+  } else {
+    $('#items-in-cart-summary-container').remove();
+    $('#cart-footer').remove();
+    $('#delivery-wrapper').remove();
+    $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
+  }
 });

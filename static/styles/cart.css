@@ -4,6 +4,7 @@
   margin-right: auto;
   background: white;
   border: 1px solid #d3d3d3;
+  min-height: 150px;
 }
 
 #success-container {
@@ -127,4 +128,10 @@
 }
 #time-window-container-table input {
   margin-right: 5px;
+}
+
+.cart-empty-msg {
+  font-size: 16px;
+  color: #7e7e7e;
+  text-align: center;
 }
