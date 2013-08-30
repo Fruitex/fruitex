@@ -17,6 +17,10 @@ function getCateHoverOutHandler() {
   };
 }
 
+function newQuery(cate, store) {
+  return 'cate:\'' + cate + '\' store:' + store;
+}
+
 function initCategory(cate, labels) {
   function getCateNum(c) {
     var res = 0;
@@ -65,13 +69,13 @@ function initCategory(cate, labels) {
       idx = (idx + 1) % columnNum;
       cate_sub_lst.append($('<li>').append(
             $('<a>').attr('class', 'cate-sub-list-header')
-            .attr('href', '/home/?query=cate:\'' + encodeURIComponent(sc) + '\'')
+            .attr('href', '/home/?query=' + encodeURIComponent(newQuery(sc, $('#combobox').val())))
             .text(sc)));
       for (var i in cate[c][sc]) {
         var s = cate[c][sc][i];
         cate_sub_lst.append($('<li>').append(
               $('<a>').attr('class', 'cate-sub-list-item')
-              .attr('href', '/home/?query=cate:\'' + encodeURIComponent(s) + '\'')
+              .attr('href', '/home/?query=' + encodeURIComponent(newQuery(s, $('#combobox').val())))
               .text(s)));
       }
     }

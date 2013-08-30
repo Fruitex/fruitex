@@ -140,12 +140,11 @@ var banner = function() {
 
   var submitQuery = function() {
     var query = '';
-    console.log($(".cate_tag"));
       if ($(".cate_tag").length) {
-        query = 'cate:\'' + $(".cate_tag").text() + '\' ' + $('#search-input')[0].value;
-      } else {
-        query = $('#search-input')[0].value;        
+        query = 'cate:\'' + $(".cate_tag").text() + '\' ';
       }
+      query += ' store:' + $('#combobox').val();
+      query += $('#search-input')[0].value;        
       window.location = '/home/?query=' + encodeURIComponent(query);
   };
 

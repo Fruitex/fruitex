@@ -40,15 +40,30 @@ def extractCate(query):
     r = re.sub(p, '', r)
   return cate, r
 
+def extractStore(query):
+  patterns = ["store:([^ ]*)",]
+  store = []
+  r = query
+  for p in patterns:
+    store.extend(re.findall(p, r))
+    r = re.sub(p, '', r)
+  return store, r
+
 def getItemsByRange(query, startId, num):
-  cates,keyword = extractCate(query)
-  if len(cates) > 0:
+  cates,query = extractCate(query)
+  stores,query = extractStore(query)
+  if cates:
     cate = cates[0]
   else:
     cate = ''
-  keyword = re.sub(r'^\s*|\s*$', '', keyword)
+  if stores:
+    store = stores[0]
+  else:
+    store = ''
+  keyword = re.sub(r'^\s*|\s*$', '', query)
   return map(toStructuredItem, 
       Item.objects.all().filter(name__icontains=keyword)
+      .filter(store__name__icontains=store)
       .filter(category__icontains=cate)[startId : startId + num])
 
 def getItemsByIds(ids):
