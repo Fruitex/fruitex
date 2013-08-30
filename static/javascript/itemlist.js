@@ -32,7 +32,6 @@ var ItemList = function (itemIds, editable) {
 	};
 
 	var createItems = function(items, parent) {
-		console.log(parent);
 	  for (var i = 0; i < items.length; i++) {
 	    parent.append(
 	    	createItem(items[i], 
@@ -42,11 +41,12 @@ var ItemList = function (itemIds, editable) {
 	};
 
   var generate = function (parent, callback) {
+  	var thisCopy = this;
 	  $.post('/home/getItems',
 	    {'ids' : JSON.stringify(itemIds)}, 
 	    function(data) {
-	    	console.log(data);
 	      if (data.length > 0) {
+	      	thisCopy.data = data;
 	        createItems(data, parent);
 	        if (callback)
 	        	callback();
@@ -59,7 +59,23 @@ var ItemList = function (itemIds, editable) {
 	    }, 'json');
 	};
 
+	var updatePrice = function (spinner) {
+		var price;
+		for (var i = 0; i < this.data.length; i++) {
+			if (this.data[i].id == spinner.id) {
+				price = this.data[i].price;
+				break;
+			}
+		}
+		if (price) {
+			var cost = $(spinner).val() * price;
+			$(spinner).parent().parent().children('.item-in-cart-price')
+					.text('$ ' + cost.toFixed(2));
+		}
+	}
+
 	return {
-		generate: generate
+		generate: generate,
+		updatePrice: updatePrice
 	};
 };
