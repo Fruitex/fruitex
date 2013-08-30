@@ -63,12 +63,14 @@ $(document).ready(function() {
       function (evt) {
         writeToCookie();
         list.updatePrice(this.id);
+        $("#delivery_item_ids").attr('value', $.cookie('cart'));
         showSummary();
       });
     $('body').on('spinstop', '.num-spinner', 
       function (evt) {
         writeToCookie();
         list.updatePrice(this);
+        $("#delivery_item_ids").attr('value', $.cookie('cart'));
         showSummary();
       });
   } else {
