@@ -40,8 +40,8 @@ def confirm(request):
         "item_name": "fruitex order",
         "invoice": invoice,
         "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
-        "return_url": "http://%s/redir/?%s" % (DOMAIN, urlencode({"to" : "check_order?invoice=" + invoice})),
-        "cancel_return": "http://i%s/redir/?to=home" % DOMAIN,
+        "return_url": "http://%s/redir/?%s" % (DOMAIN, urlencode({"to" : "/check_order?invoice=" + invoice})),
+        "cancel_return": "http://i%s/redir/?to=/home" % DOMAIN,
     }
 
     # Create the instance.

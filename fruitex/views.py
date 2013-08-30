@@ -5,15 +5,20 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from cart.models import Order
+from django.contrib.auth import authenticate
 
 def home(request):
-    template = loader.get_template('index.html')
-    context = Context({})
-    return HttpResponse(template.render(context))
+    return render_to_response("index.html", {})
+
+def error(request):
+    return render_to_response("error.html", {})
 
 @csrf_exempt
 def redir(request):
-    return redirect('/%s' % request.GET['to'])
+  if 'to' in request.GET:
+    return redirect('%s' % request.GET['to'])
+  else:
+    return error(request)
 
 @csrf_exempt
 def checkout_return(request):
@@ -22,23 +27,15 @@ def checkout_return(request):
 
 @csrf_exempt
 def check_order(request):
-    if 'invoice' in request.GET:
-      invoice = request.GET['invoice']
-    else:
-      invoice = ''
-    orders = []
-    for o in Order.objects.filter(invoice=invoice):
-        orders.append(o)
-    if len(orders) == 0:
-        return render_to_response("error.html", {})
-    else:
-        return render_to_response("check_order.html", {'order' : orders[0]})
+  if 'invoice' in request.GET:
+    invoice = request.GET['invoice']
+  else:
+    invoice = ''
+  orders = []
+  for o in Order.objects.filter(invoice=invoice):
+      orders.append(o)
+  if len(orders) == 0:
+      return error(request)
+  else:
+      return render_to_response("check_order.html", {'order' : orders[0]})
 
-
-def fruitex_admin(request):
-    from cart.models import Order
-    orders = []
-    for o in Order.objects.filter(status='paid'):
-       orders.append(o)
-    return render_to_response("fruitex_admin.html", {'orders' : orders})
-  
