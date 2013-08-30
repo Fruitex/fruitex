@@ -82,6 +82,7 @@ def loadItems():
         else:
           problemFiles.add(fname)
           print 'data in %s is not complete' % fname
+          print item
     except Exception as e:
       print e, fname, item
     ct += 1
