@@ -4,7 +4,9 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href={% static "styles/cart.css" %}/>
 <link rel="stylesheet" type="text/css" href={% static "styles/itemlist.css" %}/>
+<link rel="stylesheet" type="text/css" href={% static "styles/input_validator.css" %}/>
 <script src={% static "javascript/itemlist.js" %}></script>
+<script src={% static "javascript/input_validator.js" %}></script>
 <script src={% static "javascript/cart.js" %}></script>
 
 <div id='cart-wrapper'>
@@ -89,15 +91,15 @@
   </div>
 </div>
 <div id='cart-footer'>
-
  <img id='checkout-button' src={% static "imgs/btn_checkout.png" %}></img> 
-
 </div>
 <script>
   var itemIds = $.cookie('cart');
   $("#delivery_item_ids").attr('value', itemIds);
   $("#checkout-button").click(function() {
-    $("#checkout-form").submit();
+    if (isValidUserInput()) {
+      $("#checkout-form").submit();
+    }
   }); 
 </script>
 <div id="success-container">

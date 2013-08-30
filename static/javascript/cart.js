@@ -38,6 +38,14 @@ var writeToCookie = function() {
   $.cookie('cart', JSON.stringify(ItemsIds), { path: '/' });
 }
 
+var isValidUserInput = function () {
+  var v = InputValidator;
+  v.init();
+  return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
+      && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
+      && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"));
+}
+
 $(document).ready(function() {
   loadItemsInCart();
   $('body').on('change', '.num-spinner', 
