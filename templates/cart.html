@@ -94,8 +94,7 @@
  <img id='checkout-button' src={% static "imgs/btn_checkout.png" %}></img> 
 </div>
 <script>
-  var itemIds = $.cookie('cart');
-  $("#delivery_item_ids").attr('value', itemIds);
+  $("#delivery_item_ids").attr('value', $.cookie('cart'));
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
       $("#checkout-form").submit();

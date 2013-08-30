@@ -56,11 +56,13 @@ $(document).ready(function() {
     $('body').on('change', '.num-spinner', 
       function (evt) {
         writeToCookie();
+        $("#delivery_item_ids").attr('value', $.cookie('cart'));
         showSummary();
       });
     $('body').on('spinstop', '.num-spinner', 
       function (evt) {
         writeToCookie();
+        $("#delivery_item_ids").attr('value', $.cookie('cart'));
         showSummary();
       });
   } else {
