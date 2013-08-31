@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+import csv
 import re
 
 def clearItems():
@@ -26,14 +27,95 @@ def showOrders():
 def trim(s):
   return re.sub('(^\s+|\s+$)', '', s)
 
+
+def loadBooks():
+  bookstore = Store(name = 'bookstore', address = "")
+  bookstore.save()
+  items = []
+  for fname in _getAllCsvFiles('data/bookstore/'):
+    f = csv.reader(open(fname))
+    next(f) # eat the header 
+    print fname
+    for lst in f:
+      items.append((map(trim, lst), fname))
+  DPT=0
+  CRS=1
+  SECTION=2
+  E_EN=3
+  PROV=4
+  RO=5
+  AUTHOR=6
+  TITLE=7
+  VL=8
+  ED=9
+  PUBLISHER=10
+  CP=11
+  B=12
+  PRICE=13
+  CATEGORY=14
+  PIC=15
+  TAX_STATUS=16
+  TAX_CLASS=17
+
+  def getRemark(item):
+    res = {}
+    if item[DPT]:
+      res["dpt"] = item[DPT]
+    if item[CRS]:
+      res["crs"] = item[CRS]
+    if item[SECTION]:
+      res["section"] = item[SECTION]
+    if item[E_EN]:
+      res["e/en"] = item[E_EN]
+    if item[PROV]:
+      res["prov"] = item[PROV]
+    if item[RO]:
+      res["r/o"] = item[RO]
+    if item[AUTHOR]:
+      res["author"] = item[AUTHOR]
+    if item[VL]:
+      res["vl"] = item[VL]
+    if item[ED]:
+      res["ed"] = item[ED]
+    if item[PUBLISHER]:
+      res["publisher"] = item[PUBLISHER]
+    if item[CP]:
+      res["cp"] = item[CP]
+    if item[B]:
+      res["b"] = item[B]
+    if item[PIC]:
+      res["pic"] = item[PIC]
+    return json.dumps(res)
+
+  print "%d books to write" % len(items)
+  ct = 0
+  problemFiles = set()
+  for item,fname in items:
+    try:
+      if item[CATEGORY] and item[TITLE] and item[PRICE] \
+          and item[TAX_STATUS] and item[TAX_CLASS]:
+        Item(store = bookstore, category = item[CATEGORY],
+            name = item[TITLE], price = item[PRICE], sku = os.path.splitext(item[PIC])[0],
+            tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
+            remark = getRemark(item)).save()
+      else:
+        if fname in problemFiles:
+          continue
+        else:
+          problemFiles.add(fname)
+          print 'data in %s is not complete' % fname
+          print item
+    except Exception as e:
+      print e, fname, item
+    ct += 1
+    if ct%100==0:
+      print "%d books written" % ct
+
 def loadItems():
-  import csv
-  sobeys = Store(name = 'sobeys',
-      address = "450 Columbia St W, Waterloo ON N2T 2W1")
+  sobeys = Store(name = 'sobeys', address = "450 Columbia St W, Waterloo ON N2T 2W1")
   sobeys.save()
   items = []
-
-  for fname in _getAllCsvFiles('data/'):
+  for fname in _getAllCsvFiles('data/sobeys/'):
     f = csv.reader(open(fname))
     next(f) # eat the header 
     print fname
@@ -111,6 +193,7 @@ def main(argv):
     clearItems()
   elif len(argv) > 1 and argv[1] == 'load':
     loadItems()
+    loadBooks()
   elif len(argv) > 1 and argv[1] == 'cate':
     fetchCategory()
   elif len(argv) > 1 and argv[1] == 'order':
