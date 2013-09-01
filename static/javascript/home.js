@@ -6,7 +6,7 @@ var showItems = function (items) {
     var item = items[i];
     var itemContainer = $('<div>').attr('class', 'item-container');
     itemList.append(itemContainer);
-    var imgUrl = 'http://108.171.244.148/static/sobeys_imgs/' + item.sku + '.JPG';
+    var imgUrl = '{% static "sobeys_imgs/" %}' + item.sku + '.JPG';
     var itemInfo = $('<div>').attr('class', 'item-info-wrapper')
       .append($('<img>').attr('class', 'item-image').attr('src', imgUrl))
       .append($('<div>').attr('class', 'item-name').text(item.name))
@@ -34,6 +34,11 @@ var showItems = function (items) {
     }();
   }
 };
+
+var showAd = function(store) {
+  $('#ad').append($('<img>').attr('src', '{% static "imgs/" %}' + 'ad_' + store + '.png'));
+}
+
 var addToCart = function(itemId) {
   var cart;
   if ($.cookie("cart") == undefined) {
@@ -67,6 +72,10 @@ var getAndShowItems = function(query, startId, num) {
     {'startId' : startId, 'num' : num, 'query' : query}, 
     function(data) {
       if (data.length > 0) {
+        // Assume no cross store query
+        var store = data[0].store;
+        console.log(store);
+        showAd(store);
         showItems(data);
         $('#navigator-prev').unbind('click').click(function() {
           if (startId > 0) {
