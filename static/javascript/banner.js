@@ -164,17 +164,18 @@ var banner = function() {
       submitQuery();
     });
     $("#search-input-wrapper").remove(".cate_tag");
-    var query = global.getUrlValue('query');
-
-    var firstWord = query.split('\:')[0];
-    if (firstWord == "cate") {
-      var tokens = query.split('\:')[1].split('\'');
-      var tag = createCateTag(tokens[1]);
-      $("#search-input-wrapper").prepend(tag);
-      $("#search-input").css("width", 460 - tag.width() + 'px');
-      $("#search-input").val(tokens[2]);
-    } else {
-      $("#search-input").val(query);
+    var query = decodeURIComponent(getURLParameter('query'));
+    if (query) {
+      var firstWord = query.split('\:')[0];
+      if (firstWord == "cate") {
+        var tokens = query.split('\:')[1].split('\'');
+        var tag = createCateTag(tokens[1]);
+        $("#search-input-wrapper").prepend(tag);
+        $("#search-input").css("width", 460 - tag.width() + 'px');
+        $("#search-input").val(tokens[2]);
+      } else {
+        $("#search-input").val(query);
+      }
     }
     $("#search-input").keyup(function (evt) {
       if (evt.which == 13) {
