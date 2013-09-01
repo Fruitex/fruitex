@@ -28,7 +28,7 @@ def main(request):
 
 def toStructuredItem(it):
   return {'name' : it.name, 'price' : it.price, 'category' : it.category, 
-      'store' : it.store.id, 'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name} 
+      'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name} 
 
 import re
 def extractCate(query):
