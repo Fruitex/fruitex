@@ -18,7 +18,7 @@ function getCateHoverOutHandler() {
 }
 
 function newQuery(cate, store) {
-  return 'cate:\'' + cate + '\' store:' + store;
+  return 'cate:\'' + cate + '\'';
 }
 
 function initCategory(cate, labels) {
@@ -69,13 +69,15 @@ function initCategory(cate, labels) {
       idx = (idx + 1) % columnNum;
       cate_sub_lst.append($('<li>').append(
             $('<a>').attr('class', 'cate-sub-list-header')
-            .attr('href', '/home/?query=' + encodeURIComponent(newQuery(sc, $('#combobox').val())))
+            .attr('href', '/home/?query=' + encodeURIComponent(newQuery(sc, $('#combobox').val())) +
+                  '&store=' + encodeURIComponent(global.getUrlValue('store')))
             .text(sc)));
       for (var i in cate[c][sc]) {
         var s = cate[c][sc][i];
         cate_sub_lst.append($('<li>').append(
               $('<a>').attr('class', 'cate-sub-list-item')
-              .attr('href', '/home/?query=' + encodeURIComponent(newQuery(s, $('#combobox').val())))
+              .attr('href', '/home/?query=' + encodeURIComponent(newQuery(s, $('#combobox').val())) +
+                  '&store=' + encodeURIComponent(global.getUrlValue('store')))
               .text(s)));
       }
     }

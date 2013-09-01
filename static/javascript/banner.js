@@ -140,12 +140,13 @@ var banner = function() {
 
   var submitQuery = function() {
     var query = '';
-      if ($(".cate_tag").length) {
-        query = 'cate:\'' + $(".cate_tag").text() + '\' ';
-      }
-      query += ' store:' + $('#combobox').val();
-      query += $('#search-input')[0].value;        
-      window.location = '/home/?query=' + encodeURIComponent(query);
+    if ($(".cate_tag").length) {
+      query = 'cate:\'' + $(".cate_tag").text() + '\' ';
+    }
+    var store = $('#combobox').val();
+    query += $('#search-input')[0].value;        
+    window.location = '/home/?store=' + encodeURIComponent(store) +
+        '&query=' + encodeURIComponent(query);
   };
 
   var createCateTag = function(value) {
@@ -164,6 +165,7 @@ var banner = function() {
     });
     $("#search-input-wrapper").remove(".cate_tag");
     var query = global.getUrlValue('query');
+
     var cate = query.split('\:')[0];
     if (cate == "cate") {
       var tokens = query.split('\:')[1].split('\'');

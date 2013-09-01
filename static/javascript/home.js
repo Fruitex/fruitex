@@ -82,7 +82,8 @@ var getAndShowItems = function(query, startId, num) {
 
 $(document).ready(function () {
   updateCartBubble();
-  var query = getURLParameter('query');
+  var query = getURLParameter('query') +
+      encodeURIComponent(' store:' + getURLParameter('store'));
   getAndShowItems(query, 0, 12);
   $(".item-container").hover(function() {
     $(this).children(".btn-add-container").slideDown('fast');

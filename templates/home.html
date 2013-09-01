@@ -2,6 +2,24 @@
 {% load static %}
 {% load compress %}
 
+{% block store_list %}
+  {% compress js inline %}
+    <script src={% static "javascript/store_list.js" %}></script>
+  {% endcompress %}
+  <link rel="stylesheet" type="text/css" href={% static "styles/store_list.css" %}/>
+  <ul id='store-list'>
+    <li id='store-title'>
+      Stores
+    </li>
+    <li id='sobeys'>
+      Sobeys
+    </li>
+    <li id='bookstore'>
+      WLU Bookstore
+    </li>
+  </ul>
+{% endblock %}
+
 {% block category %}
   {% compress js inline %}
     <script src={% static "javascript/category.js" %}></script>
