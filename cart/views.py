@@ -36,6 +36,7 @@ def confirm(request):
         delivery_window = deliveryWindow, time=datetime.now(), invoice=invoice).save()
     paypal_dict = {
         "business": PAYPAL_RECEIVER_EMAIL,
+        "currency_code": "CAD",
         "amount": "%.2f" % (float(price) + float(tax) + float(shipping)),
         "item_name": "fruitex order",
         "invoice": invoice,
