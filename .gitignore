@@ -1,4 +1,5 @@
 *.pyc
 *.log
 .DS_Store
-*.db
+fruitex.db
+fruitex-prod.db

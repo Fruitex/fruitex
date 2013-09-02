@@ -74,8 +74,6 @@ var getAndShowItems = function(query, startId, num) {
       if (data.length > 0) {
         // Assume no cross store query
         var store = data[0].store;
-        console.log(store);
-        showAd(store);
         showItems(data);
         $('#navigator-prev').unbind('click').click(function() {
           if (startId > 0) {
@@ -91,8 +89,9 @@ var getAndShowItems = function(query, startId, num) {
 
 $(document).ready(function () {
   updateCartBubble();
-  var query = getURLParameter('query') +
-      encodeURIComponent(' store:' + getURLParameter('store'));
+  var store = GetSelectedStore();
+  var query = getURLParameter('query');
+  showAd(store);
   getAndShowItems(query, 0, 12);
   $(".item-container").hover(function() {
     $(this).children(".btn-add-container").slideDown('fast');
