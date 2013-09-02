@@ -188,6 +188,15 @@ def showTax():
       tax[s] = 1
   print tax
 
+def fixTypo():
+  ct = 0
+  for o in Item.objects.all():
+    if 'Goceries' in  o.category:
+      o.category = o.category.replace('Goceries', 'Groceries')
+      o.save()
+      ct += 1
+  print '%d items fixed' % ct
+
 def main(argv):
   if len(argv) > 1 and argv[1] == 'clear':
     clearItems()
@@ -200,6 +209,8 @@ def main(argv):
     showOrders()
   elif len(argv) > 1 and argv[1] == 'tax':
     showTax()
+  elif len(argv) > 1 and argv[1] == 'fix':
+    fixTypo()
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)

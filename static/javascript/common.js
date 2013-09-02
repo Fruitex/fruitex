@@ -1,7 +1,7 @@
 function getURLParameter(name) {
-    return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,''])[1]
-    );
+  return decodeURIComponent(
+      (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,''])[1]
+  );
 }
 var RegExpFindAll = function (s, p, idx) {
   var r = new RegExp(p);
@@ -28,3 +28,10 @@ var ParseQuery = function (query) {
     keyword: query.replace(/^\s+|\s+$/, ''),
   };
 };
+var GetSelectedStore = function() {
+  var curStore = ParseQuery(getURLParameter('query')).store[0];
+  if (!curStore) {
+    curStore = 'sobeys';
+  }
+  return curStore;
+}

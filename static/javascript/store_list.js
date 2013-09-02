@@ -4,11 +4,7 @@ var StoreList = function () {
 		$('#store-list').children('li:not(:first-child)').click(function () {
 			window.location = '/home/?query=' + 'store:' + $(this).attr('id');
 		})
-		var curStore = ParseQuery(getURLParameter('query')).store[0];
-    if (!curStore) {
-      curStore = 'sobeys';
-    }
-    SelectCurrentStoreUI(curStore);
+    SelectCurrentStoreUI(GetSelectedStore());
 	};
 
 	return {
