@@ -4,7 +4,7 @@ from cart.models import Order
 from home.models import Store, Item
 import json
 from django.shortcuts import redirect
-from fruitex.decorators import admin
+from django.contrib.auth.decorators import login_required
 
 def toStructuredItem(it):
 	return {'name' : it.name, 'price' : it.price, 'category' : it.category, 
@@ -34,7 +34,7 @@ def toStructuredOrder(o):
     'status': o.status,
 	}
 
-@admin
+@login_required
 def orderlist(request):
   template = loader.get_template('order_manager.html')
   context = Context({
