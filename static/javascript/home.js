@@ -41,7 +41,7 @@ var showAd = function(store) {
 
 var addToCart = function(itemId) {
   var cart;
-  if ($.cookie("cart") == undefined) {
+  if (!$.cookie("cart")) {
     cart = new Array();
   } else {
     cart = JSON.parse($.cookie("cart"));
@@ -60,7 +60,7 @@ var addToCartAnimation = function() {
 
 var updateCartBubble = function() {
 	$("#cart_bubble").hide();
-	var size = $.cookie("cart") == undefined ? 0 : JSON.parse($.cookie("cart")).length;
+	var size = !$.cookie("cart") ? 0 : JSON.parse($.cookie("cart")).length;
 	if (size > 0) {
 		$("#cart_bubble").show();
 		$("#cart_bubble").children("p").text(size);
