@@ -10,7 +10,7 @@ var showSummary = function() {
         .append($('<td>').attr('class', 'summary-label').text('Sum : '))
         .append($('<td>').attr('class', 'summary-value').text('$ ' + data.sum.toFixed(2))))
       .append($('<tr>').attr('id', 'summary-tax')
-        .append($('<td>').attr('class', 'summary-label').text('Tax : '))
+        .append($('<td>').attr('class', 'summary-label').text('HST : '))
         .append($('<td>').attr('class', 'summary-value').text('$ ' + data.tax.toFixed(2))))
       .append($('<tr>').attr('id', 'summary-delivery')
         .append($('<td>').attr('class', 'summary-label').text('Delivery : '))
