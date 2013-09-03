@@ -4,6 +4,7 @@ import sys
 import json
 import csv
 import re
+from datetime import datetime,timedelta
 
 def clearItems():
   for o in Store.objects.all():
@@ -197,6 +198,9 @@ def fixTypo():
       ct += 1
   print '%d items fixed' % ct
 
+def clearOrder():
+  Order.objects.filter(status='pending').filter(time__lt=datetime.now() - timedelta(minutes=1)).delete()
+
 def main(argv):
   if len(argv) > 1 and argv[1] == 'clear':
     clearItems()
@@ -211,6 +215,8 @@ def main(argv):
     showTax()
   elif len(argv) > 1 and argv[1] == 'fix':
     fixTypo()
+  elif len(argv) > 1 and argv[1] == 'clear_order':
+    clearOrder()
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
