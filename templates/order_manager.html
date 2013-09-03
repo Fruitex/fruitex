@@ -15,7 +15,7 @@
 $(document).ready(function() {
   var orders = {{ orders | safe }};
   for (i in orders) {
-    $("#orders-wrapper").append(createOrder(orders[i]));
+    $("#orders-wrapper").append(createOrderForAdmin(orders[i]));
   }}
   );
 </script>
