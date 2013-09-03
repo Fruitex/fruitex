@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^$', 'fruitex.views.home', name='home'),
     url(r'^home/', include('home.urls')),
     url(r'^cart/', include('cart.urls')),
-    url(r'^orders/', include('orders.urls')),
+    url(r'^orders/', 'fruitex.views.orders'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -25,6 +25,6 @@ urlpatterns = patterns('',
 
     url(r'^fruitex-magic-ipn/', include('paypal.standard.ipn.urls')),
     url(r'^redir/', 'fruitex.views.redir'),
-    url(r'^check_order/', 'orders.views.check_order'),
+    url(r'^check_order/', 'fruitex.views.check_order'),
     url(r'^error', 'fruitex.views.error'),
 )
