@@ -35,7 +35,7 @@ var loadItemsInCart = function() {
 
 var isCartEmpty = function() {
   return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
-}
+};
 
 var writeToCookie = function() {
   var ItemsIds = [];
@@ -46,15 +46,19 @@ var writeToCookie = function() {
     }
   }
   $.cookie('cart', JSON.stringify(ItemsIds), { path: '/' });
-}
+};
 
-var isValidUserInput = function () {
+var clearCart = function() {
+  $.cookie('cart', '', { path: '/' });
+};
+
+var isValidUserInput = function() {
   var v = InputValidator;
   v.init();
   return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
       && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
       && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"));
-}
+};
 
 $(document).ready(function() {
   if (!isCartEmpty()) {
