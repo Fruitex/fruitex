@@ -98,4 +98,5 @@ $(document).ready(function () {
   }, function () {
     $(this).children(".btn-add-container").slideUp('fast');
   });
+  SearchBox.init();
 });

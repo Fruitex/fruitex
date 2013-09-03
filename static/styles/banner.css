@@ -76,11 +76,12 @@
 
 .store-tag {
     border: 1px solid #d3d3d3;
-    padding: 2px 9px;
     background: #cfee71;
     display: inline-block;
-    height: 15px;
+    height: 16px;
     padding: 7px;
+    display: none;
+    margin-right: -5px;
 }
 
 .store-tag img {
@@ -104,6 +105,7 @@
     margin-right: auto;
     text-align: center;
     margin-top: 10px;
+    display: none;
 }
 
 #cart_bubble {

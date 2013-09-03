@@ -1,6 +1,6 @@
 {% load static %}
 
-var banner = function() {
+var SearchBox = function() {
   var submitQuery = function() {
     var query = '';
     if ($(".cate_tag").length) {
@@ -32,10 +32,16 @@ var banner = function() {
         // FIXME: Add support for multiple cates
         var tag = createCateTag(parsedQuery.cate[0]);
         $("#search-input-wrapper").prepend(tag);
-        $("#search-input").css("width", 460 - tag.width() + 'px');
+        setTimeout(function(){
+          // Avoid racing between js and browser rendering
+          $("#search-input").css("width", 460 - tag.width() + 'px');
+        },0);
       }
-      if (parsedQuery.store && parsedQuery.store.length) {
+      if (parsedQuery.store &&
+          parsedQuery.store.length &&
+          parsedQuery.store[0]) {
         $('.store-name').text(parsedQuery.store);
+        $('.store-tag').css('display', 'inline-block');
       }
 
       if (parsedQuery.keyword) {
@@ -47,9 +53,10 @@ var banner = function() {
         submitQuery();
       }
     })
+    $('.center-container').fadeIn();
   };
 
-  $(document).ready(function() {
-    initSearchBox();
-  });
+  return {
+    init: initSearchBox
+  };
 }();
