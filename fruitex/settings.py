@@ -6,10 +6,10 @@ if config.DEBUG:
   DEBUG = True
   TEMPLATE_DEBUG = True
   DB_FILE = 'fruitex.db'
-  #PAYPAL_RECEIVER_EMAIL = 'biran0079@gmail.com'
-  #MERCHANT_ID = 'biran0079@gmail.com'
-  PAYPAL_RECEIVER_EMAIL = 'fruitex2012@gmail.com'
-  MERCHANT_ID = 'fruitex2012@gmail.com'
+  PAYPAL_RECEIVER_EMAIL = 'biran0083@gmail.com'
+  MERCHANT_ID = 'biran0083@gmail.com'
+  #PAYPAL_RECEIVER_EMAIL = 'fruitex2012@gmail.com'
+  #MERCHANT_ID = 'fruitex2012@gmail.com'
 else:
   DEBUG = False
   TEMPLATE_DEBUG = False

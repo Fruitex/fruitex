@@ -24,18 +24,3 @@ def redir(request):
 def checkout_return(request):
     invoice=request.GET['invoice']
     return render_to_response("checkout_return.html", {'invoice' : invoice})
-
-@csrf_exempt
-def check_order(request):
-  if 'invoice' in request.GET:
-    invoice = request.GET['invoice']
-  else:
-    invoice = ''
-  orders = []
-  for o in Order.objects.filter(invoice=invoice):
-      orders.append(o)
-  if len(orders) == 0:
-      return error(request)
-  else:
-      return render_to_response("check_order.html", {'order' : orders[0]})
-

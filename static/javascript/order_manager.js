@@ -8,7 +8,6 @@ var createDeliveryInfo = function(order) {
   container.append($("<p>").text("Postcode: " + order.postcode));
   container.append($("<p>").text("Phone: " + order.phone));
   container.append($("<p>").text("Delivery Window: " + order.delivery_window));
-  container.append($("<p>").text("Status: " + order.status));
   return container;
 }
 
@@ -16,6 +15,11 @@ var createOrder = function(order) {
   var container =$("<div>").addClass('order-container');
   container.append(createDeliveryInfo(order));
   ItemList(order.items, false).generate(container); 
+  return container;
+}
+
+var createOrderForAdmin = function (order) {
+  var container = createOrder(order);
   var btn = $("<button>").text("Delivered!").click(function() {
     $.post('/orders/deliver',
       {
