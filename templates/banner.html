@@ -18,15 +18,14 @@
 </a>
 <img id="img_add_success" src={% static "imgs/add_success.png" %}></img>
 <div class="center-container">
-  <div id="store-selector-title">Store</div>
-  <select id="combobox">
-    <option value="sobeys">Sobeys</option>
-    <option value="bookstore">Book Store</option>
-  </select>
-  <div id="search-container">
+  <span class="store-tag">
+    <img src={% static "imgs/store_tag.png" %}></img>
+    <span class="store-name"></span>
+  </span>
+  <span id="search-container">
     <div id="search-input-wrapper">
       <input id="search-input" type="text"></input>
     </div>
-    <img id="search-btn" src={% static "imgs/search_btn.png" %}></imgs`g>
-  </div>
+    <img id="search-btn" src={% static "imgs/search_btn.png" %}></imgs>
+  </span>
 </div>
