@@ -6,6 +6,7 @@ import json
 from category import category
 from django.views.decorators.csrf import csrf_exempt
 import re
+from django.db.models import Q
 
 TAX_RATE = 0.13
 
@@ -69,10 +70,10 @@ def getItemsByRange(query, startId, num):
   else:
     store = ''
   keyword = re.sub(r'^\s*|\s*$', '', query)
-  return map(toStructuredItem, 
-      Item.objects.all().filter(name__icontains=keyword)
-      .filter(store__name__icontains=store)
-      .filter(category__icontains=cate)[startId : startId + num])
+  res = Item.objects.all().filter(store__name__icontains=store).filter(category__icontains=cate)
+  for k in keyword.split():
+    res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))
+  return map(toStructuredItem, res[startId : startId + num])
 
 def getItemsByIds(ids):
   return map(toStructuredItem, Item.objects.filter(id__in = ids))
