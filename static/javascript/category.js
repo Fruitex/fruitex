@@ -75,7 +75,7 @@ function initCategory(cate, labels) {
         var s = cate[c][sc][i];
         cate_sub_lst.append($('<li>').append(
               $('<a>').attr('class', 'cate-sub-list-item')
-              .attr('href', '/home/?query=' + encodeURIComponent(newQuery(s, GetSelectedStore())))
+              .attr('href', '/home/?query=' + encodeURIComponent(newQuery(sc + '->' + s, GetSelectedStore())))
               .text(s)));
       }
     }

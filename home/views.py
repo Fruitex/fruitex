@@ -5,6 +5,7 @@ from home.models import Store, Item
 import json
 from category import category
 from django.views.decorators.csrf import csrf_exempt
+import re
 
 TAX_RATE = 0.13
 
@@ -17,11 +18,18 @@ labels = {
   'Pet Care':'cate_label_pet.png',
 }
 
+def getStore(request):
+  if 'query' in request.GET:
+    stores,_ = extractStore(request.GET['query'])
+    if len(stores) > 0 and stores[0] in category:
+      return stores[0]
+  return 'sobeys'
+
 @csrf_exempt
 def main(request):
     template = loader.get_template('home.html')
     context = Context({
-      'category' : json.dumps(category),
+      'category' : json.dumps(category[getStore(request)]),
       'labels' : json.dumps(labels)
       })
     return HttpResponse(template.render(context))
@@ -31,7 +39,6 @@ def toStructuredItem(it):
       'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name,
       'remark': it.remark} 
 
-import re
 def extractCate(query):
   patterns = ["cate:'([^']*)'", "cate:([^ ]*)",]
   cate = []
