@@ -43,3 +43,8 @@
 	margin-left: 10px;
 	cursor: pointer;
 }
+
+.book-info-container p {
+	margin-top: 5px;
+	font-size: 14px;
+}
