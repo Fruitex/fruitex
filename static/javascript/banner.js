@@ -6,7 +6,7 @@ var SearchBox = function() {
     if ($(".cate_tag").length) {
       query = 'cate:\'' + $(".cate_tag").text() + '\'';
     }
-    query += ' store:' + GetSelectedStore();
+    query += ' store:' + GetSelectedStore() + ' ';
     query += $('#search-input')[0].value;        
     window.location = '/home/?query=' + encodeURIComponent(query);
   };
