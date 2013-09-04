@@ -6,7 +6,8 @@ var ItemDetail = function () {
 	};
 
 	var generate = function (item) {
-		console.log(item);
+		$('.item-detail-container').remove(); 
+
 		var imgUrl = 'http://108.171.244.148/static/sobeys_imgs/' + item.sku + '.JPG';
 		var container = $('<div>').addClass('item-detail-container');
 		var left = $('<div>').addClass('item-detail-container-left')
@@ -24,8 +25,6 @@ var ItemDetail = function () {
 			bookInfoContainer.append($('<p>').text('Publisher: ' + remark.publisher));
 			right.append(bookInfoContainer);
 		}
-
-
 
 		var addBtn = $('<img>')
         .attr('class', 'item-detail-btn-add')
