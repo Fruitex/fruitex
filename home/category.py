@@ -290,13 +290,13 @@ def cateForSobeys(cateList):
 
 def getTextBookTopCate(c):
     if ord(c[0].upper()) <= ord('E'):
-      return 'Dep A-E'
+      return 'Department A-E'
     elif ord(c[0].upper()) <= ord('J'):
-      return 'Dep F-J'
+      return 'Department F-J'
     elif ord(c[0].upper()) <= ord('O'):
-      return 'Dep K-O'
+      return 'Department K-O'
     else:
-      return 'Dep P-Z'
+      return 'Department P-Z'
 
 def cateForBookStore(cateList):
     category = {}

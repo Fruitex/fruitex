@@ -17,6 +17,10 @@ labels = {
   'Snacks & Candies': 'cate_label_candy.png',
   'Beverages':'cate_label_beverage.png',
   'Pet Care':'cate_label_pet.png',
+  'Department A-E': 'cate_label_book.png',
+  'Department F-J': 'cate_label_book.png',
+  'Department K-O': 'cate_label_book.png',
+  'Department P-Z': 'cate_label_book.png',
 }
 
 def getStore(request):

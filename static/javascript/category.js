@@ -42,6 +42,7 @@ function initCategory(cate, labels) {
   var index = 0;
   for (var j = 0; j < sortedCate.length; j++) {
     var c = sortedCate[j];
+    console.log(c);
     var label = $('<img>').attr('src', '{% static "imgs/" %}' + labels[c]);
     cate_lst.append($('<li>').attr('class', 'cate').append(label)
       .append($('<span>').text(c))
