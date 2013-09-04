@@ -6,6 +6,12 @@ var isBook = function(item) {
          JSON.parse(item.remark)["crs"];
 };
 
+var createPrice = function (price) {
+  return $('<div>').addClass('item-price')
+      .append($('<span>').text('$' + price))
+      .append($('<img>').attr('src', '{% static "imgs/tag_cad.png" %}'));
+}
+
 var showItems = function (items) {
   var itemList = $('#item-list').empty();
   for (var i = 0; i < items.length; i++) {
@@ -23,8 +29,9 @@ var showItems = function (items) {
     var itemInfo = $('<div>').attr('class', 'item-info-wrapper')
       .append($('<img>').attr('class', 'item-image').attr('src', imgUrl))
       .append($('<div>').attr('class', 'item-name').text(title))
-      .append($('<div>').attr('class', 'item-price').text(item.price));
+      .append(createPrice(item.price));
     var btn = $('<div>').attr('class', 'btn-add-container')
+      .append($('<div>').addClass('bg'))
       .append($('<img>')
         .attr('class', 'btn-add')
         .attr('src', '/static/imgs/btn_add.png'));
