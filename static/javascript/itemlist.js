@@ -1,5 +1,4 @@
 var ItemList = function (itemIds, editable) {
-
 	var itemCountGetter = function(id, ids) {
     var res = 0;
     for (var i = 0; i < itemIds.length; i++) {

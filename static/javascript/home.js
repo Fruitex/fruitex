@@ -1,15 +1,28 @@
 {% load static %}
 
+var isBook = function(item) {
+  return item.remark &&
+         JSON.parse(item.remark) &&
+         JSON.parse(item.remark)["crs"];
+};
+
 var showItems = function (items) {
   var itemList = $('#item-list').empty();
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     var itemContainer = $('<div>').attr('class', 'item-container');
     itemList.append(itemContainer);
+
+    var title = item.name;
+    if (isBook(item)) {
+      var remark = JSON.parse(item.remark);
+      title = remark['dpt'] + ' ' + remark['crs'];
+    }
+
     var imgUrl = '{% static "sobeys_imgs/" %}' + item.sku + '.JPG';
     var itemInfo = $('<div>').attr('class', 'item-info-wrapper')
       .append($('<img>').attr('class', 'item-image').attr('src', imgUrl))
-      .append($('<div>').attr('class', 'item-name').text(item.name))
+      .append($('<div>').attr('class', 'item-name').text(title))
       .append($('<div>').attr('class', 'item-price').text(item.price));
     var btn = $('<div>').attr('class', 'btn-add-container')
       .append($('<img>')
