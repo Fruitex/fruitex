@@ -5,15 +5,24 @@ var ItemDetail = function () {
          	 JSON.parse(item.remark)["crs"];
 	};
 
+	var BookTitleHandler = function(title) {
+		return title.substr(0, 1) + title.substr(1).toLowerCase();
+	}
+
 	var generate = function (item) {
 		$('.item-detail-container').remove(); 
+
+		var name = item.name;
+		if (isBook(item)) {
+			name = BookTitleHandler(item.name);
+		}
 
 		var imgUrl = 'http://108.171.244.148/static/sobeys_imgs/' + item.sku + '.JPG';
 		var container = $('<div>').addClass('item-detail-container');
 		var left = $('<div>').addClass('item-detail-container-left')
 				.append($('<img>').addClass('item-detail-img').attr('src', imgUrl));
 		var right = $('<div>').addClass('item-detail-container-right')
-				.append($('<p>').addClass('item-detail-name').text(item.name))
+				.append($('<p>').addClass('item-detail-name').text(name))
 				.append($('<p>').addClass('item-detail-price').text('Price: $' + item.price + ' CAD')
 			);
 
