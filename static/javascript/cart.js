@@ -82,5 +82,10 @@ $(document).ready(function() {
     $('#cart-footer').remove();
     $('#delivery-wrapper').remove();
     $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
+    $("#cart-container").append($('<p>').text('Return to shop')
+      .addClass('cart-btn-return')
+      .click(function () {
+        window.location = '/home/';
+      }));
   }
 });
