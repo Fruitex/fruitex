@@ -34,12 +34,6 @@ def toStructuredItem(it):
 
 def toStructuredOrder(o):
 	ids = json.loads(o.items)
-	its = Item.objects.filter(id__in = ids)
-	items = []
-	for it in its:
-		item = toStructuredItem(it)
-		item['quatity'] = ids.count(item['id'])
-		items.append(item)
 	return {
 		'name': o.name,
 		'address': o.address,
@@ -61,6 +55,36 @@ def orders(request):
     'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='pending')))
   })
   return HttpResponse(template.render(context));
+
+@login_required
+@csrf_exempt
+def get_orders(request):
+  if 'invoices' in request.POST:
+    invoices = json.loads(request.POST['invoices'])
+  else:
+    return HttpResponse('error');
+  return HttpResponse(json.dumps(get_orders_internal(invoices)))
+
+@login_required
+@csrf_exempt
+def group_orders(request):
+  if 'invoices' in request.POST:
+    invoices = json.loads(request.POST['invoices'])
+  else:
+    return HttpResponse('error')
+  ids = []
+  for o in get_orders_internal(invoices):
+    ids.extend(o['items'])
+  group_by_cate = {}
+  for it in Item.objects.filter(id__in = set(ids)):
+    c = it.category
+    if c not in group_by_cate:
+      group_by_cate[c] = []
+    group_by_cate[c].append({'name':it.name, 'quantity':ids.count(it.id)})
+  return HttpResponse(json.dumps(group_by_cate))
+
+def get_orders_internal(invoices):
+  return map(toStructuredOrder, Order.objects.filter(invoice__in=invoices))
 
 def check_order(request):
   if 'invoice' in request.GET:

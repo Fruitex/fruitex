@@ -29,4 +29,6 @@ urlpatterns = patterns('',
     url(r'^error', 'fruitex.views.error'),
     url(r'^return_page', 'fruitex.views.return_page'),
     url(r'^not-support', 'fruitex.views.browserNotSupport'),
+    url(r'^get_orders', 'fruitex.views.get_orders'),
+    url(r'^group_orders', 'fruitex.views.group_orders'),
 )

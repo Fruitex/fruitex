@@ -80,7 +80,7 @@ def getItemsByRange(query, startId, num):
   return map(toStructuredItem, res[startId : startId + num])
 
 def getItemsByIds(ids):
-  return map(toStructuredItem, Item.objects.filter(id__in = ids))
+  return map(toStructuredItem, Item.objects.filter(id__in = set(ids)))
 
 def computeTax(item):
   if item['tax_class'] == 'zero-rate':
