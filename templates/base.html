@@ -25,7 +25,8 @@
     <body>
     <script>
       $(document).ready(function () {
-        isIE(8, 'lte') {
+        console.log(isIE(8, 'lte'));
+        if(isIE(8, 'lte')) {
           window.location = '/not-support/';
         }
       })

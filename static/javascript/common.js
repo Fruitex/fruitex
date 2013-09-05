@@ -42,7 +42,7 @@ var isIE = function(version, comparison){
     var ieTest = $div.find('a').length;
     $div.remove();
     return ieTest;
-}
+};
 
 /*
  *  Google analytics code, don't touch.
