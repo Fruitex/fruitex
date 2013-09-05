@@ -32,7 +32,7 @@
 #img_add_success {
     position: fixed;
     right: 30px;
-    top: 100;
+    top: 100px;
     display: none;
 }
 
@@ -75,23 +75,26 @@
 }
 
 .store-tag {
+    position: relative;
+    top: -1px;
     border: 1px solid #d3d3d3;
     background: #cfee71;
     display: inline-block;
-    height: 16px;
-    padding: 7px;
+    height: 30px;
+    padding: 0 5px;
     display: none;
     margin-right: -5px;
 }
 
 .store-tag img {
     position: relative;
-    top: -10px;
+    top: -3px;
 }
 
 .store-name {
     display: inline-block;
     vertical-align: top;
+    margin-top: 7px;
 }
 .cate-tag img {
     margin-left: 5px;
