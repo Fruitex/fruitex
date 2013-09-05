@@ -34,7 +34,7 @@ var GetSelectedStore = function() {
     curStore = 'sobeys';
   }
   return curStore;
-}
+};
 
 /*
  *  Google analytics code, don't touch.

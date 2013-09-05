@@ -4,14 +4,10 @@
     font-size: 12px;
     font-family: 'Open Sans',sans-serif;
 }
-html {
-    height: 100%;
-}
 
 body {
     background: #fcfcfc;
     position: relative;
-    height: 100%;
 }
 
 a:link {
