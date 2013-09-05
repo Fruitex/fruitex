@@ -72,3 +72,7 @@ def check_order(request):
     'order': json.dumps(toStructuredOrder(Order.objects.filter(invoice=invoice)[0])),
   })
   return HttpResponse(template.render(context));
+
+def return_page(request):
+    return render_to_response("return_page.html", {})
+    

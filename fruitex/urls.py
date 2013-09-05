@@ -27,4 +27,5 @@ urlpatterns = patterns('',
     url(r'^redir/', 'fruitex.views.redir'),
     url(r'^check_order/', 'fruitex.views.check_order'),
     url(r'^error', 'fruitex.views.error'),
+    url(r'^return_page', 'fruitex.views.return_page'),
 )

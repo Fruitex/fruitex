@@ -42,7 +42,7 @@ def confirm(request):
         "invoice": invoice,
         "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
         "return_url": "http://%s/redir/?%s" % (DOMAIN, urlencode({"to" : "/check_order?invoice=" + invoice})),
-        "return": "http://%s/check_order/" % DOMAIN,
+        "return": "http://%s/return_page/" % DOMAIN,
         "cancel_return": "http://i%s/redir/?to=/home" % DOMAIN,
     }
 

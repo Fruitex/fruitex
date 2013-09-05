@@ -201,6 +201,10 @@ def fixTypo():
 def clearOrder():
   Order.objects.filter(status='pending').filter(time__lt=datetime.now() - timedelta(minutes=1)).delete()
 
+def showVersion():
+  import django
+  print django.VERSION
+
 def main(argv):
   if len(argv) > 1 and argv[1] == 'clear':
     clearItems()
@@ -215,6 +219,8 @@ def main(argv):
     showTax()
   elif len(argv) > 1 and argv[1] == 'fix':
     fixTypo()
+  elif len(argv) > 1 and argv[1] == 'v':
+    showVersion()
   elif len(argv) > 1 and argv[1] == 'clear_order':
     clearOrder()
   else:
