@@ -6,7 +6,7 @@ elif platform.uname()[1] == 'XINYUANs-MacBook-Air.local':
 else:
   BASE_DIR = '/fruitex/'
 
-DOMAIN = '108.171.244.148'
+DOMAIN = 'fruitex.ca' #'108.171.244.148'
 
 #  Set this to false to switch to prod.
 DEBUG = True
