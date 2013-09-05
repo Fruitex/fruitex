@@ -134,4 +134,13 @@
   font-size: 16px;
   color: #7e7e7e;
   text-align: center;
+  margin-bottom: 40px;
+}
+
+.cart-btn-return {
+  width: 100px;
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+  cursor: pointer;
 }
