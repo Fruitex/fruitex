@@ -75,4 +75,7 @@ def check_order(request):
 
 def return_page(request):
     return render_to_response("return_page.html", {})
+
+def browserNotSupport(request):
+    return render_to_response("not_support.html", {})
     
