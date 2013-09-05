@@ -1,3 +1,4 @@
 killall uwsgi
-./daemon uwsgi --socket 127.0.0.1:3031  --chdir /fruitex -w wsgi 2>> err.log
+sleep 2
+./daemon uwsgi --socket 127.0.0.1:3031 -p 2 --threads 4 --chdir /fruitex -w wsgi 2>> err.log
 
