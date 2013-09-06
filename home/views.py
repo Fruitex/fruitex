@@ -39,8 +39,13 @@ def main(request):
       })
     return HttpResponse(template.render(context))
 
+def getItemPrice(it):
+  if it.sales_price > 0:
+    return it.sales_price
+  return it.price
+
 def toStructuredItem(it):
-  return {'name' : it.name, 'price' : it.price, 'category' : it.category,
+  return {'name' : it.name, 'price' : getItemPrice(it), 'category' : it.category,
       'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name,
       'remark': it.remark}
 
