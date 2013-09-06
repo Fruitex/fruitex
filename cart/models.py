@@ -1,5 +1,8 @@
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models import F
+from home.models import Item
+import json
 
 # Create your models here.
 class Order(models.Model):
@@ -28,7 +31,13 @@ def send_receipt(to, subject, message):
 
 def handle_payment_received(status, ipn):
   invoice = ipn.invoice
-  Order.objects.filter(invoice=invoice).update(status=status)
+  order = Order.objects.filter(invoice=invoice)[0]
+  order.status=status
+  order.save()
+  ids = json.loads(order.items)
+  for it in Item.objects.filter(id__in=set(ids)):
+    it.sold_number=it.sold_number + ids.count(it.id)
+    it.save()
   send_receipt(ipn.payer_email,\
      '[Fruitex] Payment of your order %s received.' % invoice,\
      "You can track your order at http://fruitex.ca/check_order/?invoice=%s" % invoice)

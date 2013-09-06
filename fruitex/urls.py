@@ -31,5 +31,4 @@ urlpatterns = patterns('',
     url(r'^not-support', 'fruitex.views.browserNotSupport'),
     url(r'^get_orders', 'fruitex.views.get_orders'),
     url(r'^group_orders', 'fruitex.views.group_orders'),
-    url(r'^send_receipt', 'fruitex.views.send_receipt')
 )

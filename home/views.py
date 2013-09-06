@@ -13,7 +13,7 @@ TAX_RATE = 0.13
 labels = {
   'Produce': 'cate_label_produce.png',
   'Home & Lifestyle': 'cate_label_home.png',
-  'Groceries': 'cate_label_grocery.png', 
+  'Groceries': 'cate_label_grocery.png',
   'Snacks & Candies': 'cate_label_candy.png',
   'Beverages':'cate_label_beverage.png',
   'Pet Care':'cate_label_pet.png',

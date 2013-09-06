@@ -20,4 +20,4 @@ class Item(models.Model):
     tax_status = models.CharField(max_length=50)
     tax_class = models.CharField(max_length=50)
     remark = models.CharField(max_length=200)
-
+    sold_number = models.IntegerField(default=0)
