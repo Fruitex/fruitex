@@ -180,7 +180,6 @@ LOGGING = {
     }
 }
 
-
 TEMPLATE_DIRS = (
     os.path.join(config.BASE_DIR, 'templates'),
 )
@@ -188,4 +187,11 @@ TEMPLATE_DIRS = (
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
+
+# email settings
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'noreply@fruitex.ca'
+EMAIL_HOST_PASSWORD = 'Fruitex01'
 
