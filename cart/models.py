@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.db import models
 
 # Create your models here.
@@ -14,24 +15,30 @@ class Order(models.Model):
     shipping = models.FloatField()
     status = models.CharField(max_length=20)
     delivery_window = models.CharField(max_length=20)
-    time = models.DateTimeField();
+    time = models.DateTimeField()
     invoice = models.CharField(max_length=30)
 
 
 from paypal.standard.ipn.signals import payment_was_successful
 from paypal.standard.ipn.signals import payment_was_flagged
 
+def send_receipt(to, subject, message):
+  send_mail(subject, message, 'noreply@fruitex.com',
+    [to], fail_silently=False)
+
+def handle_payment_received(status, ipn):
+  invoice = ipn.invoice
+  Order.objects.filter(invoice=invoice).update(status=status)
+  send_receipt(ipn.payer_email,\
+     '[Fruitex] Payment of your order %s received.' % invoice,\
+     "You can track your order at http://fruitex.ca/check_order/?invoice=%s" % invoice)
+
+
 def payment_successful(sender, **kwargs):
-  invoice = sender.invoice
-  for o in Order.objects.filter(invoice=invoice):
-    o.status="paid"
-    o.save()
+  handle_payment_received('paid', sender)
 
 def payment_flagged(sender, **kwargs):
-  invoice = sender.invoice
-  for o in Order.objects.filter(invoice=invoice):
-    o.status="flagged"
-    o.save()
+  handle_payment_received('flagged', sender)
 
 payment_was_successful.connect(payment_successful)
 payment_was_flagged.connect(payment_flagged)

@@ -7,7 +7,6 @@ from cart.models import Order
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from home.views import toStructuredItem
-from django.core.mail import send_mail
 import json
 
 def home(request):
@@ -100,8 +99,3 @@ def return_page(request):
 def browserNotSupport(request):
     return render_to_response("not_support.html", {})
 
-def send_receipt(request):
-  send_mail('Subject here', 'Here is the message.', 'noreply@fruitex.com',
-    ['xinyuan.f@gmail.com'], fail_silently=False)
-  return HttpResponse('mail sent to xinyuan.f@gmail.com')
-    
