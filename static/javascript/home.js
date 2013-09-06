@@ -25,7 +25,7 @@ var showItems = function (items) {
       title = remark['dpt'] + ' ' + remark['crs'];
     }
 
-    var imgUrl = '{% static "sobeys_imgs/" %}' + item.sku + '.JPG';
+    var imgUrl = getItemImageUrl(item);
     var itemInfo = $('<div>').attr('class', 'item-info-wrapper')
       .append($('<img>').attr('class', 'item-image').attr('src', imgUrl))
       .append($('<div>').attr('class', 'item-name').text(title))

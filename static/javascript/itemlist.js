@@ -10,7 +10,7 @@ var ItemList = function (itemIds, editable) {
   };
 
 	var createItem = function(item, count) {
-	  var imgUrl = 'http://108.171.244.148/static/sobeys_imgs/' + item.sku + '.JPG';
+	  var imgUrl = getItemImageUrl(item);
 	  var itemWrapper = $('<div>').attr('class', 'item-in-cart')
 	  	.append($('<img>').attr('class', 'item-in-cart-img').attr("src", imgUrl));
 	  var itemInfo = $('<div>').attr('class', 'item-info-wrapper')

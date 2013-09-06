@@ -44,6 +44,10 @@ var isIE = function(version, comparison){
     return ieTest;
 };
 
+var getItemImageUrl = function(item) {
+  return '/static/' + item.store + '_imgs/' + item.sku + '.JPG';
+};
+
 /*
  *  Google analytics code, don't touch.
  */

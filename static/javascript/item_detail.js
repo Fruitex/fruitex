@@ -11,13 +11,12 @@ var ItemDetail = function () {
 
 	var generate = function (item) {
 		$('.item-detail-container').remove(); 
-
 		var name = item.name;
 		if (isBook(item)) {
 			name = BookTitleHandler(item.name);
 		}
 
-		var imgUrl = 'http://108.171.244.148/static/sobeys_imgs/' + item.sku + '.JPG';
+		var imgUrl = getItemImageUrl(item);
 		var container = $('<div>').addClass('item-detail-container');
 		var left = $('<div>').addClass('item-detail-container-left')
 				.append($('<img>').addClass('item-detail-img').attr('src', imgUrl));
