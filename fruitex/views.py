@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response,redirect
 from cart.models import Order
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from home.views import toStructuredItem
 import json
 
 def home(request):
@@ -25,11 +26,6 @@ def redir(request):
 def checkout_return(request):
     invoice=request.GET['invoice']
     return render_to_response("checkout_return.html", {'invoice' : invoice})
-
-def toStructuredItem(it):
-	return {'name' : it.name, 'price' : it.price, 'category' : it.category,
-	'store' : it.store.id, 'id' : it.id, 'tax_class' : it.tax_class,
-	'sku' : it.sku, 'store': it.store.name }
 
 
 def toStructuredOrder(o):
@@ -76,11 +72,11 @@ def group_orders(request):
   for o in get_orders_internal(invoices):
     ids.extend(o['items'])
   group_by_cate = {}
-  for it in Item.objects.filter(id__in = set(ids)):
-    c = it.category
+  for it in getItemsByIds(ids):
+    c = it['category']
     if c not in group_by_cate:
       group_by_cate[c] = []
-    group_by_cate[c].append({'name':it.name, 'quantity':ids.count(it.id)})
+    group_by_cate[c].append({'name':it['name'], 'quantity':ids.count(it['id'])})
   return HttpResponse(json.dumps(group_by_cate))
 
 def get_orders_internal(invoices):

@@ -40,9 +40,9 @@ def main(request):
     return HttpResponse(template.render(context))
 
 def toStructuredItem(it):
-  return {'name' : it.name, 'price' : it.price, 'category' : it.category, 
+  return {'name' : it.name, 'price' : it.price, 'category' : it.category,
       'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name,
-      'remark': it.remark} 
+      'remark': it.remark}
 
 def extractCate(query):
   patterns = ["cate:'([^']*)'", "cate:([^ ]*)",]
@@ -76,7 +76,8 @@ def getItemsByRange(query, startId, num):
   keyword = re.sub(r'^\s*|\s*$', '', query)
   res = Item.objects.all().filter(store__name__icontains=store).filter(category__icontains=cate)
   for k in keyword.split():
-    res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))
+    res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))\
+        .filter(out_of_stock=False)
   return map(toStructuredItem, res[startId : startId + num])
 
 def getItemsByIds(ids):

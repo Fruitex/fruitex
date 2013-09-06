@@ -220,6 +220,9 @@ def main(argv):
   elif len(argv) > 1 and argv[1] == 'fix':
     fixTypo()
   elif len(argv) > 1 and argv[1] == 'v':
+    for it in Item.objects.all():
+      it.out_of_stock = False
+      it.save()
     showVersion()
   elif len(argv) > 1 and argv[1] == 'clear_order':
     clearOrder()
