@@ -81,9 +81,8 @@ def getRawItemsByQuery(query):
   keyword = re.sub(r'^\s*|\s*$', '', query)
   res = Item.objects.all().filter(store__name__icontains=store).filter(category__icontains=cate)
   for k in keyword.split():
-    res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))\
-        .filter(out_of_stock=False)
-  return res
+    res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))
+  return res.exclude(out_of_stock=1)
 
 def getItemsByRange(query, startId, num):
   return map(toStructuredItem, getRawItemsByQuery(query)[startId : startId + num])

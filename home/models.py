@@ -15,7 +15,7 @@ class Item(models.Model):
     name = models.CharField(max_length=50)
     price = models.FloatField()
     sales_price = models.FloatField(default=-1.0)
-    out_of_stock = models.BooleanField(default=False)
+    out_of_stock = models.IntegerField(default=0)
     sku = models.CharField(max_length=20)
     tax_status = models.CharField(max_length=50)
     tax_class = models.CharField(max_length=50)

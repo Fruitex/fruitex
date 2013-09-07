@@ -57,6 +57,7 @@ def loadBookstoreItems():
   PIC=15
   TAX_STATUS=16
   TAX_CLASS=17
+  OUT_OF_STOCK=19
 
   def getRemark(item):
     res = {}
@@ -96,7 +97,9 @@ def loadBookstoreItems():
       if item[CATEGORY] and item[TITLE] and item[PRICE] \
           and item[TAX_STATUS] and item[TAX_CLASS]:
         Item(store = bookstore, category = item[CATEGORY],
-            name = item[TITLE], price = item[PRICE], sku = os.path.splitext(item[PIC])[0],
+            name = item[TITLE], price = item[PRICE],
+            sku = os.path.splitext(item[PIC])[0],
+            out_of_stock = (item[OUT_OF_STOCK] == '*'),
             tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
             remark = getRemark(item)).save()
       else:
