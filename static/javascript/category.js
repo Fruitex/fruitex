@@ -42,14 +42,13 @@ function initCategory(cate, labels) {
   var index = 0;
   for (var j = 0; j < sortedCate.length; j++) {
     var c = sortedCate[j];
-    console.log(c);
     var label = $('<img>').attr('src', '{% static "imgs/" %}' + labels[c]);
     cate_lst.append($('<li>').attr('class', 'cate').append(label)
-      .append($('<span>').text(c))
-      .hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
+        .append($('<span>').text(c))
+        .hover(getCateHoverInHandler(c), getCateHoverOutHandler()));
     var sub_cate = $('<div>').attr('class', 'sub-cate')
-    .attr('id', getCategoryId(c)).hide()
-    .hover(function(){$(this).show();}, function(){$(this).hide()});
+        .attr('id', getCategoryId(c)).hide()
+        .hover(function(){$(this).show();}, function(){$(this).hide()});
     $('#category').append(sub_cate);
     var columnNum = Math.ceil((0.1 + getCateNum(c))/15.0);
     var containers = [];
@@ -64,7 +63,13 @@ function initCategory(cate, labels) {
       containers.push(col);
     }
     var idx = 0;
+    var sorted_subcate = [];
     for (var sc in cate[c]) {
+      sorted_subcate.push(sc);
+    }
+    sorted_subcate.sort();
+    for (var k in sorted_subcate) {
+      var sc = sorted_subcate[k];
       var cate_sub_lst = $('<ul>').attr('class', 'cate-sub-list');
       containers[idx].append(cate_sub_lst);
       idx = (idx + 1) % columnNum;
