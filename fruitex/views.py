@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response,redirect
 from cart.models import Order
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from home.views import toStructuredItem
+from home.views import toStructuredItem, getItemsByIds
 import json
 
 def home(request):
@@ -98,4 +98,3 @@ def return_page(request):
 
 def browserNotSupport(request):
     return render_to_response("not_support.html", {})
-

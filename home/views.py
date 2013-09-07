@@ -67,7 +67,7 @@ def extractStore(query):
     r = re.sub(p, '', r)
   return store, r
 
-def getItemsByRange(query, startId, num):
+def getRawItemsByQuery(query):
   cates,query = extractCate(query)
   stores,query = extractStore(query)
   if cates:
@@ -83,7 +83,13 @@ def getItemsByRange(query, startId, num):
   for k in keyword.split():
     res = res.filter(Q(name__icontains=k+' ') | Q(name__icontains=' '+k) | Q(remark__icontains='"%s"' % k))\
         .filter(out_of_stock=False)
-  return map(toStructuredItem, res[startId : startId + num])
+  return res
+
+def getItemsByRange(query, startId, num):
+  return map(toStructuredItem, getRawItemsByQuery(query)[startId : startId + num])
+
+def getPopularItemsByRange(query, startId, num):
+  return map(toStructuredItem, getRawItemsByQuery(query).order_by('-sold_number')[startId : startId + num])
 
 def getItemsByIds(ids):
   return map(toStructuredItem, Item.objects.filter(id__in = set(ids)))
@@ -100,15 +106,15 @@ def computeDelivery(item):
   return 4.0
 
 import urllib2
-@csrf_exempt
-def getItems(request):
+
+def getItemsInternal(request, getItemCallback):
   if request.method == 'POST':
     if 'startId' in request.POST:
       query = request.POST['query']
       query = urllib2.unquote(query.encode("utf8"))
       startId = int(request.POST['startId'])
       num = int(request.POST['num'])
-      return HttpResponse(json.dumps(getItemsByRange(query, startId, num)))
+      return HttpResponse(json.dumps(getItemCallback(query, startId, num)))
     elif 'ids' in request.POST:
       ids = json.loads(request.POST['ids'])
       return HttpResponse(json.dumps(getItemsByIds(ids)))
@@ -116,6 +122,14 @@ def getItems(request):
       return HttpResponse('error')
   else:
     return HttpResponse('error')
+
+@csrf_exempt
+def getItems(request):
+  return getItemsInternal(request, getItemsByRange)
+
+@csrf_exempt
+def getPopularItems(request):
+  return getItemsInternal(request, getPopularItemsByRange)
 
 def computeSummaryInternal(idsStr):
     ids = json.loads(idsStr)
