@@ -29,7 +29,7 @@ def trim(s):
   return re.sub('(^\s+|\s+$)', '', s)
 
 
-def loadBooks():
+def loadBookstoreItems():
   bookstore = Store(name = 'bookstore', address = "")
   bookstore.save()
   items = []
@@ -112,7 +112,7 @@ def loadBooks():
     if ct%100==0:
       print "%d books written" % ct
 
-def loadItems():
+def loadSobeysItems():
   sobeys = Store(name = 'sobeys', address = "450 Columbia St W, Waterloo ON N2T 2W1")
   sobeys.save()
   items = []
@@ -198,6 +198,22 @@ def fixTypo():
       ct += 1
   print '%d items fixed' % ct
 
+def initItemSoldNumber():
+  ct = {}
+  for o in Order.objects.all():
+    l = json.loads(o.items)
+    for i in l:
+      if i not in ct:
+        ct[i] = 1
+      else:
+        ct[i] += 1
+  for item in Item.objects.all():
+    if item.id in ct:
+      item.sold_number = ct[item.id]
+    else:
+      item.sold_number = 0
+    item.save()
+
 def clearOrder():
   Order.objects.filter(status='pending').filter(time__lt=datetime.now() - timedelta(minutes=1)).delete()
 
@@ -209,8 +225,8 @@ def main(argv):
   if len(argv) > 1 and argv[1] == 'clear':
     clearItems()
   elif len(argv) > 1 and argv[1] == 'load':
-    loadItems()
-    loadBooks()
+    loadSobeysItems()
+    loadBookstoreItems()
   elif len(argv) > 1 and argv[1] == 'cate':
     fetchCategory()
   elif len(argv) > 1 and argv[1] == 'order':
@@ -219,10 +235,9 @@ def main(argv):
     showTax()
   elif len(argv) > 1 and argv[1] == 'fix':
     fixTypo()
+  elif len(argv) > 1 and argv[1] == 'init':
+    initItemSoldNumber()
   elif len(argv) > 1 and argv[1] == 'v':
-    for it in Item.objects.all():
-      it.out_of_stock = False
-      it.save()
     showVersion()
   elif len(argv) > 1 and argv[1] == 'clear_order':
     clearOrder()
