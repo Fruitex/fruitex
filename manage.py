@@ -200,7 +200,7 @@ def fixTypo():
 
 def initItemSoldNumber():
   ct = {}
-  for o in Order.objects.all():
+  for o in Order.objects.exclude(status='pending'):
     l = json.loads(o.items)
     for i in l:
       if i not in ct:
