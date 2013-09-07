@@ -91,9 +91,13 @@ def loadBookstoreItems():
 
   print "%d books to write" % len(items)
   ct = 0
+  addedBooks = set()
   problemFiles = set()
   for item,fname in items:
     try:
+      bookid = (item[TITLE], item[AUTHOR], item[ED], item[PRICE], item[DPT], item[CRS])
+      if bookid in addedBooks: continue
+      addedBooks.add(bookid)
       if item[CATEGORY] and item[TITLE] and item[PRICE] \
           and item[TAX_STATUS] and item[TAX_CLASS]:
         Item(store = bookstore, category = item[CATEGORY],
