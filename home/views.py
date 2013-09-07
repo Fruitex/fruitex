@@ -45,9 +45,12 @@ def getItemPrice(it):
   return it.price
 
 def toStructuredItem(it):
-  return {'name' : it.name, 'price' : getItemPrice(it), 'category' : it.category,
+  res =  {'name' : it.name, 'price' : it.price, 'category' : it.category,
       'id' : it.id, 'tax_class' : it.tax_class, 'sku' : it.sku, 'store': it.store.name,
       'remark': it.remark}
+  if it.sales_price > 0:
+    res['sales_price'] = it.sales_price
+  return res
 
 def extractCate(query):
   patterns = ["cate:'([^']*)'", "cate:([^ ]*)",]
@@ -138,7 +141,10 @@ def computeSummaryInternal(idsStr):
     t = 0.0
     for item in items:
       ct = ids.count(item['id'])
-      s += item['price'] * ct
+      if 'sales_price' in item:
+        s += item['sales_price'] * ct
+      else:
+        s += item['price'] * ct
       t += computeTax(item) * ct
     return {'sum' : s, 'tax' : t, 'delivery' : d, 'total' : s + t + d}
 
