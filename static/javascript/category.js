@@ -18,7 +18,7 @@ function getCateHoverOutHandler() {
 }
 
 function newQuery(cate, store) {
-  return 'cate:\'' + cate + '\'' + ' store:' + store;
+  return 'cate:"' + cate + '"' + ' store:' + store;
 }
 
 function initCategory(cate, labels) {

@@ -53,7 +53,7 @@ def toStructuredItem(it):
   return res
 
 def extractCate(query):
-  patterns = ["cate:'([^']*)'", "cate:([^ ]*)",]
+  patterns = ['cate:"([^"]*)"', 'cate:([^ "]*)',]
   cate = []
   r = query
   for p in patterns:

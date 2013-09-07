@@ -16,10 +16,10 @@ var ParseQuery = function (query) {
   var storeP = /store:([^ ]*)/g;
   var stores = RegExpFindAll(query, storeP, 1);
   query = query.replace(storeP, '');
-  var cateP = /cate:([^' ]+)/g;
+  var cateP = /cate:([^" ]+)/g;
   var cates = RegExpFindAll(query, cateP, 1);
   query = query.replace(cateP, '');
-  cateP = /cate:'([^']+)'/g;
+  cateP = /cate:"([^"]+)"/g;
   cates.push.apply(cates, RegExpFindAll(query, cateP, 1));
   query = query.replace(cateP, '');
   return {
