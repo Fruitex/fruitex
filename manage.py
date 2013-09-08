@@ -228,6 +228,10 @@ def showVersion():
   import django
   print django.VERSION
 
+def testMail():
+  from cart.models import send_receipt
+  send_receipt('biran0079@gmail.com', 'test mail', 'test msg')
+
 def main(argv):
   if len(argv) > 1 and argv[1] == 'clear':
     clearItems()
@@ -248,6 +252,8 @@ def main(argv):
     showVersion()
   elif len(argv) > 1 and argv[1] == 'clear_order':
     clearOrder()
+  elif len(argv) > 1 and argv[1] == 'mail':
+    testMail()
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
