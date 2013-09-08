@@ -20,7 +20,7 @@ var createPrice = function (price) {
 var generateItems = function (items, container, isPopular) {
   var itemList = container.empty();
   if (isPopular) {
-    itemList.append($('<p>').text('What\'s popular in ' + GetSelectedStore()).addClass('popular-item-list-title'));
+    itemList.append($('<p>').text('What\'s popular in ' + GetSelectedStoreDisplay()).addClass('popular-item-list-title'));
   }
   for (var i = 0; i < items.length; i++) {
     var item = items[i];

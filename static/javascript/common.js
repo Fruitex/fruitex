@@ -33,8 +33,13 @@ var GetSelectedStore = function() {
   if (!curStore) {
     curStore = 'Sobeys';
   }
-  return curStore.substr(0, 1).toUpperCase() + curStore.substr(1);
+  return curStore;
 };
+
+var GetSelectedStoreDisplay = function () {
+  var store = GetSelectedStore();
+  return store.substr(0, 1).toUpperCase() + store.substr(1);
+}
 
 var isIE = function(version, comparison){
     var $div = $('<div style="display:none;"/>').appendTo($('body'));
