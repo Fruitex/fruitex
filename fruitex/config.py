@@ -9,4 +9,4 @@ else:
 DOMAIN = 'fruitex.ca' #'108.171.244.148'
 
 #  Set this to false to switch to prod.
-DEBUG = False
+DEBUG = True
