@@ -52,7 +52,18 @@
 {% endblock %}
 
 {% block adleft %}
-<img src={% static "imgs/ad_side.png"%}>
+<div class="customer-service-container">
+  <span class="customer-service-title">Need help?</span>
+  <p>
+    <img src={% static "imgs/icon_email.png" %}>
+    <a>support@fruitex.ca</a>
+  </p>  
+  <p>
+    <img src={% static "imgs/icon_phone.png" %}>
+    <a>(226)606-4578</a>
+  </p>
+</div>
+<!--<img class='ad' src={% static "imgs/ad_side.png"%}>-->
 {% endblock %}
 
 {% block ad %}
