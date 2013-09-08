@@ -40,7 +40,7 @@ var SearchBox = function() {
       if (parsedQuery.store &&
           parsedQuery.store.length &&
           parsedQuery.store[0]) {
-        $('.store-name').text(parsedQuery.store);
+        $('.store-name').text(GetSelectedStoreDisplay());
         $('.store-tag').css('display', 'inline-block');
       }
 
