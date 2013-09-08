@@ -1,5 +1,10 @@
 {% load static %}
 
+var isSearchResult = function() {
+  var query = ParseQuery(getURLParameter('query'));
+  return query.cate.length || query.keyword.length;
+}
+
 var isBook = function(item) {
   return item.remark &&
          JSON.parse(item.remark) &&
@@ -12,11 +17,18 @@ var createPrice = function (price) {
       .append($('<img>').attr('src', '{% static "imgs/tag_cad.png" %}'));
 }
 
-var showItems = function (items) {
-  var itemList = $('#item-list').empty();
+var generateItems = function (items, container, isPopular) {
+  var itemList = container.empty();
+  if (isPopular) {
+    itemList.append($('<p>').text('What\'s popular in ' + GetSelectedStore()).addClass('popular-item-list-title'));
+  }
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
-    var itemContainer = $('<div>').attr('class', 'item-container');
+    var containerClassName = 'item-container';
+    if (isPopular) {
+      containerClassName = 'popular-item-container';
+    }
+    var itemContainer = $('<div>').attr('class', containerClassName);
     itemList.append(itemContainer);
 
     var title = item.name;
@@ -94,7 +106,7 @@ var getAndShowItems = function(query, startId, num) {
       if (data.length > 0) {
         // Assume no cross store query
         var store = data[0].store;
-        showItems(data);
+        generateItems(data, $('#item-list'), false);
         $('#navigator-prev').unbind('click').click(function() {
           if (startId > 0) {
             getAndShowItems(query, startId - num, num);
@@ -106,6 +118,18 @@ var getAndShowItems = function(query, startId, num) {
       }
     }, 'json');
 };
+
+var getPopularItems = function(query, startId, num) {
+    $.post('/home/getPopularItems',
+    {'startId' : startId, 'num' : num, 'query' : query}, 
+    function(data) {
+      if (data.length > 0) {
+        // Assume no cross store query
+        generateItems(data, $('#popular-item-list'), true);
+      }
+    }, 'json');
+    $('#popular-item-list').fadeIn();
+}
 
 $(document).ready(function () {
   updateCartBubble();
@@ -119,4 +143,6 @@ $(document).ready(function () {
     $(this).children(".btn-add-container").slideUp('fast');
   });
   SearchBox.init();
+  if (!isSearchResult())
+    getPopularItems(query, 0, 4);
 });

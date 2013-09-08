@@ -31,9 +31,9 @@ var ParseQuery = function (query) {
 var GetSelectedStore = function() {
   var curStore = ParseQuery(getURLParameter('query')).store[0];
   if (!curStore) {
-    curStore = 'sobeys';
+    curStore = 'Sobeys';
   }
-  return curStore;
+  return curStore.substr(0, 1).toUpperCase() + curStore.substr(1);
 };
 
 var isIE = function(version, comparison){

@@ -5,6 +5,25 @@
   bottom: 40px;
 }
 
+#popular-item-list {
+  border: 1px solid #e6e6e6;
+  height: 325px;
+  margin-bottom: 20px;
+  width: 790px;
+  margin-left: 8px;
+  display: none;
+}
+
+.popular-item-list-title {
+  font-weight: bold;
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
 .navigator {
   float : right;
   padding : 3px 15px;
@@ -25,6 +44,18 @@
   margin-bottom:10px;
   float: left;
   border: 1px solid #e6e6e6;
+  position: relative;
+  background: white;
+  cursor: pointer;
+}
+
+.popular-item-container {
+  display: inline;
+  width: 185px;
+  height: 300px;
+  margin-left:10px;
+  margin-bottom:10px;
+  float: left;
   position: relative;
   background: white;
   cursor: pointer;
