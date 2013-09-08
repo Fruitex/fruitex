@@ -73,7 +73,11 @@
 	</tbody>
 	</table>
 	<div id='paypal-container'>
-		{{ form.sandbox }}
+    {% if sandbox %}
+      {{ form.sandbox }}
+    {% else %}
+      {{ form.render }}
+    {% endif %}
 	</div>
 </div>
 <script>

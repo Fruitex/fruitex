@@ -10,7 +10,7 @@ import time
 import uuid
 from home.views import computeSummaryInternal
 from urllib import urlencode
-from fruitex.config import DOMAIN
+from fruitex.config import DOMAIN,DEBUG
 from fruitex.settings import PAYPAL_RECEIVER_EMAIL
 
 def cart(request):
@@ -62,6 +62,7 @@ def confirm(request):
       'invoice' : invoice,
       'form': form,
       'total': round(tax + shipping + price, 2),
+      'sandbox': DEBUG,
     }
     return render_to_response("confirm.html", context)
 
