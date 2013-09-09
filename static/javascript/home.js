@@ -132,9 +132,12 @@ var getPopularItems = function(query, startId, num) {
 }
 
 $(document).ready(function () {
+  var query = getURLParameter('query');
+  if (!query) {
+    window.location = '/home/?query=store:sobeys';
+  }
   updateCartBubble();
   var store = GetSelectedStore();
-  var query = getURLParameter('query');
   showAd(store);
   getAndShowItems(query, 0, 12);
   $(".item-container").hover(function() {
