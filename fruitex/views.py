@@ -72,7 +72,6 @@ def group_orders(request):
   ids = []
   for o in get_orders_internal(invoices):
     ids.extend(o['items'])
-  print(ids)
   group_by_cate = {}
   for it in getItemsByIds(ids):
     c = it['category']

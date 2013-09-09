@@ -230,6 +230,11 @@ def testMail():
   from cart.models import send_receipt
   send_receipt('biran0079@gmail.com', 'test mail', 'test msg')
 
+def checkImg(store):
+  for it in Item.objects.filter(store__name=store).exclude(out_of_stock=1):
+    imgf = '/fruitex-imgs/%s_imgs/%s' % (store,  it.sku + '.JPG')
+    if not os.path.exists(imgf):
+      print 'Missing image for item: %d' % it.id
 
 def main(argv):
   def _arg(i):
@@ -258,6 +263,8 @@ def main(argv):
     clearOrder()
   elif _arg(1) == 'test_mail':
     testMail()
+  elif _arg(1) == 'check_img':
+    checkImg(_arg(2))
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
