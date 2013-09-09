@@ -49,7 +49,7 @@ def toStructuredOrder(o):
 def orders(request):
   template = loader.get_template('orders.html')
   context = Context({
-    'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='')))
+    'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='pending')))
   })
   return HttpResponse(template.render(context));
 
