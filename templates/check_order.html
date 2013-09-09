@@ -13,7 +13,7 @@
 
 <script>
 $(document).ready(function() {
-  var orders = {{ order | safe }};
+  var order = [{{ order | safe }}];
   	OrderManager(order, $('#orders-wrapper')).init();
 });
 </script>
