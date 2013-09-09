@@ -6,11 +6,9 @@ import csv
 import re
 from datetime import datetime,timedelta
 
-def clearItems():
-  for o in Store.objects.all():
-    o.delete()
-  for o in Item.objects.all():
-    o.delete()
+def clearItems(store):
+  Item.objects.filter(store__name__icontains=store).delete()
+  Store.objects.filter(name__icontains=store).delete()
 
 def _getAllCsvFiles(folder):
   res = []
@@ -232,9 +230,15 @@ def testMail():
   from cart.models import send_receipt
   send_receipt('biran0079@gmail.com', 'test mail', 'test msg')
 
+
 def main(argv):
-  if len(argv) > 1 and argv[1] == 'clear':
-    clearItems()
+  def _arg(i):
+    if len(argv) > i:
+      return argv[i]
+    return ''
+
+  if _arg(1) == 'clear':
+    clearItems(_arg(2))
   elif len(argv) > 1 and argv[1] == 'load':
     loadSobeysItems()
     loadBookstoreItems()
