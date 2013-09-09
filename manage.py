@@ -177,9 +177,9 @@ def loadSobeysItems():
     if ct%100==0:
       print "%d items written" % ct
 
-def fetchCategory():
+def fetchCategory(store):
   res = set()
-  for it in Item.objects.all():
+  for it in Item.objects.filter(store__name__icontains=store):
     res.add(it.category)
   for c in res:
     print c
@@ -239,24 +239,24 @@ def main(argv):
 
   if _arg(1) == 'clear':
     clearItems(_arg(2))
-  elif len(argv) > 1 and argv[1] == 'load':
+  elif _arg(1) == 'load':
     loadSobeysItems()
     loadBookstoreItems()
-  elif len(argv) > 1 and argv[1] == 'cate':
-    fetchCategory()
-  elif len(argv) > 1 and argv[1] == 'order':
+  elif _arg(1) == 'cate':
+    fetchCategory(_arg(2))
+  elif _arg(1) == 'order':
     showOrders()
-  elif len(argv) > 1 and argv[1] == 'tax':
+  elif _arg(1) == 'tax':
     showTax()
-  elif len(argv) > 1 and argv[1] == 'fix':
+  elif _arg(1) == 'fix':
     fixTypo()
-  elif len(argv) > 1 and argv[1] == 'init':
+  elif _arg(1) == 'init_sold_num':
     initItemSoldNumber()
-  elif len(argv) > 1 and argv[1] == 'v':
+  elif _arg(1) == 'v':
     showVersion()
-  elif len(argv) > 1 and argv[1] == 'clear_order':
+  elif _arg(1) == 'clear_pending_orders':
     clearOrder()
-  elif len(argv) > 1 and argv[1] == 'mail':
+  elif _arg(1) == 'test_mail':
     testMail()
   else:
     from django.core.management import execute_from_command_line
