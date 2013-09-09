@@ -1,7 +1,7 @@
 title,description,short_description,category,stock,price,regular_price,sales_prices,weight,length,width,height,sku,picture,tags,tax_status,tax_class
-Sealtest Milk 3.25% M.E. 2L,,,Groceries->Dairy->Milk,,5.19,,,,,,,BDM001,BDM001.JPG,,taxable,standard-rate
+Sealtest Milk 3.25% M.E. 2L,,,Groceries->Dairy->Milk,,3.99,,,,,,,BDM001,BDM001.JPG,,taxable,standard-rate
 Sealtest Milk 3.25% M.E. 1L,,,Groceries->Dairy->Milk,,2.99,,,,,,,BDM002,BDM002.JPG,,taxable,standard-rate
-Sealtest Milk 3.25% M.E. 4L,,,Groceries->Dairy->Milk,,5.49,,,,,,,BDM003,BDM003.JPG,,taxable,standard-rate
+Sealtest Milk 3.25% M.E. 4L,,,Groceries->Dairy->Milk,,4.97,,,,,,,BDM003,BDM003.JPG,,taxable,standard-rate
 Sealtest Chocolate Milk 1% M.E. 473ml,,,Groceries->Dairy->Milk,,2.09,,,,,,,BDM004,BDM004.JPG,,taxable,standard-rate
 Sealtest Chocolate Milk 1% M.E. 2L,,,Groceries->Dairy->Milk,,5.19,,,,,,,BDM005,BDM005.JPG,,taxable,standard-rate
 Sealtest Chocolate Milk 1% M.E. 1L,,,Groceries->Dairy->Milk,,2.99,,,,,,,BDM006,BDM006.JPG,,taxable,standard-rate
@@ -64,6 +64,6 @@ OhHenry! Milk Shake 350ml,,,Groceries->Dairy->Milk,,2.09,,,,,,,BDM062,BDM062.JPG
 Natrel Chocolate Milk 350ml,,,Groceries->Dairy->Milk,,2.09,,,,,,,BDM063,BDM063.JPG,,taxable,standard-rate
 Natrel Vanilla Milk 350ml,,,Groceries->Dairy->Milk,,2.09,,,,,,,BDM064,BDM064.JPG,,taxable,standard-rate
 Natrel 2% Milk 350ml,,,Groceries->Dairy->Milk,,2.09,,,,,,,BDM065,BDM065.JPG,,taxable,standard-rate
-Milk2go Strawberry 325ml,,,Groceries->Dairy->Milk,,2.19,,,,,,,BDM066,BDM066.JPG,,taxable,standard-rate
-Milk2go Vanilla 325ml,,,Groceries->Dairy->Milk,,2.19,,,,,,,BDM067,BDM067.JPG,,taxable,standard-rate
-Milk2go Cocolate 325ml,,,Groceries->Dairy->Milk,,2.19,,,,,,,BDM068,BDM068.JPG,,taxable,standard-rate
+Milk2go Strawberry 325ml,,,Groceries->Dairy->Milk,,2.35,,,,,,,BDM066,BDM066.JPG,,taxable,standard-rate
+Milk2go Vanilla 325ml,,,Groceries->Dairy->Milk,,2.35,,,,,,,BDM067,BDM067.JPG,,taxable,standard-rate
+Milk2go Cocolate 325ml,,,Groceries->Dairy->Milk,,2.35,,,,,,,BDM068,BDM068.JPG,,taxable,standard-rate

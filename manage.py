@@ -232,8 +232,14 @@ def testMail():
   from cart.models import send_receipt
   send_receipt('biran0079@gmail.com', 'test mail', 'test msg')
 
+
 def main(argv):
-  if len(argv) > 1 and argv[1] == 'clear':
+  def _arg(i):
+    if len(argv) > i:
+      return argv[i]
+    return ''
+
+  if _arg(1) == 'clear':
     clearItems()
   elif len(argv) > 1 and argv[1] == 'load':
     loadSobeysItems()

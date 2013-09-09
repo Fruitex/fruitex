@@ -1,5 +1,4 @@
 var createDeliveryInfo = function(order) {
-  console.log(order);
   var container = $('<div>').addClass("delivery_info");
   container.append($("<p>").text("Status: " + order.status));
   container.append($("<p>").text("Created on: " + order.time));
