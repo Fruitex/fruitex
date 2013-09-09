@@ -6,11 +6,9 @@ import csv
 import re
 from datetime import datetime,timedelta
 
-def clearItems():
-  for o in Store.objects.all():
-    o.delete()
-  for o in Item.objects.all():
-    o.delete()
+def clearItems(store):
+  Item.objects.filter(store__name__icontains=store).delete()
+  Store.objects.filter(name__icontains=store).delete()
 
 def _getAllCsvFiles(folder):
   res = []
@@ -240,7 +238,7 @@ def main(argv):
     return ''
 
   if _arg(1) == 'clear':
-    clearItems()
+    clearItems(_arg(2))
   elif len(argv) > 1 and argv[1] == 'load':
     loadSobeysItems()
     loadBookstoreItems()

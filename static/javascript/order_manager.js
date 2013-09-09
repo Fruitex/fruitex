@@ -11,6 +11,7 @@ var createDeliveryInfo = function(order) {
 }
 
 var createOrder = function(order) {
+  console.log(order);
   var container =$("<div>").addClass('order-container');
   container.append(createDeliveryInfo(order));
   ItemList(order.items, false).generate(container); 
