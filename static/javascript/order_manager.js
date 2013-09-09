@@ -52,6 +52,7 @@ var OrderManager = function (orders, parent) {
     $.post('/group_orders',
       {'invoices' : JSON.stringify(invoices)}, 
       function(data) {
+        console.log(data);
         for (var i in data) {
           generateCateList(i, data[i])
         }
@@ -70,7 +71,8 @@ var OrderManager = function (orders, parent) {
   };
 
   return {
-    init: init
+    init: init,
+    create: createOrder
   };
 
 };
