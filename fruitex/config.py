@@ -1,7 +1,7 @@
 import platform
 
 #  Set this to false to switch to prod.
-DEBUG = False
+DEBUG = True
 
 if platform.uname()[1] == 'user-PC':
   BASE_DIR = r'C:\Users\user\Dropbox\fruitex\\'

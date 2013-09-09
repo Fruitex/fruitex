@@ -24,10 +24,11 @@ class Order(models.Model):
 
 from paypal.standard.ipn.signals import payment_was_successful
 from paypal.standard.ipn.signals import payment_was_flagged
+from threading import Thread
 
 def send_receipt(to, subject, message):
-  send_mail(subject, message, 'noreply@fruitex.com',
-    [to], fail_silently=False)
+  Thread(target=lambda: send_mail(subject, message, 'noreply@fruitex.com',
+      [to], fail_silently=False)).start()
 
 def handle_payment_received(status, ipn):
   invoice = ipn.invoice
