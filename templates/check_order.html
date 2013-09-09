@@ -13,9 +13,9 @@
 
 <script>
 $(document).ready(function() {
-  var order = {{ order | safe }};
-    $("#orders-wrapper").append(createOrder(order));
-  });
+  var orders = {{ orders | safe }};
+  	OrderManager(orders, $('#orders-wrapper')).init();
+});
 </script>
 
 {% endblock %}
