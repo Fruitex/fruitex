@@ -13,8 +13,8 @@
 
 <script>
 $(document).ready(function() {
-  var orders = {{ orders | safe }};
-  	OrderManager(orders, $('#orders-wrapper')).init();
+  var orders = {{ order | safe }};
+  	OrderManager(order, $('#orders-wrapper')).init();
 });
 </script>
 
