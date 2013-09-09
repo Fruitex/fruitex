@@ -41,14 +41,15 @@ def toStructuredOrder(o):
 		'items': ids,
 		'delivery_window': o.delivery_window,
 		'time': o.time.isoformat(),
-        'status': o.status,
+    'status': o.status,
+    'invoice': o.invoice
 	}
 
 @login_required
 def orders(request):
   template = loader.get_template('orders.html')
   context = Context({
-    'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='pending')))
+    'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='')))
   })
   return HttpResponse(template.render(context));
 
@@ -71,12 +72,14 @@ def group_orders(request):
   ids = []
   for o in get_orders_internal(invoices):
     ids.extend(o['items'])
+  print(ids)
   group_by_cate = {}
   for it in getItemsByIds(ids):
     c = it['category']
     if c not in group_by_cate:
       group_by_cate[c] = []
-    group_by_cate[c].append({'name':it['name'], 'quantity':ids.count(it['id'])})
+    for i in range(0, ids.count(it['id'])):
+      group_by_cate[c].append(it['id'])
   return HttpResponse(json.dumps(group_by_cate))
 
 def get_orders_internal(invoices):

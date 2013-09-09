@@ -31,7 +31,7 @@ var ParseQuery = function (query) {
 var GetSelectedStore = function() {
   var curStore = ParseQuery(getURLParameter('query')).store[0];
   if (!curStore) {
-    curStore = 'Sobeys';
+    curStore = 'sobeys';
   }
   return curStore;
 };

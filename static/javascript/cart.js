@@ -48,6 +48,24 @@ var writeToCookie = function() {
   $.cookie('cart', JSON.stringify(ItemsIds), { path: '/' });
 };
 
+var disableDeliveryTime = function(btn) {
+  btn.attr('disabled', true);
+  btn.parent().addClass('disabled')
+}
+var checkDeliveryTime = function() {
+  var d = new Date();
+  var h = d.getHours();
+  if (h > 11) {
+    disableDeliveryTime($('input[value="12:00-14:00"]'));
+  }
+  if (h > 15) {
+    disableDeliveryTime($('input[value="16:00-18:00"]'));
+  }
+  if (h > 19) {
+    disableDeliveryTime($('input[value="20:00-22:00"]'));
+  }
+}
+
 var clearCart = function() {
   $.cookie('cart', '', { path: '/' });
 };
@@ -61,6 +79,7 @@ var isValidUserInput = function() {
 };
 
 $(document).ready(function() {
+  checkDeliveryTime();
   if (!isCartEmpty()) {
     var list = loadItemsInCart();
     $('body').on('change', '.num-spinner', 

@@ -48,3 +48,27 @@
   font-size: 20px;
   margin: 20px;
 }
+
+#buy-list {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  margin-left: -400px;
+  background: white;
+  display: none;
+  width: 800px;
+  padding: 20px;
+  border: 1px solid;
+}
+
+.buy-list-title {
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid;
+  margin: 10px 0;
+}
+
+#btn-buy-list{
+  position: fixed;
+  padding: 5px;
+}
