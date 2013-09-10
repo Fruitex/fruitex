@@ -30,3 +30,28 @@
 #paypal-container {
 	text-align: center;
 }
+
+#payment-container {
+  width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  border: 1px solid #d3d3d3;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+#payment-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+#payment-note-title {
+  font-weight: bold;
+}
+
+#payment-note {
+  margin: 10px;
+  border: 1px solid #d3d3d3;
+}
