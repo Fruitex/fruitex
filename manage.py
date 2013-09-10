@@ -231,10 +231,14 @@ def testMail():
   send_receipt('biran0079@gmail.com', 'test mail', 'test msg')
 
 def checkImg(store):
+  allImgs = set(os.listdir('/fruitex-imgs/%s_imgs/' % store))
   for it in Item.objects.filter(store__name=store).exclude(out_of_stock=1):
-    imgf = '/fruitex-imgs/%s_imgs/%s' % (store,  it.sku + '.JPG')
-    if not os.path.exists(imgf):
-      print 'Missing image for item: %d' % it.id
+    imgF = "%s.JPG" % it.sku
+    if imgF in allImgs:
+      allImgs.remove(imgF)
+    else:
+      print 'Missing image for item: %d (%s.JPG)' % (it.id, it.sku)
+  print "Unmatched imgs: %s" % str(allImgs)
 
 def main(argv):
   def _arg(i):
