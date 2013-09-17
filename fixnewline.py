@@ -11,7 +11,7 @@ def _getAllCsvFiles(folder):
   return res
 
 if __name__=='__main__':
-  for f in _getAllCsvFiles("data/"):
+  for f in _getAllCsvFiles(sys.argv[1]):
     s=file(f).read().replace('\r\n', '\n').replace('\r', '\n')
     out=file(f, 'wb')
     out.write(s)
