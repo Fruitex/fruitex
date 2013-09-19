@@ -69,11 +69,13 @@ def fixTypo():
   ct=0
   for o in Item.objects.filter(category='Produce->Fruits_Vegetables->Fruits'):
     o.category = 'Produce->Fruit & Vegetable->Fruit'
+    o.save()
     ct+=1
   print '%d fruit category fixed' % ct
   ct=0
   for o in Item.objects.filter(category='Produce->Fruits_Vegetables->Vegetables'):
     o.category = 'Produce->Fruit & Vegetable->Vegetable'
+    o.save()
     ct+=1
   print '%d vegerable category fixed' % ct
 
