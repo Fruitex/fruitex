@@ -32,14 +32,14 @@ def loadBookstoreItems():
   bookstore.save()
   items = []
   for fname in _getAllCsvFiles('data/bookstore/'):
-    addBookstoreItems(fname)
+    addBookstoreItems(fname, False)
 
 def loadSobeysItems():
   sobeys = Store(name = 'sobeys', address = "450 Columbia St W, Waterloo ON N2T 2W1")
   sobeys.save()
   items = []
   for fname in _getAllCsvFiles('data/sobeys/'):
-    addSobeysItems(fname)
+    addSobeysItems(fname, False)
 
 def fetchCategory(store):
   res = set()
@@ -65,7 +65,17 @@ def fixTypo():
       o.category = o.category.replace('Goceries', 'Groceries')
       o.save()
       ct += 1
-  print '%d items fixed' % ct
+  print '%d Goceries typo fixed' % ct
+  ct=0
+  for o in Item.objects.filter(category='Produce->Fruits_Vegetables->Fruits'):
+    o.category = 'Produce->Fruit & Vegetable->Fruit'
+    ct+=1
+  print '%d fruit category fixed' % ct
+  ct=0
+  for o in Item.objects.filter(category='Produce->Fruits_Vegetables->Vegetables'):
+    o.category = 'Produce->Fruit & Vegetable->Vegetable'
+    ct+=1
+  print '%d vegerable category fixed' % ct
 
 def initItemSoldNumber():
   ct = {}
@@ -104,7 +114,7 @@ def checkImg(store):
       print 'Missing image for item: %d (%s.JPG)' % (it.id, it.sku)
   print "Unmatched imgs: %s" % str(allImgs)
 
-def addSobeysItems(fname):
+def addSobeysItems(fname, check_only):
   sobeys = Store.objects.filter(name='sobeys')[0]
   items = []
   f = csv.reader(open(fname))
@@ -140,14 +150,20 @@ def addSobeysItems(fname):
 
   print "%d items to write" % len(items)
   problemFiles = set()
+  newItemCt=0
   for item,fname in items:
     try:
       if item[CATEGORY] and item[TITLE] and item[SKU] and item[PRICE] \
           and item[TAX_STATUS] and item[TAX_CLASS]:
-        Item(store = sobeys, category = item[CATEGORY],
-            name = item[TITLE], price = item[PRICE], sku = item[SKU],
-            tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
-            remark = getRemark(item)).save()
+        if len(Item.objects.filter(store=sobeys, name=item[TITLE])) == 0:
+          newItemCt+=1
+          if not check_only:
+            Item(store = sobeys, category = item[CATEGORY],
+                name = item[TITLE], price = item[PRICE], sku = item[SKU],
+                tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
+                remark = getRemark(item)).save()
+        elif check_only:
+          print "duplicate item %s" % item[TITLE]
       else:
         if fname in problemFiles:
           continue
@@ -157,8 +173,9 @@ def addSobeysItems(fname):
           print item
     except Exception as e:
       print e, fname, item
+  print "%d new items" % newItemCt
 
-def addBookstoreItems(fname):
+def addBookstoreItems(fname, check_only):
   bookstore = Store.objects.filter(name='bookstore')[0]
   items = []
   f = csv.reader(open(fname))
@@ -219,6 +236,7 @@ def addBookstoreItems(fname):
   print "%d items to write" % len(items)
   addedBooks = set()
   problemFiles = set()
+  newItemCt=0
   for item,fname in items:
     try:
       bookid = (item[TITLE], item[AUTHOR], item[ED], item[PRICE], item[DPT], item[CRS])
@@ -226,12 +244,17 @@ def addBookstoreItems(fname):
       addedBooks.add(bookid)
       if item[CATEGORY] and item[TITLE] and item[PRICE] \
           and item[TAX_STATUS] and item[TAX_CLASS]:
-        Item(store = bookstore, category = item[CATEGORY],
-            name = item[TITLE], price = item[PRICE],
-            sku = os.path.splitext(item[PIC])[0],
-            out_of_stock = (item[OUT_OF_STOCK] == '*'),
-            tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
-            remark = getRemark(item)).save()
+        if len(Item.objects.filter(store=bookstore, name=item[TITLE])) == 0:
+          newItemCt+=1
+          if not check_only:
+            Item(store = bookstore, category = item[CATEGORY],
+                name = item[TITLE], price = item[PRICE],
+                sku = os.path.splitext(item[PIC])[0],
+                out_of_stock = (item[OUT_OF_STOCK] == '*'),
+                tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
+                remark = getRemark(item)).save()
+        elif check_only:
+          print "duplicate item %s" % item[TITLE]
       else:
         if fname in problemFiles:
           continue
@@ -241,12 +264,15 @@ def addBookstoreItems(fname):
           print item
     except Exception as e:
       print e, fname, item
+  print "%d new items" % newItemCt
 
-def addItems(store, f):
+def addItems(store, f, check_only=False):
   if store == 'sobeys':
-    addSobeysItems(f)
+    for fname in _getAllCsvFiles(f):
+      addSobeysItems(fname, check_only)
   elif store == 'bookstore':
-    addBookstoreItems(f)
+    for fname in _getAllCsvFiles(f):
+      addBookstoreItems(fname, check_only)
   else:
     print "unknown store: %s" % store
 
@@ -263,6 +289,8 @@ def main(argv):
     loadBookstoreItems()
   elif _arg(1) == 'add':
     addItems(_arg(2), _arg(3))
+  elif _arg(1) == 'check_item':
+    addItems(_arg(2), _arg(3), check_only=True)
   elif _arg(1) == 'cate':
     fetchCategory(_arg(2))
   elif _arg(1) == 'order':
