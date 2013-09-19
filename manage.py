@@ -278,6 +278,52 @@ def addItems(store, f, check_only=False):
   else:
     print "unknown store: %s" % store
 
+def markSobeysInStore(fname):
+  res = 0
+  f = csv.reader(open(fname))
+  next(f) # eat the header 
+  print 'loading %s' %fname
+  for lst in f:
+    name = trim(lst[0])
+    l=Item.objects.filter(name=name)
+    if len(l) != 1:
+      print 'got %d item named %s' % (len(l), name)
+    else:
+      l[0].out_of_stock=0
+      l[0].save()
+      res += 1
+  return res
+
+def markBookstoreInStore(fname):
+  res = 0
+  f = csv.reader(open(fname))
+  next(f) # eat the header 
+  print 'loading %s' %fname
+  for lst in f:
+    name = trim(lst[7])
+    l=Item.objects.filter(name=name)
+    if len(l) != 1:
+      print 'got %d item named %s' % (len(l), name)
+    else:
+      l[0].out_of_stock=0
+      l[0].save()
+      res += 1
+  return res
+
+def markSoldOutIfNotExist(store, directory):
+  res = len(Item.objects.filter(store__name=store))
+  Item.objects.filter(store__name=store).update(out_of_stock=1)
+  if store == 'sobeys':
+    for fname in _getAllCsvFiles(directory):
+      res -= markSobeysInStore(fname)
+  elif store == 'bookstore':
+    for fname in _getAllCsvFiles(directory):
+      res -= markBookstoreInStore(fname)
+  else:
+    print "unknown store: %s" % store
+    return
+  print '%d items marked out of stock' % res
+
 def main(argv):
   def _arg(i):
     if len(argv) > i:
@@ -311,6 +357,8 @@ def main(argv):
     testMail()
   elif _arg(1) == 'check_img':
     checkImg(_arg(2))
+  elif _arg(1) == 'mark_sold_out_if_not_exist':
+    markSoldOutIfNotExist(_arg(2), _arg(3))
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
