@@ -1,0 +1,53 @@
+{% load static %}
+<aside>
+<div class="stores">
+	<header>Store</header>
+	<ul>
+		{% for item in stores %} 
+		<li{% if current_store_name == item.name %} class="current"{% endif %}><a href="/home/?query=store:{{item.name}}">{{item.description}}</a></li>
+		{% endfor %}
+	</ul>
+</div>
+<div class="categories">
+	<header>Categories</header>
+	<ul>
+		{% for c in cateNav %}
+		<li>
+			<span title="{{ c.k }}" style="background-image:url('{% static "imgs/" %}{{c.labels}}')">{{ c.k }}</span>
+			<div>
+				<ul>
+					{% for col in c.cols %}
+					<li>
+						<ul>
+							{% for sc in col %}
+							<li>
+								<a title="{{sc.k}}" href="/home?query={{ "cate:\""|add:sc.k|add:"\" store:"|add:current_store_name|urlencode }}">{{sc.k}}</a>
+								{% ifequal sc.v|length 0 %}
+						        {% else %}
+						        <ul>
+									{% for ssc in sc.v %}
+									<li>
+										<a title="{{ssc}}" href="/home?query={{ "cate:\""|add:sc.k|add:"->"|add:ssc|add:"\" store:"|add:current_store_name|urlencode }}">{{ssc}}</a>
+									</li>
+									{% endfor %}
+								</ul>
+						        {% endifequal %}
+							</li>
+							{% endfor %}
+						</ul>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+<div class="help">
+	<header>Need Help?</header>
+	<ul>
+		<li>support@fruitex.ca</li>
+		<li>(226)606-4578</li>
+	</ul>
+</div>
+</aside>

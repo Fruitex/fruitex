@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Fruitex</title>
+    <style type="text/css">
+        body {
+            width: 100%;  height: 100%;  margin: 0;  background: url("/static/imgs/bg_intro.png") no-repeat;  background-size: cover;  
+            position: absolute;
+        }
+        body>div {
+            position: absolute;
+            top: 50%;
+            text-align: center;
+            background: url("/static/imgs/logo_intro.png") no-repeat 50%;
+            height: 150px;
+            width: 100%;
+            margin-top: -120px;
+        }
+        body>a {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: 40px;
+            width: 130px;
+            height: 40px;
+            margin-left: -65px;
+            border-color: rgb(116, 188, 56);
+            background-image: linear-gradient(to bottom, rgb(60, 196, 42) 0%,rgb(53, 194, 26) 50%,rgb(53, 194, 26) 100%);
+            color: rgb(25,38,7);
+            line-height:40px;
+            text-decoration:none;
+            text-align:center;
+            border-radius: 8px;
+            border: 1px solid rgb(61,73,41);
+            border-bottom-width: 4px;
+            text-transform: uppercase;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        footer {
+            position: absolute;  bottom: 0;  width: 100%;  height: 90px;  background: rgba(211, 214, 203, 0.6);
+        }
+        footer li {
+            list-style: none;
+            float: right;
+            height: 52px;
+            width: 170px;
+            margin-right: 30px;
+            background: url('/static/imgs/logo_sobeys.png') no-repeat 50%;
+        }
+        footer li:nth-child(1){
+            width: 155px;
+            background-image:url('/static/imgs/logo_sobeys.png');
+        }
+        footer li:nth-child(2){
+            width: 230px;
+            background-image:url('/static/imgs/logo_velocity.png');
+        }
+        footer li:nth-child(3){
+            width: 177px;
+            background-image:url('/static/imgs/logo_laurier.png');
+        }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <a href="/home?query=store:sobeys">Start</a>
+    <footer>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </footer>
+  </body>
+</html>

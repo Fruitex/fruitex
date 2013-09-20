@@ -1,0 +1,181 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content%}
+{% if is_search %}
+<div class="search-items">
+	<article>
+		<ul></ul>
+		<div class="loading"></div>
+	</article>
+	<footer>
+		<span title="prev page" class="prev"></span>
+		<span title="next page" class="next"></span>
+	</footer>
+</div>
+{% else %}
+<div class="ad">
+	<img src="{% static "imgs/"%}ad_{{current_store_name}}.png" alter="{{current_store_description}} Advertisement" />
+</div>
+<div class="week-sale">
+	<header>Weekly Sale</header>
+	<article>
+		<ul></ul>
+		<div class="loading"></div>
+	</article>
+</div>
+<div class="popular">
+	<header>What's popular</header>
+	<article>
+		<ul></ul>
+		<div class="loading"></div>
+	</article>
+</div>
+{% endif %}
+{% endblock %}
+{% block page_script%}
+<script type="text/javascript">
+	var search = function(){
+		var sc = $('body>header .search-content').val().trim();
+		if (!sc) {
+			return false
+		}
+		var query = 'store:{{current_store_name}} ' + sc;
+		location.href = '/home?query='+encodeURIComponent(query);
+	}
+	$('body>header .search-btn').click(function(){
+		search();
+	});
+	$("body>header .search-content").keyup(function (evt) {
+      if (evt.which == 13) {
+        search();
+      }
+    });
+    var addToCart = function(itemId) {
+	    var cart;
+	    if (!$.cookie("cart")) {
+	      cart = new Array();
+	    } else {
+	      cart = JSON.parse($.cookie("cart"));
+	    }
+	    cart.push(itemId);
+	    $.cookie("cart", JSON.stringify(cart), {path : '/'});
+	    var plus = $('body>header .plus');
+		plus.fadeIn(500, function () {
+			setTimeout(function(){plus.fadeOut(1000);},2000);
+		});
+		$('body>header .num').html(cart.length).css('opacity',1);
+	};
+	$('#content .content article').delegate('.add i','click',function(){
+		addToCart($(this).data('id'));
+	});
+</script>
+{% if is_search %}
+<script type="text/template" id="item_template">
+{% templatetag openvariable %}each(i,it) items{% templatetag closevariable %}
+	<li title="${it.name}">
+	<p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{current_store_name}}_imgs/${it.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
+	<p class="name">${truncate(it.name,50)}</p>
+	<p class="price">
+		<span class="original">$ ${it.price}</span>
+	</p>
+	<p class="add"><i data-id="${it.id}">Add To Cart</i></p>
+	</li>
+{% templatetag openvariable %}/each{% templatetag closevariable %}
+</script>
+<script type="text/javascript">
+	var truncate = function(str,len){
+		if (str.length > len) {
+			return str.substr(0,len - 3) + '...';
+		}
+		return str;
+	}
+	var image_loaded = function(image){
+		$(image).fadeIn();
+		$(image).next().hide();
+	}
+	var startId = 0;
+	var num = 12;
+	var item_template = $.template(null,$('#item_template').html());
+	var render_search = function(startId,num,callback){
+		$.post('/home/getItems',{'startId':startId,'num':num,query:location.search.replace(/^\?query=/,'')},function(data){
+			var containor = $('#content .content .search-items article');
+			containor.find('.loading').fadeOut();
+			$.tmpl(item_template,{'items':data}).appendTo(containor.find('ul').empty());
+			callback && callback();
+		},'json');
+	}
+	render_search(startId,num);
+	$('#content .content .search-items footer .prev').click(function(){
+		startId = startId - 12;
+		if (startId < 0) {
+			startId = 0;
+		}
+		var containor = $('#content .content .search-items article');
+		containor.find('.loading').fadeIn();
+		var self = $(this);
+		render_search(startId,num,function(){
+			if (startId == 0) {
+				self.hide();
+			}
+		});
+	});
+	$('#content .content .search-items footer .next').click(function(){
+		startId = startId + 12;
+		var containor = $('#content .content .search-items article');
+		containor.find('.loading').fadeIn();
+		render_search(startId,num,function(){
+			$('#content .content .search-items footer .prev').show();
+		});
+	});
+</script>
+{% else %}
+<script type="text/template" id="item_template">
+{% templatetag openvariable %}each(i,it) items{% templatetag closevariable %}
+	<li title="${it.name}">
+	<p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{current_store_name}}_imgs/${it.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
+	<p class="name">${truncate(it.name,50)}</p>
+	{% templatetag openvariable %}if is_weekly{% templatetag closevariable %}
+	<p class="price weekly">
+		<span class="now">$ ${it.price}</span>
+		<span class="original">$ ${it.price}</span>
+	</p>
+	{% templatetag openvariable %}else{% templatetag closevariable %}
+	<p class="price">
+		<span class="original">$ ${it.price}</span>
+	</p>
+	{% templatetag openvariable %}/if{% templatetag closevariable %}
+	<p class="add"><i data-id="${it.id}">Add To Cart</i></p>
+	</li>
+{% templatetag openvariable %}/each{% templatetag closevariable %}
+</script>
+<script type="text/javascript">
+	var truncate = function(str,len){
+		if (str.length > len) {
+			return str.substr(0,len - 3) + '...';
+		}
+		return str;
+	}
+	var image_loaded = function(image){
+		$(image).fadeIn();
+		$(image).next().hide();
+	}
+	var item_template = $.template(null,$('#item_template').html());
+	var render_weekly = function(){
+		$.post('/home/getPopularItems',{'startId':0,'num':5,query:location.search.replace(/^\?query=/,'')},function(data){
+			var containor = $('#content .content .week-sale article');
+			containor.find('.loading').fadeOut();
+			$.tmpl(item_template,{'items':data,'is_weekly':true}).appendTo(containor.find('ul'));
+		},'json');
+	}
+	render_weekly();
+	var render_popular = function(){
+		$.post('/home/getPopularItems',{'startId':0,'num':10,query:location.search.replace(/^\?query=/,'')},function(data){
+			var containor = $('#content .content .popular article');
+			containor.find('.loading').fadeOut();
+			$.tmpl(item_template,{'items':data}).appendTo(containor.find('ul'));
+		},'json');
+	}
+	render_popular();
+</script>
+{% endif %}
+{% endblock %}
