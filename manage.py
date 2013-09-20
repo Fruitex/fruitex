@@ -27,18 +27,18 @@ def trim(s):
   return re.sub('(^\s+|\s+$)', '', s)
 
 
-def loadBookstoreItems():
+def loadBookstoreItems(directory):
   bookstore = Store(name = 'bookstore', address = "")
   bookstore.save()
   items = []
-  for fname in _getAllCsvFiles('data/bookstore/'):
+  for fname in _getAllCsvFiles(directory):
     addBookstoreItems(fname, False)
 
-def loadSobeysItems():
+def loadSobeysItems(directory):
   sobeys = Store(name = 'sobeys', address = "450 Columbia St W, Waterloo ON N2T 2W1")
   sobeys.save()
   items = []
-  for fname in _getAllCsvFiles('data/sobeys/'):
+  for fname in _getAllCsvFiles(directory):
     addSobeysItems(fname, False)
 
 def fetchCategory(store):
@@ -78,6 +78,24 @@ def fixTypo():
     o.save()
     ct+=1
   print '%d vegerable category fixed' % ct
+  for it in Item.objects.filter(sku='BDM031'):
+    if it.name == 'Natrel Organic Milk 3.8% M.E. 2L':
+      it.name = 'Natrel Organic Milk 3.8% M.E. 4L'
+      it.save()
+      print 'Natrel Organic Milk 3.8% M.E. 2L name updated'
+  for it in Item.objects.filter(sku='HLPCFH088'):
+    if it.name == 'Compliments Tampon Super 20Pk':
+      it.name = 'Compliments Tampon Regular 20Pk'
+      it.save()
+      print 'Compliments Tampon Super 20Pk name updated'
+  ct = 0
+  its = Item.objects.filter(category='Groceries->Dairy->Milk')
+  ct += len(its)
+  its.update(category='Groceries->Dairy & Dairy Products->Milk')
+  its = Item.objects.filter(category='Groceries->Dairy->Yogurt')
+  ct += len(its)
+  its.update(category='Groceries->Dairy & Dairy Products->Yogurt')
+  print '%d dairy category fixed' % ct
 
 def initItemSoldNumber():
   ct = {}
@@ -278,51 +296,16 @@ def addItems(store, f, check_only=False):
   else:
     print "unknown store: %s" % store
 
-def markSobeysInStore(fname):
-  res = 0
-  f = csv.reader(open(fname))
-  next(f) # eat the header 
-  print 'loading %s' %fname
-  for lst in f:
-    name = trim(lst[0])
-    l=Item.objects.filter(name=name)
-    if len(l) != 1:
-      print 'got %d item named %s' % (len(l), name)
-    else:
-      l[0].out_of_stock=0
-      l[0].save()
-      res += 1
-  return res
-
-def markBookstoreInStore(fname):
-  res = 0
-  f = csv.reader(open(fname))
-  next(f) # eat the header 
-  print 'loading %s' %fname
-  for lst in f:
-    name = trim(lst[7])
-    l=Item.objects.filter(name=name)
-    if len(l) != 1:
-      print 'got %d item named %s' % (len(l), name)
-    else:
-      l[0].out_of_stock=0
-      l[0].save()
-      res += 1
-  return res
-
-def markSoldOutIfNotExist(store, directory):
-  res = len(Item.objects.filter(store__name=store))
-  Item.objects.filter(store__name=store).update(out_of_stock=1)
+def loadItem(store, f):
+  if f == '':
+    print 'need to specify directory'
+    return
   if store == 'sobeys':
-    for fname in _getAllCsvFiles(directory):
-      res -= markSobeysInStore(fname)
+    loadSobeysItems(f)
   elif store == 'bookstore':
-    for fname in _getAllCsvFiles(directory):
-      res -= markBookstoreInStore(fname)
+    loadBookstoreItems(f)
   else:
     print "unknown store: %s" % store
-    return
-  print '%d items marked out of stock' % res
 
 def main(argv):
   def _arg(i):
@@ -333,8 +316,7 @@ def main(argv):
   if _arg(1) == 'clear':
     clearItems(_arg(2))
   elif _arg(1) == 'load':
-    loadSobeysItems()
-    loadBookstoreItems()
+    loadItem(_arg(2), _arg(3))
   elif _arg(1) == 'add':
     addItems(_arg(2), _arg(3))
   elif _arg(1) == 'check_item':
@@ -357,8 +339,6 @@ def main(argv):
     testMail()
   elif _arg(1) == 'check_img':
     checkImg(_arg(2))
-  elif _arg(1) == 'mark_sold_out_if_not_exist':
-    markSoldOutIfNotExist(_arg(2), _arg(3))
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
