@@ -327,7 +327,7 @@ body>header>a.cart .plus {
     position: relative;
 }
 #content>.content .week-sale article, #content>.content .popular article {
-    height: 215px;
+    height: 195px;
     position: relative;
     margin-top: 30px;
 }
@@ -368,7 +368,7 @@ body>header>a.cart .plus {
 #content>.content div article li {
     float: left;
     list-style: none;
-    width: 145px;
+    width: 149px;
     position: relative;
     border-right: 1px dashed #ccc;
     overflow: hidden;
@@ -384,6 +384,8 @@ body>header>a.cart .plus {
 }
 #content>.content div article ul {
     padding: 0;
+    margin: 0;
+    margin-top: -8px;
 }
 #content>.content div article li:last-child {
     border-right: none;
@@ -391,7 +393,7 @@ body>header>a.cart .plus {
 #content>.content div article li .name {
     font-size: 12px;
     padding: 8px;
-    height: 60px;
+    height: 40px;
     overflow: hidden;
 }
 #content>.content div article li .price {
@@ -423,24 +425,24 @@ body>header>a.cart .plus {
     text-transform: uppercase;
     background: rgb(60, 204, 32);
     color: #fff;
-    height: 24px;
-    line-height: 24px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 8px;
     border: 1px solid rgb(70, 156, 13);
     border-bottom-width: 2px;
     border-radius: 5px;
-    top: 8px;
+    top: 5px;
     left: 50%;
     font-style: normal;
     font-size: 12px;
-    font-weight: 700;
     z-index: 999;
     width: 100px;
     text-align: center;
+    box-shadow: 1px 1px 1px rgb(70, 156, 13);
     margin-left: -50px;
 }
 #content>.content .popular article {
-    height: 470px;
+    height: 430px;
 }
 #content>.content .popular article li {
     margin-top: 20px;
@@ -482,7 +484,7 @@ body>footer{
     background: #fff;
 }
 #content>.content div.search-items article li {
-    width: 175px;
+    width: 179px;
     border: 1px solid #ccc;
     margin: 8px;
     border-radius: 8px;
@@ -500,7 +502,7 @@ body>footer{
     background: rgb(252,252,252);
 }
 #content>.content>div.search-items > article {
-    height: 850px;
+    height: 790px;
     position: relative;
 }
 #content>.content div.search-items article li .price {
@@ -515,7 +517,7 @@ body>footer{
     color: #fff;
     font-size: 12px;
     padding: 0 3px;
-    margin-left: 6px;
+    margin-left: 3px;
     border: 1px solid rgb(27, 106, 16);
     text-transform: uppercase;
     line-height: 12px;
