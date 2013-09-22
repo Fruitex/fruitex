@@ -1,6 +1,8 @@
 from home.models import Item
 
+
 def cateForSobeys():
+    invalidData = ['Goceries']
     category = {}
     seen = set()
     for it in Item.objects.filter(store__name='sobeys'):
@@ -11,6 +13,8 @@ def cateForSobeys():
         seen.add(c)
       c = c.split('->')
       assert len(c) >= 2, 'incalid category format: %s' % c
+      if c[0] in invalidData:
+        continue
       if c[0] not in category:
         category[c[0]]={}
       if c[1] not in category[c[0]]:
