@@ -5,7 +5,7 @@ import os
 if config.DEBUG:
   DEBUG = True
   TEMPLATE_DEBUG = True
-  DB_FILE = 'fruitex.db'
+  DB_FILE = 'fruitex-prod.db'
   PAYPAL_RECEIVER_EMAIL = 'biran0083@gmail.com'
   MERCHANT_ID = 'biran0083@gmail.com'
   #PAYPAL_RECEIVER_EMAIL = 'fruitex2012@gmail.com'
@@ -131,7 +131,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(config.BASE_DIR, "static"),
+    os.path.join(config.BASE_DIR, "ntemplates"),
 )
 
 INSTALLED_APPS = (
@@ -181,7 +181,7 @@ LOGGING = {
 }
 
 TEMPLATE_DIRS = (
-    os.path.join(config.BASE_DIR, 'templates'),
+    os.path.join(config.BASE_DIR, 'ntemplates'),
 )
 
 COMPRESS_JS_FILTERS = [

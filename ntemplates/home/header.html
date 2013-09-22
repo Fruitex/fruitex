@@ -1,0 +1,20 @@
+<header>
+	<a href="/home/?query=store:sobeys" title="Fruitex" class="home"></a>
+	<div class="search">
+		<span class="store">{{ current_store_description }}</span>
+		{% if cate %}
+		<span class="cate"><span>{{ cate }}<i>×</i></span></span>
+		{% endif %}
+		<input class="search-content"{% if search_content %} value="{{search_content}}"{% endif %}/>
+		<span class="search-btn"><i>Search</i></span>
+	</div>
+	<a class="cart" href="/cart">
+		<span class="num"{% if cart_size == 0 %} style="opacity:0"{% endif %}>{{ cart_size }}</span>
+		<span class="plus"></span>
+	</a>
+	<script type="text/javascript">
+	$('body>header .cate i').click(function(){
+		location.href = '/home?query=store:{{current_store_name}}';
+	});
+	</script>
+</header>

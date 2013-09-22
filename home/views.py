@@ -7,38 +7,110 @@ from category import category
 from django.views.decorators.csrf import csrf_exempt
 import re
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from urllib import unquote
 
 TAX_RATE = 0.13
 
 labels = {
-  'Produce': 'cate_label_produce.png',
-  'Home & Lifestyle': 'cate_label_home.png',
-  'Groceries': 'cate_label_grocery.png',
-  'Snacks & Candies': 'cate_label_candy.png',
-  'Beverages':'cate_label_beverage.png',
-  'Pet Care':'cate_label_pet.png',
-  'Department A-E': 'cate_label_book.png',
-  'Department F-J': 'cate_label_book.png',
-  'Department K-O': 'cate_label_book.png',
-  'Department P-Z': 'cate_label_book.png',
+    'Produce': 'cate_label_produce.png',
+    'Home & Lifestyle': 'cate_label_home.png',
+    'Groceries': 'cate_label_grocery.png',
+    'Snacks & Candies': 'cate_label_candy.png',
+    'Beverages':'cate_label_beverage.png',
+    'Pet Care':'cate_label_pet.png',
+    'Department A-E': 'cate_label_book.png',
+    'Department F-J': 'cate_label_book.png',
+    'Department K-O': 'cate_label_book.png',
+    'Department P-Z': 'cate_label_book.png',
 }
 
+stores = {
+    'sobeys':'Sobeys',
+    'bookstore':'WLU Bookstore'
+}
+stores_list = [{'name':'sobeys','description':'Sobeys'},{'name':'bookstore','description':'WLU Bookstore'}]
 def getStore(request):
-  if 'query' in request.GET:
-    stores,_ = extractStore(request.GET['query'])
-    if len(stores) > 0 and stores[0] in category:
-      return stores[0]
-  return 'sobeys'
+    if 'query' in request.GET:
+        stores,_ = extractStore(request.GET['query'])
+        if len(stores) > 0 and stores[0] in category:
+            return stores[0]
+    return 'sobeys'
+
+def getCate(request):
+    if 'query' in request.GET:
+        cates,_ = extractCate(request.GET['query'])
+        if len(cates) > 0:
+            return cates[0]
+    return ''
+def isSearch(request):
+    if 'query' in request.GET:
+        return not(re.match(r"^store:[^\s]+$",request.GET['query'].strip()))
+    return False
+def getSearchContent(request):
+    if not('query' in request.GET):
+        return ''
+    query = request.GET['query'].strip()
+    if isSearch(request) and not(re.match(r'.*cate:".*',query)):
+        search = query = re.findall('store:[^\s]+\s+([^\s]+)',query)
+        if search:
+            return search[0]
+        return ''
+    return ''
+def getCartSize(request):
+    if 'cart' in request.COOKIES:
+        try:
+            cart_size = len(json.loads(unquote(request.COOKIES['cart']))) 
+        except ValueError, e:
+            cart_size = 0
+        return cart_size
+    return 0;
 
 @csrf_exempt
 def main(request):
-    template = loader.get_template('home.html')
+    if not('query' in request.GET):
+        return HttpResponseRedirect('/home?query=store:sobeys');
+    template = loader.get_template('home/home.html')
+    store = getStore(request)
     context = Context({
-      'category' : json.dumps(category[getStore(request)]),
-      'labels' : json.dumps(labels)
-      })
+        'cateNav':getCateNav(category[store]),
+        'current_store_description':stores[store],
+        'cate':getCate(request),
+        'stores':stores_list,
+        'current_store_name':store,
+        'is_search':isSearch(request),
+        'search_content':getSearchContent(request),
+        'cart_size':getCartSize(request),
+    })
     return HttpResponse(template.render(context))
-
+def getCateNav(cate):
+    navs = []
+    def getCateNum(c):
+        res = 0
+        for x in cate[c]:
+            res += len(cate[c][x])
+        return res
+    mck = sorted(cate.keys(),key=getCateNum,reverse=True)
+    for k in mck:
+        nav = {'k':k,'labels':labels.get(k)}
+        cateNum = getCateNum(k)
+        if cateNum % 15 == 0:
+            colNum = cateNum / 15
+            if colNum == 0:
+                colNum = 1
+        else:
+            colNum = cateNum / 15 + 1
+        cols = []
+        sks = sorted(cate[k].keys())
+        for cn in range(colNum):
+            col = []
+            for i in range(len(sks)):
+                if i % colNum == cn:
+                    col.append({'k':sks[i],'v':sorted(cate[k][sks[i]])})
+            cols.append(col)
+        nav['cols'] = cols
+        navs.append(nav)
+    return navs
 def getItemPrice(it):
   if it.sales_price > 0:
     return it.sales_price
