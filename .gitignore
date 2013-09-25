@@ -1,7 +1,1 @@
-*.pyc
-*.log
-.DS_Store
-fruitex.db
-fruitex-prod.db
-uwsgi.ini
-/fruitex/
+config/.gitignore

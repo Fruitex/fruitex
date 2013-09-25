@@ -1,0 +1,6 @@
+for pid in `ps aux | grep 127.0.0.1:3000 | grep -v grep| awk '{print $2}'`
+do
+  kill -9 $pid
+done
+sleep 2
+./daemon uwsgi --socket 127.0.0.1:3000 -p 2 --threads 4 --chdir /fruitex -w wsgi 2>> err.log
