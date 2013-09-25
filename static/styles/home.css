@@ -12,7 +12,7 @@ body{
 body>header {
     height: 56px;
     background: rgba(244, 244, 244, 0.7);
-    border-bottom: 2px rgb(213, 213, 213) solid;
+    border-bottom: 2px rgb(228, 228, 228) solid;
     position: fixed;
     width: 100%;
     z-index: 999;
@@ -24,6 +24,7 @@ body>header>a.home {
     background: url('../imgs/logo.png') no-repeat 50%;
     position: absolute;
     left: 0;
+    background-position: 15px 5px;
 }
 body>header .search {
     width: 700px;
@@ -108,10 +109,10 @@ body>header>a.cart {
     background-position-x: 50%;
     background-position-y: 50%;
     border-top: none;
-    box-shadow: 1px 1px 1px;
+    box-shadow: 0px 1px 1px;
 }
 #content{
-    width: 1000px;
+    width: 996px;
     margin: auto;
     padding-top: 56px;
 }
@@ -154,15 +155,14 @@ body>header>a.cart .plus {
     padding: 0;
 }
 #content>aside .stores header{
-    height:42px;
     text-indent:16px;
     background: rgb(50, 50, 50);
     color:#fff;
-    line-height:42px;
+    line-height:35px;
     border-radius:8px 8px 0 0;
 }
 #content>aside .stores ul li {
-    line-height: 42px;
+    line-height: 36px;
     list-style: none;
     padding-left: 16px;
     border-bottom: 1px solid #ccc;
@@ -212,7 +212,7 @@ body>header>a.cart .plus {
     margin: 0;
 }
 #content>aside .categories >header {
-    line-height: 42px;
+    line-height: 35px;
     background: rgb(192,232,100);
     padding-left: 16px;
     border-radius: 8px 8px 0 0;
@@ -223,17 +223,17 @@ body>header>a.cart .plus {
     border-radius: 0 0 8px 8px;
 }
 #content>aside .categories > ul > li {
-    line-height: 42px;
+    line-height: 36px;
     padding: 0 8px;
     border-bottom: 1px solid rgb(204, 204, 204);
     cursor: pointer;
     position: relative;
-    height: 42px;
+    height: 36px;
 }
 #content>aside .categories > ul > li>span {
     display: inline-block;
     width: 100%;
-    padding-left: 28px;
+    padding-left: 32px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -251,8 +251,7 @@ body>header>a.cart .plus {
     display: table;
     padding: 16px;
     border: 1px solid #ccc;
-    border-left-width: 2px;
-    border-right-width: 2px;
+    border-bottom-width: 5px;
     margin-left: 10px;
     border-radius: 8px;
 }
@@ -287,7 +286,7 @@ body>header>a.cart .plus {
 #content>aside .help header {
     background: rgb(50, 50, 50);
     color: #fff;
-    line-height: 42px;
+    line-height: 35px;
     text-indent: 16px;
     border-radius: 8px 8px 0 0;
     font-weight: 700;
@@ -299,7 +298,7 @@ body>header>a.cart .plus {
     border-bottom-width: 4px;
 }
 #content>aside .help ul li {
-    line-height: 42px;
+    line-height: 36px;
     list-style: none;
     text-indent: 40px;
     background-repeat: no-repeat;
@@ -320,10 +319,10 @@ body>header>a.cart .plus {
     border-radius: 12px;
 }
 #content>.content .week-sale,#content>.content .popular {
-    margin-top: 16px;
+    margin-top: 12px;
     border: 1px solid #ccc;
     border-radius: 12px;
-    padding: 16px;
+    padding: 2px 12px 5px 12px;
     position: relative;
 }
 #content>.content .week-sale article, #content>.content .popular article {
@@ -336,19 +335,17 @@ body>header>a.cart .plus {
     height: 32px;
     background: #f00;
     color: #fff;
-    line-height: 32px;
-    padding: 0 8px;
+    line-height: 30px;
+    padding: 0 20px;
     border-radius: 12px 0 12px 0;
     left: -1px;
     top: -1px;
     border: 1px solid rgb(144, 68, 68);
     background-image: linear-gradient(to bottom, rgb(246, 107, 107) 0%,rgb(244, 91, 89) 50%,rgb(244, 91, 89) 100%);
-    box-shadow: 1px 1px 1px rgb(242, 176, 176);
 }
 #content>.content .popular header {
     background: rgb(124, 205, 86);
-    border-color: rgb(116, 188, 56);
-    box-shadow: 1px 1px 1px rgb(38, 73, 39);
+    border-color: rgb(78, 145, 23);
     background-image: linear-gradient(to bottom, rgb(124, 205, 86) 0%,rgb(114, 200, 77) 50%,rgb(114, 200, 77) 100%);
 }
 #content>.content>div>article .loading {
@@ -368,7 +365,7 @@ body>header>a.cart .plus {
 #content>.content div article li {
     float: left;
     list-style: none;
-    width: 149px;
+    width: 150px;
     position: relative;
     border-right: 1px dashed #ccc;
     overflow: hidden;
@@ -451,12 +448,13 @@ body>header>a.cart .plus {
     border-right: none;
 }
 body>footer{
-    height: 100px;
-    background: #333;
-    line-height: 100px;
+    height: 50px;
+    background: rgba(244, 244, 244, 0.7);
+    line-height: 35px;
     text-align: center;
-    margin-top: 20px;
-    color: #fff;
+    margin-top: 30px;
+    border-top: 1px solid #d3d3d3;
+    color: grey;
 }
 #content>.content div article li .image {
     height: 100px;
