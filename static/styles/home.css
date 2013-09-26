@@ -382,7 +382,6 @@ body>header>a.cart .plus {
 #content>.content div article ul {
     padding: 0;
     margin: 0;
-    margin-top: -8px;
 }
 #content>.content div article li:last-child {
     border-right: none;
@@ -545,4 +544,7 @@ body>footer{
 #content>.content>div.search-items > footer >span.next {
     left: 390px;
     background: rgb(255, 255, 255) url('/static/imgs/arrow_right.png') no-repeat 12px 50%;
+}
+#content>.content div.search-items article ul {
+    margin-top: -8px;
 }
