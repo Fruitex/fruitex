@@ -21,6 +21,23 @@
 		{% include "home/aside.html" %}
 		</div>
 		{% include "home/footer.html" %}
+		<div class="md-modal" id="md_modal">
+			<div class="md-content">
+				{% block md_content %}{% endblock %}
+			</div>
+		</div>
+		<div class="md-overlay"></div>
 		{% block page_script %}{% endblock %}
+		<script type="text/javascript">
+		$(document).keydown(function(e) {
+		    if (e.keyCode == 27) {
+		        $('.md-show').removeClass('md-show');
+		        $('.md-content .header a').show();
+		    }
+		});
+		$('.md-overlay').click(function(){
+			$('#md_modal').removeClass('md-show');
+		});
+		</script>
 	</body>
 </html>
