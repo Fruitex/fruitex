@@ -597,7 +597,9 @@ body>footer{
     -moz-transition: all 0.3s;
     transition: all 0.3s;
     padding: 24px 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,1);
+    /* box-shadow: 0 0 10px rgba(0,0,0,1); */
+    border: 1px solid #ccc;
+    border-bottom-width: 4px;
 }
 .md-show .md-content {
     -webkit-transform: scale(1);
@@ -620,6 +622,7 @@ body>footer{
     width: 300px;
     height: 300px;
     float: right;
+    font-size: 16px;
 }
 .md-modal .md-content .ops {
     clear: both;
@@ -633,7 +636,7 @@ body>footer{
     height: 30px;
     line-height: 30px;
     padding: 0 8px;
-    border: 1px solid rgb(70, 156, 13);
+    border: 1px solid rgb(21, 21, 21);
     border-bottom-width: 2px;
     border-radius: 5px;
     font-style: normal;
@@ -649,7 +652,7 @@ body>footer{
     height: 30px;
     line-height: 30px;
     padding: 0 8px;
-    border: 1px solid rgb(21,21,21);
+    border: 1px solid rgb(21, 21, 21);
     border-bottom-width: 2px;
     border-radius: 5px;
     font-style: normal;
@@ -660,4 +663,7 @@ body>footer{
 }
 .md-modal .md-content .ops button:hover{
     opacity:1;
+}
+.md-modal .md-content .detail .common p:first-child {
+    font-weight: 700;
 }
