@@ -307,6 +307,34 @@ def loadItem(store, f):
   else:
     print "unknown store: %s" % store
 
+def onSale(store, fname, onSaleStart):
+  f = csv.reader(open(fname))
+  next(f) # eat the header 
+  for lst in f:
+    l = map(trim, lst)
+    if store == 'sobeys':
+      TITLE=0
+      PRICE=5
+      SALES_PRICE=7
+      title = l[TITLE]
+      price = l[PRICE]
+      sales_price = l[SALES_PRICE]
+      it = Item.objects.filter(name=title)
+    else:
+      print 'unknown store: %s' % store
+      return
+
+    if len(it) != 1:
+      "%d items found with name %s" % (len(it), title)
+      return 
+    if onSaleStart:
+      it.update(sales_price = sales_price)
+    else:
+      it.update(sales_price = -1)
+
+    for i in Item.objects.filter(name=title):
+      print i.id, i.sales_price
+
 def main(argv):
   def _arg(i):
     if len(argv) > i:
@@ -339,6 +367,10 @@ def main(argv):
     testMail()
   elif _arg(1) == 'check_img':
     checkImg(_arg(2))
+  elif _arg(1) == 'on_sale':
+    onSale(_arg(2), _arg(3), True)
+  elif _arg(1) == 'off_sale':
+    onSale(_arg(2), _arg(3), False)
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
