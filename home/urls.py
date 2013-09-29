@@ -5,5 +5,6 @@ urlpatterns = patterns('',
     url(r'^$', views.main),
     url(r'^getItems$', views.getItems),
     url(r'^getPopularItems$', views.getPopularItems),
+    url(r'^getOnSaleItems$', views.getOnSaleItems),
     url(r'^computeSummary$', views.computeSummary),
 )

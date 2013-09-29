@@ -162,6 +162,9 @@ def getRawItemsByQuery(query):
 def getItemsByRange(query, startId, num):
   return map(toStructuredItem, getRawItemsByQuery(query)[startId : startId + num])
 
+def getOnSaleItemsByRange(query, startId, num):
+  return map(toStructuredItem, getRawItemsByQuery(query).filter(sales_price__gt=0)[startId : startId + num])
+
 def getPopularItemsByRange(query, startId, num):
   return map(toStructuredItem, getRawItemsByQuery(query).order_by('-sold_number')[startId : startId + num])
 
@@ -204,6 +207,10 @@ def getItems(request):
 @csrf_exempt
 def getPopularItems(request):
   return getItemsInternal(request, getPopularItemsByRange)
+
+@csrf_exempt
+def getOnSaleItems(request):
+  return getItemsInternal(request, getOnSaleItemsByRange)
 
 def computeSummaryInternal(idsStr):
     ids = json.loads(idsStr)
