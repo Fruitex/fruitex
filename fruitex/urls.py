@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
-
+import config
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'fruitex.views.home', name='home'),
     # url(r'^fruitex/', include('fruitex.foo.urls')),
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': '/fruitex/static', 'show_indexes': True}),
+        {'document_root': config.BASE_DIR + 'static', 'show_indexes': True}),
     url(r'^$', 'fruitex.views.home', name='home'),
     url(r'^home/', include('home.urls')),
     url(r'^cart/', include('cart.urls')),
