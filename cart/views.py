@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template import Context, loader
-from cart.models import Order
+from cart.models import Order, Coupon
 from datetime import datetime
 import json
 from django.shortcuts import render_to_response
@@ -15,6 +15,19 @@ from fruitex.settings import PAYPAL_RECEIVER_EMAIL
 
 def cart(request):
     return render_to_response("cart.html", {})
+
+@csrf_exempt
+def coupon(request):
+  if request.method == 'POST':
+    if 'code' in request.POST:
+      code = request.POST['code']
+      coupon = Coupon.objects.filter(code=code)
+      if (len(coupon) > 0 and coupon[0].used):
+        coupon.update(used=True)
+        return HttpResponse(json.dumps({'value': coupon[0].value}))
+      else:
+        return HttpResponse(json.dumps(False))
+  return HttpResponse('Error')
 
 @csrf_exempt
 def confirm(request):

@@ -21,6 +21,13 @@ class Order(models.Model):
     time = models.DateTimeField()
     invoice = models.CharField(max_length=30)
 
+class Coupon(models.Model):
+  def __unicode__(self):
+    return self.code
+  code = models.CharField(max_length=30)
+  value = models.FloatField()
+  used = models.BooleanField()
+
 
 from paypal.standard.ipn.signals import payment_was_successful
 from paypal.standard.ipn.signals import payment_was_flagged
