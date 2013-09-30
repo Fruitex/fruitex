@@ -179,7 +179,7 @@
 	<p class="name">${truncate(it.name,50)}</p>
 	{% templatetag openvariable %}if is_weekly{% templatetag closevariable %}
 	<p class="price weekly">
-		<span class="now">$ ${it.price}</span>
+		<span class="now">$ ${it.sales_price}</span>
 		<span class="original">$ ${it.price}</span>
 	</p>
 	{% templatetag openvariable %}else{% templatetag closevariable %}
@@ -204,7 +204,7 @@
 	}
 	var item_template = $.template(null,$('#item_template').html());
 	var render_weekly = function(){
-		$.post('/home/getPopularItems',{'startId':0,'num':5,query:location.search.replace(/^\?query=/,'')},function(data){
+		$.post('/home/getOnSaleItems',{'startId':0,'num':5,query:location.search.replace(/^\?query=/,'')},function(data){
 			var containor = $('#content .content .week-sale article');
 			containor.find('.loading').fadeOut();
 			$.tmpl(item_template,{'items':data,'is_weekly':true}).appendTo(containor.find('ul'));
