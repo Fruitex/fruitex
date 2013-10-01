@@ -9,6 +9,7 @@ import re
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from urllib import unquote
+from cart.models import Coupon
 
 TAX_RATE = 0.13
 
@@ -212,12 +213,19 @@ def getPopularItems(request):
 def getOnSaleItems(request):
   return getItemsInternal(request, getOnSaleItemsByRange)
 
-def computeSummaryInternal(idsStr):
+def computeCoupon(code):
+  coupon = Coupon.objects.filter(code=code)
+  if (len(coupon) > 0 and coupon[0].used):
+    return coupon[0].value
+  return 0
+
+def computeSummaryInternal(idsStr, coupon):
     ids = json.loads(idsStr)
     items = getItemsByIds(ids)
     d = computeDelivery(items)
     s = 0.0
     t = 0.0
+    discount = computeCoupon(coupon)
     for item in items:
       ct = ids.count(item['id'])
       if 'sales_price' in item:
@@ -225,12 +233,18 @@ def computeSummaryInternal(idsStr):
       else:
         s += item['price'] * ct
       t += computeTax(item) * ct
-    return {'sum' : s, 'tax' : t, 'delivery' : d, 'total' : s + t + d}
+    return {
+      'sum' : s,
+      'tax' : t,
+      'delivery' : d,
+      'discount': discount,
+      'total' : max(s + t + d - discount, 0),
+    }
 
 @csrf_exempt
 def computeSummary(request):
-  if request.method == 'POST':
-    res = computeSummaryInternal(request.POST['ids'])
+  if request.method == 'POST' and 'ids' in request.POST and 'coupon' in request.POST:
+    res = computeSummaryInternal(request.POST['ids'], request.POST['coupon'])
     return HttpResponse(json.dumps(res))
   else:
     return HttpResponse('error')

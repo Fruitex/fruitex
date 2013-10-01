@@ -17,31 +17,23 @@ def cart(request):
     return render_to_response("cart.html", {})
 
 @csrf_exempt
-def coupon(request):
-  if request.method == 'POST':
-    if 'code' in request.POST:
-      code = request.POST['code']
-      coupon = Coupon.objects.filter(code=code)
-      if (len(coupon) > 0 and coupon[0].used):
-        coupon.update(used=True)
-        return HttpResponse(json.dumps({'value': coupon[0].value}))
-      else:
-        return HttpResponse(json.dumps(False))
-  return HttpResponse('Error')
-
-@csrf_exempt
 def confirm(request):
+
     name = request.POST['name']
     phone = request.POST['phone']
     address = request.POST['address']
     postcode = request.POST['postcode']
     ids = request.POST['ids']
     deliveryWindow = request.POST['time']
+    coupon = request.POST['coupon']
 
-    res = computeSummaryInternal(ids)
+    res = computeSummaryInternal(ids, coupon)
     price = res['sum']
     tax = res['tax']
     shipping = res['delivery']
+    discount = res['discount']
+
+    total = max(float(price) + float(tax) + float(shipping) - float(discount), 0)
 
     invoice = str(uuid.uuid4())
     Order(name=name, address=address, phone=phone, postcode=postcode,
@@ -50,7 +42,7 @@ def confirm(request):
     paypal_dict = {
         "business": PAYPAL_RECEIVER_EMAIL,
         "currency_code": "CAD",
-        "amount": "%.2f" % (float(price) + float(tax) + float(shipping)),
+        "amount": "%.2f" % total,
         "item_name": "fruitex order",
         "invoice": invoice,
         "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
@@ -58,6 +50,9 @@ def confirm(request):
         "return": "http://%s/return_page/" % DOMAIN,
         "cancel_return": "http://i%s/redir/?to=/home" % DOMAIN,
     }
+
+    #invalidate coupon
+    Coupon.objects.filter(code=coupon).update(used=True)
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
@@ -74,7 +69,8 @@ def confirm(request):
       'delivery_window' : deliveryWindow,
       'invoice' : invoice,
       'form': form,
-      'total': round(tax + shipping + price, 2),
+      'discount': discount,
+      'total': round(total, 2),
       'sandbox': DEBUG,
     }
     return render_to_response("confirm.html", context)

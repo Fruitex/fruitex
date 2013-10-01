@@ -13,7 +13,11 @@
   <p id="cart-header">Your cart</p>
   <div id='cart-container'> 
   </div>
-  <div id='items-in-cart-summary-container'></div>
+  <div id='coupon_container'>
+    <label>Coupon: <input id='coupon-input' type='text'></input></label>
+  </div>
+  <div id='items-in-cart-summary-container'>   
+  </div>
 </div>
 <div id='delivery-wrapper'>
   <p id="delivery-header">Delivery Info</p>
@@ -87,6 +91,7 @@
       </tr>
     </table> 
     <input type="hidden" name="ids" id="delivery_item_ids"/>
+    <input id='coupon-input-hidden' name='coupon' type='hidden'></input>
     </form>
   </div>
 </div>

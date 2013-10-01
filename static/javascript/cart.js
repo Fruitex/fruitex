@@ -4,7 +4,10 @@ var showSummary = function() {
   var table = $('<table>').attr('id', 'items-in-cart-summary-table');
   itemsSummary.append(table);
   $.post('/home/computeSummary',
-    {'ids' : $.cookie('cart')},
+    {
+      'ids': $.cookie('cart'),
+      'coupon': $('#coupon-input').val(),
+    },
     function(data) {
       table.append($('<tr>').attr('id', 'summary-sum')
         .append($('<td>').attr('class', 'summary-label').text('Sum : '))
@@ -15,9 +18,19 @@ var showSummary = function() {
       .append($('<tr>').attr('id', 'summary-delivery')
         .append($('<td>').attr('class', 'summary-label').text('Delivery : '))
         .append($('<td>').attr('class', 'summary-value').text('$ ' + data.delivery.toFixed(2))))
+      .append($('<tr>').attr('id', 'summary-discount')
+        .append($('<td>').attr('class', 'summary-label').text('Discount : '))
+        .append($('<td>').attr('class', 'summary-value').text('$ ' + data.discount.toFixed(2))))
       .append($('<tr>').attr('id', 'summary-total')
         .append($('<td>').attr('class', 'summary-label').text('Total : '))
         .append($('<td>').attr('class', 'summary-value').text('$ ' + data.total.toFixed(2))));
+
+      $('#coupon_container').children('label').children('.tick').remove();
+      if (!data.discount)
+        $('#summary-discount').hide();
+      else {
+        $('#coupon_container').children('label').append($('<img>').addClass('tick').attr('src', '/static/imgs/tick.png'));
+      }
     }, 
     'json');
 };
@@ -79,6 +92,12 @@ var isValidUserInput = function() {
 };
 
 $(document).ready(function() {
+  $('#coupon-input').keyup(function () {
+    showSummary();
+    $('#coupon-input-hidden').val(
+      $('#coupon-input').val()
+    );
+  })
   checkDeliveryTime();
   if (!isCartEmpty()) {
     var list = loadItemsInCart();
@@ -99,6 +118,7 @@ $(document).ready(function() {
   } else {
     $('#items-in-cart-summary-container').remove();
     $('#cart-footer').remove();
+    $('#coupon_container').remove();
     $('#delivery-wrapper').remove();
     $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
     $("#cart-container").append($('<p>').text('Return to shop')

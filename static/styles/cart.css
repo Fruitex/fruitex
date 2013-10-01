@@ -74,14 +74,11 @@
 #items-in-cart-summary-container {
   background-color : rgb(245,252,245);
   border-top: 1px solid #e6e6e6;
-  height : 110px;
   padding : 10px;
 }
 #items-in-cart-summary-table {
   width: 150px;
-  float: right;
-  margin-right: 75px;
-
+  margin-left: 450px;
 }
 
 #items-in-cart-summary-table tr td {
@@ -148,3 +145,24 @@
 .disabled {
   color: #d3d3d3;
 }
+
+#coupon_container {
+  text-align: right; 
+  padding-bottom: 20px; 
+  padding-right: 80px;
+  font-weight: bold;
+}
+#coupon_container input {
+  margin-left: 5px;
+  border: 1px solid #d3d3d3;
+  width: 100px;
+  padding: 2px;
+}
+#summary-discount {
+  font-weight: bold;
+  color: #ec5184;
+}
+.tick {
+  margin-left: 5px;
+}
+
