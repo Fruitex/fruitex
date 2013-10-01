@@ -206,11 +206,10 @@
 	var render_weekly = function(){
 		$.post('/home/getOnSaleItems',{'startId':0,'num':15,query:location.search.replace(/^\?query=/,'')},function(data){
 			var containor = $('#content .content .week-sale article');
-=======
-      if (!data || !data.length) {
-        $('.week-sale').hide();
-      }
-      var containor = $('#content .content .week-sale article');
+      		if (!data || !data.length) {
+        		$('.week-sale').hide();
+      		}
+      		var containor = $('#content .content .week-sale article');
 			containor.find('.loading').fadeOut();
 			$.tmpl(item_template,{'items':data,'is_weekly':true}).appendTo(containor.find('ul'));
 		},'json');
