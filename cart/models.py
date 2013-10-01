@@ -39,6 +39,9 @@ def send_receipt(to, subject, message):
 
 def handle_payment_received(status, ipn):
   invoice = ipn.invoice
+  coupon = json.loads(ipn.custom)['coupon']
+  #invalidate coupon
+  Coupon.objects.filter(code=coupon).update(used=True)
   order = Order.objects.filter(invoice=invoice)[0]
   order.status=status
   order.save()

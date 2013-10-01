@@ -49,10 +49,8 @@ def confirm(request):
         "return_url": "http://%s/redir/?%s" % (DOMAIN, urlencode({"to" : "/check_order?invoice=" + invoice})),
         "return": "http://%s/return_page/" % DOMAIN,
         "cancel_return": "http://i%s/redir/?to=/home" % DOMAIN,
+        "custom": json.dumps({'coupon': coupon})
     }
-
-    #invalidate coupon
-    Coupon.objects.filter(code=coupon).update(used=True)
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
