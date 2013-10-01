@@ -326,9 +326,9 @@ body>header>a.cart .plus {
     position: relative;
 }
 #content>.content .week-sale article, #content>.content .popular article {
-    height: 195px;
+    height: 640px;
     position: relative;
-    margin-top: 30px;
+    margin-top: 35px;
 }
 #content>.content .week-sale header, #content>.content .popular header {
     position: absolute;
@@ -440,10 +440,10 @@ body>header>a.cart .plus {
 #content>.content .popular article {
     height: 430px;
 }
-#content>.content .popular article li {
+#content>.content article li {
     margin-top: 20px;
 }
-#content>.content .popular article li:nth-child(5n) {
+#content>.content article li:nth-child(5n) {
     border-right: none;
 }
 body>footer{
