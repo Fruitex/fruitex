@@ -215,7 +215,7 @@ def getOnSaleItems(request):
 
 def computeCoupon(code):
   coupon = Coupon.objects.filter(code=code)
-  if (len(coupon) > 0 and coupon[0].used):
+  if (len(coupon) > 0 and not coupon[0].used):
     return coupon[0].value
   return 0
 
