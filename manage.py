@@ -4,6 +4,7 @@ import sys
 import json
 import csv
 import re
+import uuid
 from datetime import datetime,timedelta
 
 def clearItems(store):
@@ -335,6 +336,23 @@ def onSale(store, fname, onSaleStart):
     for i in Item.objects.filter(name=title):
       print i.id, i.sales_price
 
+def generateCouponCode():
+  while True:
+    code = str(uuid.uuid4())[:25]
+    if len(Coupon.objects.filter(code=code)) == 0:
+      return code
+
+def addCoupon(num, value):
+  for i in range(num):
+    c = Coupon()
+    c.code = generateCouponCode()
+    c.value = value
+    c.used = 0
+    c.save()
+
+def clearUserCoupon():
+  Coupon.objects.filter(used=1).delete()
+
 def main(argv):
   def _arg(i):
     if len(argv) > i:
@@ -371,6 +389,10 @@ def main(argv):
     onSale(_arg(2), _arg(3), True)
   elif _arg(1) == 'off_sale':
     onSale(_arg(2), _arg(3), False)
+  elif _arg(1) == 'add_coupon':
+    addCoupon(int(_arg(2)), float(_arg(3)))
+  elif _arg(1) == 'clear_used_coupon':
+    clearUserCoupon()
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
@@ -378,6 +400,6 @@ def main(argv):
 if __name__ == "__main__":
   os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fruitex.settings")
   from home.models import Store, Item
-  from cart.models import Order
+  from cart.models import Order, Coupon
   main(sys.argv)
 
