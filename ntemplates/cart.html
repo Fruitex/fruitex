@@ -54,7 +54,7 @@
           <table id="time-window-container-table">
             <tr>
               <td>
-                Today:
+                {{ today|date:'j F' }}:
               </td>
               <td>
                 <input type="radio" name="time" value="12:00-14:00">
@@ -71,7 +71,7 @@
             </tr>
             <tr>
               <td>
-                Tommorow:
+                {{ tomorrow|date:'j F' }}:
               </td>
               <td>
                 <input type="radio" name="time" value="tomorrow 12:00-14:00" checked="checked">
@@ -96,7 +96,7 @@
   </div>
 </div>
 <div id='cart-footer'>
- <img id='checkout-button' src={% static "imgs/btn_checkout.png" %}></img> 
+ <button id="checkout-button">CHECK OUT</button>
 </div>
 <script>
   $("#delivery_item_ids").attr('value', $.cookie('cart'));
