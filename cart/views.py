@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import Context, loader
 from cart.models import Order, Coupon
 from datetime import datetime
+from datetime import timedelta
 import json
 from django.shortcuts import render_to_response
 from paypal.standard.forms import PayPalPaymentsForm
@@ -14,7 +15,9 @@ from fruitex.config import DOMAIN,DEBUG
 from fruitex.settings import PAYPAL_RECEIVER_EMAIL
 
 def cart(request):
-    return render_to_response("cart.html", {})
+    today = datetime.now()
+    tomorrow = today + timedelta(days=1)
+    return render_to_response("cart.html", {'today':today,'tomorrow':tomorrow})
 
 @csrf_exempt
 def confirm(request):
