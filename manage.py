@@ -42,6 +42,20 @@ def loadSobeysItems(directory):
   for fname in _getAllCsvFiles(directory):
     addSobeysItems(fname, False)
 
+def loadPetceteraItems(directory):
+  petcetera = sobeys = Store(name = 'petcetera', address = "582 King St N, Waterloo, ON N2L 6L3")
+  petcetera.save()
+  items = []
+  for fname in _getAllCsvFiles(directory):
+    addPetceteraItems(fname, False)
+
+def createStore(storeName, storeAddress):
+  if (storeName=='' or storeAddress==''):
+  	print 'missing argument'
+  else:
+  	Store.objects.create(name=storeName, address=storeAddress)
+
+
 def fetchCategory(store):
   res = set()
   for it in Item.objects.filter(store__name__icontains=store):
@@ -287,6 +301,68 @@ def addBookstoreItems(fname, check_only):
       print e, fname, item
   print "%d new items" % newItemCt
 
+def addPetceteraItems(fname, check_only):
+  petcetera = Store.objects.filter(name='petcetera')[0]
+  items = []
+  f = csv.reader(open(fname))
+  next(f) # eat the header 
+  print 'loading %s' %fname
+  for lst in f:
+    items.append((map(trim, lst), fname))
+  TITLE=0
+  CATEGORY=3
+  PRICE=5
+  SALES_PRICE=7
+  WEIGHT=8
+  LENGTH=9
+  WIDTH=10
+  HEIGHT=11
+  SKU=12
+  TAX_STATUS=15
+  TAX_CLASS=16
+
+  def getRemark(item):
+    res = {}
+    if item[WEIGHT]:
+      res["weight"] = item[WEIGHT]
+    if item[LENGTH]:
+      res["length"] = item[LENGTH]
+    if item[WIDTH]:
+      res["width"] = item[WIDTH]
+    if item[HEIGHT]:
+      res["height"] = item[HEIGHT]
+    if item[SALES_PRICE]:
+      res["sales_price"] = item[SALES_PRICE]
+    return json.dumps(res)
+
+  print "%d items to write" % len(items)
+  problemFiles = set()
+  newItemCt=0
+  for item,fname in items:
+    try:
+      if item[CATEGORY] and item[TITLE] and item[SKU] and item[PRICE] \
+          and item[TAX_STATUS] and item[TAX_CLASS]:
+        if len(Item.objects.filter(store=petcetera, name=item[TITLE])) == 0:
+          newItemCt+=1
+          if not check_only:
+            Item(store = petcetera, category = item[CATEGORY],
+                name = item[TITLE], price = item[PRICE], sku = item[SKU],
+                tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
+                remark = getRemark(item)).save()
+        elif check_only:
+          print "duplicate item %s" % item[TITLE]
+      else:
+        if fname in problemFiles:
+          continue
+        else:
+          problemFiles.add(fname)
+          print 'data in %s is not complete' % fname
+          print item
+    except Exception as e:
+      print e, fname, item
+  print "%d new items" % newItemCt
+
+
 def addItems(store, f, check_only=False):
   if store == 'sobeys':
     for fname in _getAllCsvFiles(f):
@@ -305,6 +381,8 @@ def loadItem(store, f):
     loadSobeysItems(f)
   elif store == 'bookstore':
     loadBookstoreItems(f)
+  elif store == 'petcetera':
+  	loadPetceteraItems(f)
   else:
     print "unknown store: %s" % store
 
@@ -393,6 +471,8 @@ def main(argv):
     addCoupon(int(_arg(2)), float(_arg(3)))
   elif _arg(1) == 'clear_used_coupon':
     clearUserCoupon()
+  elif _arg(1) == 'create_store':
+  	createStore(_arg(2), _arg(3))
   else:
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
