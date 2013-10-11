@@ -338,7 +338,7 @@ def onSale(store, fname, onSaleStart):
 
 def generateCouponCode():
   while True:
-    code = str(uuid.uuid4())[:25]
+    code = str(uuid.uuid4())[:10]
     if len(Coupon.objects.filter(code=code)) == 0:
       return code
 
