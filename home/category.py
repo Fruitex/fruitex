@@ -23,6 +23,27 @@ def cateForSobeys():
         category[c[0]][c[1]].append(c[2])
     return category
 
+def cateForPetcetera():
+    invalidData = []
+    category = {}
+    seen = set()
+    for it in Item.objects.filter(store__name='petcetera'):
+      c = it.category
+      if c in seen:
+        continue
+      else:
+        seen.add(c)
+      c = c.split('->')
+      assert len(c) >= 2, 'incalid category format: %s' % c
+      if c[0] in invalidData:
+        continue
+      if c[0] not in category:
+        category[c[0]]={}
+      if c[1] not in category[c[0]]:
+        category[c[0]][c[1]]=[]
+      if len(c) == 3:
+        category[c[0]][c[1]].append(c[2])
+    return category
 
 def getTextBookTopCate(c):
     if ord(c[0].upper()) <= ord('E'):
@@ -58,4 +79,5 @@ def cateForBookStore():
 category = {
     'sobeys' : cateForSobeys(),
     'bookstore' : cateForBookStore(),
+    'petcetera': cateForPetcetera(),
 }

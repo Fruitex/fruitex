@@ -24,13 +24,20 @@ labels = {
     'Department F-J': 'cate_label_book.png',
     'Department K-O': 'cate_label_book.png',
     'Department P-Z': 'cate_label_book.png',
+    'Dog': 'cate_label_dog.png',
 }
 
 stores = {
     'sobeys':'Sobeys',
-    'bookstore':'WLU Bookstore'
+    'bookstore':'WLU Bookstore',
+    'petcetera': 'Petcetera'
 }
-stores_list = [{'name':'sobeys','description':'Sobeys'},{'name':'bookstore','description':'WLU Bookstore'}]
+stores_list = [
+  {'name':'sobeys','description':'Sobeys'},
+  {'name':'bookstore','description':'WLU Bookstore'},
+  {'name':'petcetera','description':'Petcetera'}
+]
+
 def getStore(request):
     if 'query' in request.GET:
         stores,_ = extractStore(request.GET['query'])
