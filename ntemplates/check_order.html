@@ -1,21 +1,56 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static "styles/order_manager.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "styles/itemlist.css" %}"/>
-<script src={% static "javascript/order_manager.js" %}></script>
-<script src={% static "javascript/itemlist.js" %}></script>
-
-<div id='orders-wrapper'>
-  <p id="order-header">Your Order</p>
+<div id='order'>
+  <header>
+  	<span>Your Order Receipt</span>
+  	<a href="mailto:support@fruitex.ca">Need Help?</a>
+  </header>
+  <div>
+  	<p class="status">
+  		<span class="label">Status:</span>
+  		<span class="content">Successfully Received</span>
+  	</p>
+  	<p>
+  		<span class="label">Date:</span>
+  		<span class="content">{{ order.time|date:'Y-m-d H:i:s' }}</span>
+  	</p>
+  	<p>
+  		<span class="label">Delivery Time:</span>
+  		<span class="content">{{ order.delivery_window }}</span>
+  	</p>
+  	<p>
+  		<span class="label">Deliverr Address:</span>
+  		<span class="content">{{ order.address }}</span>
+  	</p>
+  	<p>
+  		<span class="label">Phone Number:</span>
+  		<span class="content">{{ order.phone }}</span>
+  	</p>
+  </div>
+  <footer>
+  	Total Price:$ {{order.price}} CAD
+  </footer>
 </div>
-
-<script>
-$(document).ready(function() {
-  var order = {{ order | safe }};
-  $('#orders-wrapper').append(OrderManager().create(order));
-});
-</script>
-
+{% for key,store in order.item_detail.items%}
+<div class="store">
+	<img src="{% static ""%}imgs/{{ store.map }}" alter="The Map Of {{ store.name }}" />
+	<ul>
+	{% for item in store.items %}
+		<li>
+			<img src="{% static ""%}{{ store.name }}_imgs/{{ item.sku }}.JPG">
+			<div class="desc">
+				<p>{{ item.name }}</p>
+				<p>From:{{ store.name }}</p>
+			</div>
+			<div class="price">
+				<span>Quatity:{{ item.quatity }}</span>
+				<span>$ {{ item.price }}</span>
+			</div>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
+{% endfor %}
 {% endblock %}

@@ -1,74 +1,97 @@
-#orders-wrapper {
-  width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  background: white;
-  border: 1px solid #d3d3d3;
+#content > div {
+    width: 650px;
+    margin: auto;
+    border: 1px solid #ccc;
+    margin: 24px auto;
+    border-bottom-width: 4px;
+    border-radius: 8px;
+    min-height: 100px;
+    padding: 32px;
+    box-sizing: border-box;
 }
-
-#success-container {
-  width: 540px;
-  height: 150px;
-  margin-top: 100px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  background: white;
-  border: 1px solid #d3d3d3;
-  display: none;
+#content > div.store>img {
+    width: 586px;
+    
+    border: 1px solid #ccc;
 }
-
-#success-container p {
-  position: absolute;
-  top: 50px;
-  right: 30px;
-  font-size:14px;
-  line-height: 20px;
+#content > div.store li {
+    width: 588px;
+    list-style: none;
+    margin: 24px 0;
 }
-
-#success-container img {
-  position: absolute;
-  top: 40px;
-  left: 40px;
+#content > div.store li img {
+    height: 88px;
+    float: left;
 }
-
-
-.delivery_info {
-  line-height: 20px;
+#content > div.store li:after {
+    content: '';
+    clear: both;
+    display: block;
 }
-
-.order-container {
-  margin-left: 20px;
-  border-bottom: 1px solid #d3d3d3;
-  margin-right: 20px;
-  margin-bottom: 10px;
+#content > div.store li .price {
+    float: right;
+    margin-right: 64px;
 }
-
-#order-header {
-  font-size: 20px;
-  margin: 20px;
+#content > div.store li .desc {
+    float: left;
+    margin-left: 24px;
 }
-
-#buy-list {
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  margin-left: -400px;
-  background: white;
-  display: none;
-  width: 800px;
-  padding: 20px;
-  border: 1px solid;
+#content > div.store li:last-child {
+    margin-bottom: 0;
 }
-
-.buy-list-title {
-  font-size: 20px;
-  font-weight: bold;
-  border-bottom: 1px solid;
-  margin: 10px 0;
+#content > div.store li .price>span:first-child {
+    margin-right: 20px;
 }
-
-#btn-buy-list{
-  position: fixed;
-  padding: 5px;
+#content > div.store li .desc p {
+    max-width: 250px;
+}
+#content > div.store li .desc p:last-child {
+    margin-top: 16px;
+    color: #666;
+}
+#content #order {
+    padding:0;
+}
+#content #order header {
+    height: 32px;
+    line-height: 32px;
+    padding:0 32px;
+}
+#content #order header span {
+    font-weight: 700;
+    line-height: 32px;
+    display: inline-block;
+    font-size: 14px;
+}
+#content #order header a {
+    float: right;
+    font-size: 14px;
+    color: rgb(31,103,31);
+}
+#content #order > div{
+    padding:0 32px;
+}
+#content #order footer{
+    height:40px;
+    line-height: 40px;
+    text-align:right;
+    padding-right:24px;
+    background:rgb(243,248,243);
+    font-weight:700;
+    font-size:14px;
+}
+#content #order > div p {
+    padding: 8px 0;
+}
+#content #order > div p .label {
+    width: 100px;
+    display: inline-block;
+    text-align: right;
+    color: #888;
+}
+#content #order > div .status .content {
+    background: rgb(198,237,213);
+    padding:2px 4px;
+    border-radius:4px;
+    color:rgb(3,90,1);
 }
