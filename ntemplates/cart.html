@@ -14,6 +14,7 @@
   <div id='cart-container'> 
   </div>
   <div id='coupon_container'>
+    <label style="float:left;cursor:pointer;"><input style="width:16px;margin:0 8px 0 50px;" type="checkbox" id="allow_sub" checked/>Allow Subsitiation</label>
     <label>Coupon: <input id='coupon-input' type='text'></input></label>
   </div>
   <div id='items-in-cart-summary-container'>   
@@ -74,15 +75,15 @@
                 {{ tomorrow|date:'j F' }}:
               </td>
               <td>
-                <input type="radio" name="time" value="tomorrow 12:00-14:00" checked="checked">
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 12:00-14:00" checked="checked">
                 12:00-14:00
               </td>
               <td>
-                <input type="radio" name="time" value="tomorrow 16:00-18:00">
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 16:00-18:00">
                 16:00-18:00
               </td>
               <td>
-                <input type="radio" name="time" value="tomorrow 20:00-22:00">
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 20:00-22:00">
                 20:00-22:00
               </td>
             </tr>
@@ -92,6 +93,7 @@
     </table> 
     <input type="hidden" name="ids" id="delivery_item_ids"/>
     <input id='coupon-input-hidden' name='coupon' type='hidden'></input>
+    <input id='allow_sub_hidden' name='allow_sub' type='hidden' value="1"></input>
     </form>
   </div>
 </div>
@@ -102,6 +104,7 @@
   $("#delivery_item_ids").attr('value', $.cookie('cart'));
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
+      $('#allow_sub_hidden').val($('#allow_sub').prop('checked')?1:0);
       $("#checkout-form").submit();
       clearCart();
     }

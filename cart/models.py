@@ -23,6 +23,8 @@ class Order(models.Model):
     delivery_window = models.CharField(max_length=20)
     time = models.DateTimeField()
     invoice = models.CharField(max_length=30)
+    allow_sub = models.BooleanField()
+    sub_type = models.CharField(max_length=30,default='')
 
 class Coupon(models.Model):
   def __unicode__(self):
