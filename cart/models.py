@@ -3,6 +3,9 @@ from django.db import models
 from django.db.models import F
 from home.models import Item
 import json
+from django.core.mail import EmailMessage
+from django.template import loader
+from fruitex.settings import EMAIL_HOST_USER
 
 # Create your models here.
 class Order(models.Model):
@@ -20,6 +23,8 @@ class Order(models.Model):
     delivery_window = models.CharField(max_length=20)
     time = models.DateTimeField()
     invoice = models.CharField(max_length=30)
+    allow_sub = models.BooleanField()
+    sub_type = models.CharField(max_length=30,default='')
 
 class Coupon(models.Model):
   def __unicode__(self):
@@ -33,9 +38,8 @@ from paypal.standard.ipn.signals import payment_was_successful
 from paypal.standard.ipn.signals import payment_was_flagged
 from threading import Thread
 
-def send_receipt(to, subject, message):
-  Thread(target=lambda: send_mail(subject, message, 'noreply@fruitex.com',
-      [to], fail_silently=False)).start()
+def send_receipt(to, invoice):
+  Thread(target=lambda:send_html_message(to,invoice)).start()
 
 def handle_payment_received(status, ipn):
   invoice = ipn.invoice
@@ -49,10 +53,7 @@ def handle_payment_received(status, ipn):
   for it in Item.objects.filter(id__in=set(ids)):
     it.sold_number=it.sold_number + ids.count(it.id)
     it.save()
-  send_receipt(ipn.payer_email,\
-     '[Fruitex] Payment of your order %s received.' % invoice,\
-     "You can track your order at http://fruitex.ca/check_order/?invoice=%s" % invoice)
-
+  send_receipt(ipn.payer_email,invoice)
 
 def payment_successful(sender, **kwargs):
   handle_payment_received('paid', sender)
@@ -62,3 +63,9 @@ def payment_flagged(sender, **kwargs):
 
 payment_was_successful.connect(payment_successful)
 payment_was_flagged.connect(payment_flagged)
+
+def send_html_message(to,invoice):
+    html_content = loader.render_to_string('reply.html',{'invoice':invoice})
+    msg = EmailMessage('[Fruitex] Payment of your order %s received.' % invoice,html_content,EMAIL_HOST_USER,[to])
+    msg.content_subtype = "html"
+    msg.send()

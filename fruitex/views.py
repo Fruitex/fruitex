@@ -84,14 +84,38 @@ def group_orders(request):
 def get_orders_internal(invoices):
   return map(toStructuredOrder, Order.objects.filter(invoice__in=invoices))
 
+def get_order_detail(order):
+  time = order.time
+  order = toStructuredOrder(order)
+  order['time'] = time
+  ids = order['items']
+  ids_num = {}
+  for id in ids:
+    if id in ids_num:
+      ids_num[id] = ids_num[id] + 1
+    else:
+      ids_num[id] = 1
+  items = Item.objects.filter(id__in=ids_num.keys())
+  order_items = {}
+  for item in items:
+    if item.store.id in order_items:
+      order_items[item.store.id]['items'].append({'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
+    else:
+      order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
+  order['item_detail'] = order_items
+  return order    
 def check_order(request):
   if 'invoice' in request.GET:
     invoice = request.GET['invoice']
   else:
     return error(request)
   template = loader.get_template('check_order.html')
+  order = Order.objects.filter(invoice=invoice)
+  if len(order) == 0:
+    return error(request)
+  order_detail = get_order_detail(order[0])
   context = Context({
-    'order': json.dumps(toStructuredOrder(Order.objects.filter(invoice=invoice)[0])),
+    'order':order_detail,
   })
   return HttpResponse(template.render(context));
 

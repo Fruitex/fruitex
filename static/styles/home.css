@@ -492,8 +492,8 @@ body>footer{
     height: 150px;
 }
 #content>.content div.search-items article li .image img {
-    top: 0;
-    left: 30px;
+    top: 5px;
+    left: 15px;
 }
 #content>.content>div.search-items {
     background: rgb(252,252,252);
