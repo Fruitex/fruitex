@@ -370,6 +370,9 @@ def addItems(store, f, check_only=False):
   elif store == 'bookstore':
     for fname in _getAllCsvFiles(f):
       addBookstoreItems(fname, check_only)
+  elif store == 'petcetera':
+    for fname in _getAllCsvFiles(f):
+      addPetceteraItems(fname, check_only)
   else:
     print "unknown store: %s" % store
 
