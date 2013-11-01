@@ -25,6 +25,7 @@ labels = {
     'Department K-O': 'cate_label_book.png',
     'Department P-Z': 'cate_label_book.png',
     'Dog': 'cate_label_dog.png',
+    'Cat': 'cate_label_cat.png',
 }
 
 stores = {
