@@ -42,7 +42,8 @@ def toStructuredOrder(o):
 		'delivery_window': o.delivery_window,
 		'time': o.time.isoformat(),
     'status': o.status,
-    'invoice': o.invoice
+    'invoice': o.invoice,
+    'allow_sub_detail':o.allow_sub_detail
 	}
 
 @login_required
@@ -90,6 +91,7 @@ def get_order_detail(order):
   order['time'] = time
   ids = order['items']
   ids_num = {}
+  allow_sub_detail = json.loads(order['allow_sub_detail'])
   for id in ids:
     if id in ids_num:
       ids_num[id] = ids_num[id] + 1
@@ -99,9 +101,9 @@ def get_order_detail(order):
   order_items = {}
   for item in items:
     if item.store.id in order_items:
-      order_items[item.store.id]['items'].append({'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
+      order_items[item.store.id]['items'].append({'allow_sub':allow_sub_detail[str(item.id)],'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
     else:
-      order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
+      order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'allow_sub':allow_sub_detail[str(item.id)],'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
   order['item_detail'] = order_items
   return order    
 def check_order(request):

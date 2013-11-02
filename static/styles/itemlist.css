@@ -45,3 +45,16 @@
 .item-in-cart-count {
   font-size: 14px;
 }
+.item-in-cart label {
+    float: left;
+    clear: left;
+    margin-left: 20px;
+    margin-top: 8px;
+    color: #999;
+    cursor: pointer;
+}
+.item-in-cart label input {
+    vertical-align: top;
+    margin-right: 4px;
+    cursor: pointer;
+}

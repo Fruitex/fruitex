@@ -27,25 +27,19 @@ def confirm(request):
     address = request.POST['address']
     postcode = request.POST['postcode']
     ids = request.POST['ids']
+    allow_sub_detail = request.POST['allow_sub_detail']
     deliveryWindow = request.POST['time']
     coupon = request.POST['coupon']
-    allow_sub_post = request.POST['allow_sub']
-    if int(allow_sub_post) == 0:
-      allow_sub = False
-    else:
-      allow_sub = True
     res = computeSummaryInternal(ids, coupon)
     price = res['sum']
     tax = res['tax']
     shipping = res['delivery']
     discount = res['discount']
-
     total = max(float(price) + float(tax) + float(shipping) - float(discount), 0)
-
     invoice = str(uuid.uuid4())
     Order(name=name, address=address, phone=phone, postcode=postcode,
-        items=ids, price=price, tax=tax, shipping=shipping, status='pending',
-        delivery_window = deliveryWindow, time=datetime.now(), invoice=invoice,allow_sub=allow_sub).save()
+        items=ids, allow_sub_detail=allow_sub_detail,price=price, tax=tax, shipping=shipping, status='pending',
+        delivery_window = deliveryWindow, time=datetime.now(), invoice=invoice).save()
     paypal_dict = {
         "business": PAYPAL_RECEIVER_EMAIL,
         "currency_code": "CAD",
@@ -77,7 +71,7 @@ def confirm(request):
       'discount': discount,
       'total': round(total, 2),
       'sandbox': DEBUG,
-      'allow_sub':allow_sub
+      'allow_sub_detail':allow_sub_detail
     }
     return render_to_response("confirm.html", context)
 

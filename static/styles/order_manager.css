@@ -45,8 +45,8 @@
 #content > div.store li .desc p {
     max-width: 250px;
 }
-#content > div.store li .desc p:last-child {
-    margin-top: 16px;
+#content > div.store li .desc p:nth-child(2),#content > div.store li .desc p:last-child {
+    margin-top: 8px;
     color: #666;
 }
 #content #order {

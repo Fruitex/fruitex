@@ -70,12 +70,6 @@
   		</td>
   	</tr>
     <tr>
-      <td>
-        Allow Subsituation:
-      </td>
-      <td>
-        {% if allow_sub %}Yes{% else %}No{% endif %}
-      </td>
     </tr>
 
 	</tbody>
@@ -96,7 +90,7 @@
   </div>
 <script>
 	$(document).ready(function () {
-		ItemList({{ ids }}, false).generate($("#order-confirm-item-list"));
+		ItemList({{ ids }}, false,JSON.parse('{{ allow_sub_detail|safe }}')).generate($("#order-confirm-item-list"));
 	});
 </script>
 {% endblock %}
