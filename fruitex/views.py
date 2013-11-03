@@ -7,6 +7,7 @@ from cart.models import Order
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from home.views import toStructuredItem, getItemsByIds
+from django.shortcuts import render
 import json
 
 def home(request):
@@ -53,8 +54,47 @@ def orders(request):
     'orders': json.dumps(map(toStructuredOrder, Order.objects.exclude(status='pending')))
   })
   return HttpResponse(template.render(context));
-
 @login_required
+def norders(request):
+  orders = Order.objects.filter(status__in=['paid','flagged']).order_by('-time')
+  context_orders = []
+  for o in orders:
+    time = o.time
+    co = toStructuredOrder(o)
+    co['id'] = o.id
+    co['time'] = o.time.strftime('%d, %B %Y %H:%M:%S')
+    if co['allow_sub_detail']:
+      co['allow_sub_detail'] = json.loads(co['allow_sub_detail'])
+    else:
+      co['allow_sub_detail'] = {}
+    ids = co['items']
+    ids_num = {}
+    for id in ids:
+      if id in ids_num:
+        ids_num[id] = ids_num[id] + 1
+      else:
+        ids_num[id] = 1
+    items = Item.objects.filter(id__in=ids_num.keys())
+    order_items = []
+    for item in items:
+      if str(item.id) in co['allow_sub_detail']:
+        allow_sub = co['allow_sub_detail'][str(item.id)]
+      else:
+        allow_sub = 1
+      order_items.append({'category':item.category,'store':item.store.name,'allow_sub':allow_sub,'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
+    co['context_items'] = order_items
+    context_orders.append(co)
+  context = Context({
+    'orders':context_orders,
+    'orders_json':json.dumps(context_orders)
+  })
+  return render(request,'norders.html',context)
+def delivered(request):
+    id = request.POST['id']
+    order = Order.objects.filter(id=id)[0]
+    order.status='delivered'
+    order.save()
+    return HttpResponse(json.dumps({'status':'ok'}))
 @csrf_exempt
 def get_orders(request):
   if 'invoices' in request.POST:
@@ -91,7 +131,10 @@ def get_order_detail(order):
   order['time'] = time
   ids = order['items']
   ids_num = {}
-  allow_sub_detail = json.loads(order['allow_sub_detail'])
+  if order['allow_sub_detail']:
+    allow_sub_detail = json.loads(order['allow_sub_detail'])
+  else:
+    allow_sub_detail = {}
   for id in ids:
     if id in ids_num:
       ids_num[id] = ids_num[id] + 1
@@ -100,10 +143,14 @@ def get_order_detail(order):
   items = Item.objects.filter(id__in=ids_num.keys())
   order_items = {}
   for item in items:
-    if item.store.id in order_items:
-      order_items[item.store.id]['items'].append({'allow_sub':allow_sub_detail[str(item.id)],'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
+    if str(item.id) in allow_sub_detail:
+      allow_sub = allow_sub_detail[str(item.id)]
     else:
-      order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'allow_sub':allow_sub_detail[str(item.id)],'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
+      allow_sub = 1;
+    if item.store.id in order_items:
+      order_items[item.store.id]['items'].append({'allow_sub':allow_sub,'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku})
+    else:
+      order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'allow_sub':allow_sub,'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
   order['item_detail'] = order_items
   return order    
 def check_order(request):

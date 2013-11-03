@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/orders.css" %}"/>
+<script src={% static "javascript/lib/underscore.min.js" %}></script>
+<script src={% static "javascript/lib/sprintf.js" %}></script>
+<button id='btn_buy_list'>Generate Shopping List(<span id="select_num">{{ orders|length }}</span>)</button>
+<div id='orders_wrapper'>
+  <header>Orders</header>
+  <div>
+  	<ul>
+  		{% for o in orders %}
+  		<li>
+  			<div class="order-detail selected" data-id="{{ o.id }}">
+  				<p>
+  					<span class="label">Status:</span>
+  					<span class="value">{{ o.status }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Create on:</span>
+  					<span class="value">{{ o.time }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Name:</span>
+  					<span class="value">{{ o.name }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Address:</span>
+  					<span class="value">{{ o.address }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Postcode:</span>
+  					<span class="value">{{ o.postcode }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Phone:</span>
+  					<span class="value">{{ o.phone }}</span>
+  				</p>
+  				<p>
+  					<span class="label">Delivery Window:</span>
+  					<span class="value">{{ o.delivery_window }}</span>
+  				</p>
+  			</div>
+  			<div class="items">
+  				<ul>
+  					{% for i in o.context_items %}
+  					<li>
+  						<img src="{% static ""%}{{ i.store }}_imgs/{{ i.sku }}.JPG">
+  						<div class="item-info">
+  							<p>{{ i.name }}</p>
+  							<p>From: {{ i.store }}</p>
+  							<p>Allow subsitution: {% if i.allow_sub == 1 %}Yes{% else %}No{% endif %}</p>
+  						</div>
+  						<div class="order-info">
+  							<span>Quatity: {{ i.quatity }}</span>
+  							<span>Price: {{ i.price }}</span>
+  						</div>
+  					</li>
+  					{% endfor %}
+  				</ul>
+  			</div>
+        <button class="delivered" data-id="{{ o.id }}">Delivered!</button>
+  		</li>
+  		{% endfor %}
+  	</ul>
+  </div>
+</div>
+<div id='buy_list'>
+    <p>Generated Buy List</p>
+    <ul></ul>
+</div>
+<script>
+var orders = {{ orders_json|safe }};
+$('.order-detail').click(function(){
+  if ($(this).hasClass('selected')) {
+    $(this).removeClass('selected');
+    $('#select_num').html(parseInt($('#select_num').html()) - 1);
+  }else{
+    $(this).addClass('selected');
+    $('#select_num').html(parseInt($('#select_num').html()) + 1);
+  }
+});
+$('#btn_buy_list').click(function(){
+  var selected = $('.order-detail.selected');
+  if (selected.length == 0) {
+    alert('请至少选择一个订单');
+    return false;
+  }
+  var items = {};
+  selected.each(function(){
+    var id = $(this).data('id');
+    var order = _.find(orders,function(v){
+      return v.id == id;
+    });
+    _.each(order.context_items,function(v){
+      if (items[v.store]) {
+        if (items[v.store][v.category]) {
+            if (v.allow_sub) {
+                if (items[v.store][v.category][v.id]) {
+                    items[v.store][v.category][v.id]['allow_sub'] += parseInt(v.quatity);
+                }else{
+                    items[v.store][v.category][v.id] = {'item':v,'allow_sub':parseInt(v.quatity),'disallow_sub':0};
+                }
+            }else{
+                if (items[v.store][v.category][v.id]) {
+                    items[v.store][v.category][v.id]['disallow_sub'] += parseInt(v.quatity);
+                }else{
+                    items[v.store][v.category][v.id] = {'item':v,'disallow_sub':parseInt(v.quatity),'allow_sub':0};
+                }
+            }
+        }else{
+            items[v.store][v.category] = {};
+            items[v.store][v.category][v.id] = {'item':v,'allow_sub':0,'disallow_sub':0};
+            if (v.allow_sub == 1) {
+              items[v.store][v.category][v.id]['allow_sub'] = parseInt(v.quatity);
+            }else{
+              items[v.store][v.category][v.id]['disallow_sub'] = parseInt(v.quatity);
+            }
+        }
+      }else{
+        items[v.store] = {};
+        items[v.store][v.category] = {};
+        items[v.store][v.category][v.id] = {'item':v,'allow_sub':0,'disallow_sub':0};
+        if (v.allow_sub == 1) {
+          items[v.store][v.category][v.id]['allow_sub'] = parseInt(v.quatity);
+        }else{
+          items[v.store][v.category][v.id]['disallow_sub'] = parseInt(v.quatity);
+        }
+      }
+    });
+  });
+  var stores = [];
+  _.each(_.keys(items),function(v){
+    var categories = [];
+    _.each(_.keys(items[v]),function(vv){
+        var html_items = [];
+        _.each(_.keys(items[v][vv]),function(vvv){
+            var it = items[v][vv][vvv];
+            html_items.push(sprintf('<li class="items"><img src="/static/%s_imgs/%s.JPG" /><div class="item-info"><p>%s</p><p>Allow subsitution number:%s</p><p>Disallow subsitution number:%s</p></div><div class="order-info"><span>Price: %s</span></div></li>',it.item.store,it.item.sku,it.item.name,it.allow_sub,it.disallow_sub,it.item.price));
+        });
+        categories.push(sprintf('<li class="categories"><header>%s</header><ul>\n%s\n</ul></li>',vv,html_items.join('\n')));
+    });
+    stores.push(sprintf('<li class="stores"><header>%s</header><ul>\n%s\n</ul></li>',v,categories.join('\n')));
+  });
+  $('#buy_list ul').html(stores.join('\n'));
+  $(window).scrollTop($('#buy_list').position().top);
+});
+$.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     } 
+});
+$('#orders_wrapper .delivered').click(function(){
+    if ($(this).hasClass('loading')) {
+        return false;
+    }
+    $(this).addClass('loading').html('Operating');
+    var self = $(this);
+    $.post('/delivered',{'id':$(this).data('id')},function(resp){
+        resp = JSON.parse(resp);
+        if (resp.status == 'ok') {
+            self.parent().remove();
+        }else{
+            alert('Something going wrong!');
+        }
+    });
+});
+</script>
+{% endblock %}

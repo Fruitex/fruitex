@@ -1,0 +1,201 @@
+#orders_wrapper li .items {
+    margin-top: 2em;
+}
+#orders_wrapper li .items li img {
+    height: 88px;
+    float: left;
+}
+#orders_wrapper li {
+    list-style: none;
+}
+#orders_wrapper li .items li:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+#orders_wrapper li .items li .item-info {
+    float: left;
+    width: 500px;
+    margin-left: 2em;
+    padding-top: 1.5em;
+}
+#orders_wrapper li .items li .order-info {
+    float: right;
+    margin-right: 1em;
+    padding-top: 1.5em;
+}
+#orders_wrapper li .items li .item-info p {
+    line-height: 1.5em;
+    color: #999;
+}
+#orders_wrapper {
+    background: #FFF;
+    width: 900px;
+    margin: auto;
+    border-radius: 8px;
+}
+#orders_wrapper header {
+    line-height: 3em;
+    background: #333;
+    color: #FFF;
+    padding-left: 1em;
+    border-radius: 8px 8px 0 0;
+}
+#orders_wrapper >div {
+    border: 1px solid #CCC;
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 4px;
+    padding: 1em;
+}
+#orders_wrapper li .items li .item-info p:first-child {
+    color: #000;
+}
+#orders_wrapper li .order-detail {
+    background: #FFFFE0;
+    padding: 1em;
+    border-radius: 8px;
+    line-height: 2em;
+    cursor: pointer;
+}
+#orders_wrapper li .order-detail .label {
+    width: 8em;
+    display: inline-block;
+    color: #999;
+    text-align: right;
+}
+#orders_wrapper >div>ul>li {
+    border: 1px solid #ccc;
+    padding: 1em;
+    border-radius: 8px;
+    border-bottom-width: 4px;
+    margin-bottom: 1em;
+}
+#orders_wrapper li .items ul {
+    padding: .5em 4em;
+    border: 1px solid #ccc;
+    border-bottom-width: 4px;
+    border-radius: 8px;
+    margin-bottom: 2em;
+}
+#orders_wrapper li .items ul li {
+    border-bottom: 1px dashed #ccc;
+}
+#orders_wrapper li .items ul li:last-child {
+    border-bottom: none;
+}
+#btn_buy_list {
+    padding: 4px 2em;
+    background: #666;
+    border: none;
+    color: #FFF;
+    outline: none;
+    margin: 1em auto;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+#btn_buy_list:hover {
+    background: #333;
+}
+#orders_wrapper li .order-detail.selected {
+    background: #B7FDBF;
+}
+#orders_wrapper button.delivered {
+    background: #666;
+    
+    border: none;
+    color: #FFF;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+    padding: 4px 0;
+    width: 800px;
+    outline: none;
+}
+#orders_wrapper button.delivered:hover {
+    background: #333;
+}
+#orders_wrapper button.delivered:active {
+    -webkit-transform: translateY(1px);
+}
+#buy_list li {
+    list-style: none;
+}
+#buy_list {
+    width: 900px;
+    margin: auto;
+    margin-top: 5em;
+    background: #FFF;
+}
+#buy_list > ul>li >header {
+    background: #333;
+    color: #FFF;
+    line-height: 3em;
+    padding-left: 2em;
+    border-radius: 8px 8px 0 0;
+}
+#buy_list > ul>li > ul {
+    padding: 2em;
+    border: 1px solid #333;
+    border-bottom-width: 4px;
+    border-radius: 0 0 8px 8px;
+}
+#buy_list > ul>li > ul > li > header {
+    background: #333;
+    line-height: 3em;
+    color: #FFF;
+    border-radius: 8px 8px 0 0;
+    padding-left: 2em;
+}
+#buy_list > ul>li > ul > li > ul {
+    padding: 2em;
+    border: 1px solid #333;
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 4px;
+}
+#buy_list > ul>li > ul > li > ul >li>img {
+    height: 88px;
+    float: left;
+}
+#buy_list > ul>li > ul > li > ul >li:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+#buy_list > ul>li > ul > li > ul >li>.item-info {
+    float: left;
+    line-height: 1.5em;
+    padding-top: 1.5em;
+    margin-left: 1em;
+    color: #999;
+}
+#buy_list > ul>li > ul > li > ul >li>.order-info {
+    float: right;
+    padding-top: 1.5em;
+    margin-right: 2em;
+}
+#buy_list > ul>li > ul > li > ul >li>.item-info>p:first-child {
+    color: #333;
+}
+#buy_list > ul>li > ul > li > ul>li {
+    border-bottom: 1px dashed #999;
+}
+#buy_list > ul>li > ul>li {
+    margin-bottom: 2em;
+}
+#buy_list > ul>li > ul>li:last-child {
+    margin-bottom: 0;
+}
+#buy_list>ul>li {
+    margin-bottom: 2em;
+}
+#buy_list>ul>li:last-child {
+    margin-bottom: 0;
+}
+#buy_list>p {
+    text-align: center;
+    padding: 1em 0;
+    font-weight: 900;
+    font-size: 2em;
+}

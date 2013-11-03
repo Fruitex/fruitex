@@ -18,7 +18,6 @@ def cart(request):
     today = datetime.now()
     tomorrow = today + timedelta(days=1)
     return render_to_response("cart.html", {'today':today,'tomorrow':tomorrow})
-
 @csrf_exempt
 def confirm(request):
 

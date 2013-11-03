@@ -15,7 +15,8 @@ urlpatterns = patterns('',
     url(r'^home/', include('home.urls')),
     url(r'^cart/', include('cart.urls')),
     url(r'^orders/', 'fruitex.views.orders'),
-
+    url(r'^delivered', 'fruitex.views.delivered'),
+    url(r'^norders/', 'fruitex.views.norders'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
