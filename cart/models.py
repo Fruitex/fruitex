@@ -25,7 +25,7 @@ class Order(models.Model):
     invoice = models.CharField(max_length=30)
     sub_type = models.CharField(max_length=30,default='')
     allow_sub_detail = models.CharField(max_length=2000)
-    email = models.CharField(max_length=64)
+    email = models.CharField(max_length=64,default='')
 
 class Coupon(models.Model):
   def __unicode__(self):
