@@ -25,6 +25,7 @@ class Order(models.Model):
     invoice = models.CharField(max_length=30)
     sub_type = models.CharField(max_length=30,default='')
     allow_sub_detail = models.CharField(max_length=2000)
+    email = models.CharField(max_length=64)
 
 class Coupon(models.Model):
   def __unicode__(self):
@@ -48,6 +49,7 @@ def handle_payment_received(status, ipn):
   Coupon.objects.filter(code=coupon).update(used=True)
   order = Order.objects.filter(invoice=invoice)[0]
   order.status=status
+  order.email=ipn.payer_email
   order.save()
   ids = json.loads(order.items)
   for it in Item.objects.filter(id__in=set(ids)):

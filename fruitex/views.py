@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from home.views import toStructuredItem, getItemsByIds
 from django.shortcuts import render
 import json
+from django.core.mail import EmailMessage
+from fruitex.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
+from threading import Thread
 
 def home(request):
     return render_to_response("index.html", {})
@@ -93,8 +97,16 @@ def delivered(request):
     id = request.POST['id']
     order = Order.objects.filter(id=id)[0]
     order.status='delivered'
+    #send_html_message(order.email,order.invoice)
     order.save()
     return HttpResponse(json.dumps({'status':'ok'}))
+def send_receipt(to, invoice):
+  Thread(target=lambda:send_html_message(to,invoice)).start()
+def send_html_message(to,invoice):
+    html_content = loader.render_to_string('delivered.html',{'invoice':invoice})
+    msg = EmailMessage('[Fruitex] your order %s has been successfully delivered!.' % invoice,html_content,EMAIL_HOST_USER,[to])
+    msg.content_subtype = "html"
+    msg.send()
 @csrf_exempt
 def get_orders(request):
   if 'invoices' in request.POST:
