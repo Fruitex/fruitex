@@ -16,15 +16,22 @@
 <div class="ad">
 	<img src="{% static "imgs/"%}ad_{{current_store_name}}.png" alter="{{current_store_description}} Advertisement" />
 </div>
+<div class="deal-sale">
+	<header>Deal OF THIS WEEK</header>
+	<article>
+		<ul></ul>
+		<div class="loading"></div>
+	</article>
+</div>
 <div class="week-sale">
-	<header>Weekly Sale</header>
+	<header>POPULAR ONSALES</header>
 	<article>
 		<ul></ul>
 		<div class="loading"></div>
 	</article>
 </div>
 <div class="popular">
-	<header>What's popular</header>
+	<header>BEST SELLINGS</header>
 	<article>
 		<ul></ul>
 		<div class="loading"></div>
@@ -204,14 +211,19 @@
 	}
 	var item_template = $.template(null,$('#item_template').html());
 	var render_weekly = function(){
-		$.post('/home/getOnSaleItems',{'startId':0,'num':15,query:location.search.replace(/^\?query=/,'')},function(data){
+		$.post('/home/getOnSaleItems',{'startId':0,'num':10,query:location.search.replace(/^\?query=/,'')},function(data){
 			var containor = $('#content .content .week-sale article');
       		if (!data || !data.length) {
         		$('.week-sale').hide();
+        		$('.deal-sale').hide();
       		}
+      		var data_deal = data.splice(0,5);
       		var containor = $('#content .content .week-sale article');
 			containor.find('.loading').fadeOut();
 			$.tmpl(item_template,{'items':data,'is_weekly':true}).appendTo(containor.find('ul'));
+			var deal_containor = $('#content .content .deal-sale article');
+			deal_containor.find('.loading').fadeOut();
+			$.tmpl(item_template,{'items':data_deal,'is_weekly':true}).appendTo(deal_containor.find('ul'));
 		},'json');
 	}
 	render_weekly();

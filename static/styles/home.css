@@ -318,35 +318,40 @@ body>header>a.cart .plus {
     width: 780px;
     border-radius: 12px;
 }
-#content>.content .week-sale,#content>.content .popular {
+#content>.content .week-sale,#content>.content .popular,#content>.content .deal-sale {
     margin-top: 12px;
     border: 1px solid #ccc;
     border-radius: 12px;
     padding: 2px 12px 5px 12px;
     position: relative;
 }
-#content>.content .week-sale article, #content>.content .popular article {
-    height: 640px;
+#content>.content .week-sale article, #content>.content .popular article, #content>.content .deal-sale article {
+    height: 220px;
     position: relative;
     margin-top: 35px;
 }
-#content>.content .week-sale header, #content>.content .popular header {
+#content>.content .week-sale header, #content>.content .popular header, #content>.content .deal-sale header {
     position: absolute;
     height: 32px;
-    background: #f00;
+    background: #EE9F3B;
     color: #fff;
     line-height: 30px;
     padding: 0 20px;
     border-radius: 12px 0 12px 0;
     left: -1px;
     top: -1px;
-    border: 1px solid rgb(144, 68, 68);
-    background-image: linear-gradient(to bottom, rgb(246, 107, 107) 0%,rgb(244, 91, 89) 50%,rgb(244, 91, 89) 100%);
+    border: 1px solid #F56200;
+    background-image: linear-gradient(to bottom, #EE9F3B 0%,#E77640 50%,#EE9F3B 100%);
 }
 #content>.content .popular header {
     background: rgb(124, 205, 86);
     border-color: rgb(78, 145, 23);
     background-image: linear-gradient(to bottom, rgb(124, 205, 86) 0%,rgb(114, 200, 77) 50%,rgb(114, 200, 77) 100%);
+}
+#content>.content .deal-sale header {
+    background: #D93EEE;
+    border-color: #BE18C5;
+    background-image: linear-gradient(to bottom, #BE18C5 0%,#A306AA 50%,#BE18C5 100%);
 }
 #content>.content>div>article .loading {
     position: absolute;
