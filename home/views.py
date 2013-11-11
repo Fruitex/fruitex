@@ -31,12 +31,15 @@ labels = {
 stores = {
     'sobeys':'Sobeys',
     'bookstore':'WLU Bookstore',
-    'petcetera': 'Petcetera'
+    'petcetera': 'Petcetera',
+    'cloft': 'CLoft'
 }
 stores_list = [
   {'name':'sobeys','description':'Sobeys'},
   {'name':'bookstore','description':'WLU Bookstore'},
-  {'name':'petcetera','description':'Petcetera'}
+  {'name':'petcetera','description':'Petcetera'},
+  {'name':'cloft','description':'CLOFT'}
+
 ]
 
 def getStore(request):
