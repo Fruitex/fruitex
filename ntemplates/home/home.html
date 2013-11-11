@@ -211,7 +211,7 @@
 	}
 	var item_template = $.template(null,$('#item_template').html());
 	var render_weekly = function(){
-		$.post('/home/getOnSaleItems',{'startId':0,'num':10,query:location.search.replace(/^\?query=/,'')},function(data){
+		$.post('/home/getPopularItems',{'startId':0,'num':10,query:location.search.replace(/^\?query=/,'')},function(data){
 			var containor = $('#content .content .week-sale article');
       		if (!data || !data.length) {
         		$('.week-sale').hide();

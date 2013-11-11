@@ -405,7 +405,7 @@ body>header>a.cart .plus {
 #content>.content .week-sale article li .price.weekly .original {
     text-decoration: line-through;
 }
-#content>.content .week-sale article li .price.weekly .now {
+#content>.content .week-sale article li .price.weekly .now,#content>.content .deal-sale article li .price.weekly .now {
     color: rgb(229,68,57);
     margin-right: 4px;
 }
