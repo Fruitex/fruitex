@@ -27,36 +27,6 @@ def showOrders():
 def trim(s):
   return re.sub('(^\s+|\s+$)', '', s)
 
-
-def loadBookstoreItems(directory):
-  bookstore = Store(name = 'bookstore', address = "")
-  bookstore.save()
-  items = []
-  for fname in _getAllCsvFiles(directory):
-    
-    storeItems(fname, False)
-
-def loadSobeysItems(directory):
-  sobeys = Store(name = 'sobeys', address = "450 Columbia St W, Waterloo ON N2T 2W1")
-  sobeys.save()
-  items = []
-  for fname in _getAllCsvFiles(directory):
-    addSobeysItems(fname, False)
-
-def loadCLoftItems(directory):
-  sobeys = Store(name = 'cloft', address = "20 University Ave E. N2J 2V7, Waterloo, Ontario")
-  sobeys.save()
-  items = []
-  for fname in _getAllCsvFiles(directory):
-    addCLoftItems(fname, False)
-
-def loadPetceteraItems(directory):
-  petcetera = sobeys = Store(name = 'petcetera', address = "582 King St N, Waterloo, ON N2L 6L3")
-  petcetera.save()
-  items = []
-  for fname in _getAllCsvFiles(directory):
-    addPetceteraItems(fname, False)
-
 def createStore(storeName, storeAddress):
   if (storeName=='' or storeAddress==''):
   	print 'missing argument'
@@ -157,67 +127,6 @@ def checkImg(store):
       print 'Missing image for item: %d (%s.JPG)' % (it.id, it.sku)
   print "Unmatched imgs: %s" % str(allImgs)
 
-def addSobeysItems(fname, check_only):
-  sobeys = Store.objects.filter(name='sobeys')[0]
-  items = []
-  f = csv.reader(open(fname))
-  next(f) # eat the header 
-  print 'loading %s' %fname
-  for lst in f:
-    items.append((map(trim, lst), fname))
-  TITLE=0
-  CATEGORY=3
-  PRICE=5
-  SALES_PRICE=7
-  WEIGHT=8
-  LENGTH=9
-  WIDTH=10
-  HEIGHT=11
-  SKU=12
-  TAX_STATUS=15
-  TAX_CLASS=16
-
-  def getRemark(item):
-    res = {}
-    if item[WEIGHT]:
-      res["weight"] = item[WEIGHT]
-    if item[LENGTH]:
-      res["length"] = item[LENGTH]
-    if item[WIDTH]:
-      res["width"] = item[WIDTH]
-    if item[HEIGHT]:
-      res["height"] = item[HEIGHT]
-    if item[SALES_PRICE]:
-      res["sales_price"] = item[SALES_PRICE]
-    return json.dumps(res)
-
-  print "%d items to write" % len(items)
-  problemFiles = set()
-  newItemCt=0
-  for item,fname in items:
-    try:
-      if item[CATEGORY] and item[TITLE] and item[SKU] and item[PRICE] \
-          and item[TAX_STATUS] and item[TAX_CLASS]:
-        if len(Item.objects.filter(store=sobeys, name=item[TITLE])) == 0:
-          newItemCt+=1
-          if not check_only:
-            Item(store = sobeys, category = item[CATEGORY],
-                name = item[TITLE], price = item[PRICE], sku = item[SKU],
-                tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
-                remark = getRemark(item)).save()
-        elif check_only:
-          print "duplicate item %s" % item[TITLE]
-      else:
-        if fname in problemFiles:
-          continue
-        else:
-          problemFiles.add(fname)
-          print 'data in %s is not complete' % fname
-          print item
-    except Exception as e:
-      print e, fname, item
-  print "%d new items" % newItemCt
-
 def addBookstoreItems(fname, check_only):
   bookstore = Store.objects.filter(name='bookstore')[0]
   items = []
@@ -309,8 +218,8 @@ def addBookstoreItems(fname, check_only):
       print e, fname, item
   print "%d new items" % newItemCt
 
-def addPetceteraItems(fname, check_only):
-  petcetera = Store.objects.filter(name='petcetera')[0]
+def addRegularItems(store_name, fname, check_only):
+  store = Store.objects.filter(name=store_name)[0]
   items = []
   f = csv.reader(open(fname))
   next(f) # eat the header 
@@ -350,71 +259,10 @@ def addPetceteraItems(fname, check_only):
     try:
       if item[CATEGORY] and item[TITLE] and item[SKU] and item[PRICE] \
           and item[TAX_STATUS] and item[TAX_CLASS]:
-        if len(Item.objects.filter(store=petcetera, name=item[TITLE])) == 0:
+        if len(Item.objects.filter(store=store, name=item[TITLE])) == 0:
           newItemCt+=1
           if not check_only:
-            Item(store = petcetera, category = item[CATEGORY],
-                name = item[TITLE], price = item[PRICE], sku = item[SKU],
-                tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
-                remark = getRemark(item)).save()
-        elif check_only:
-          print "duplicate item %s" % item[TITLE]
-      else:
-        if fname in problemFiles:
-          continue
-        else:
-          problemFiles.add(fname)
-          print 'data in %s is not complete' % fname
-          print item
-    except Exception as e:
-      print e, fname, item
-  print "%d new items" % newItemCt
-
-def addCLoftItems(fname, check_only):
-  cloft = Store.objects.filter(name='cloft')[0]
-  items = []
-  f = csv.reader(open(fname))
-  next(f) # eat the header 
-  print 'loading %s' %fname
-  for lst in f:
-    items.append((map(trim, lst), fname))
-  TITLE=0
-  CATEGORY=3
-  PRICE=5
-  SALES_PRICE=7
-  WEIGHT=8
-  LENGTH=9
-  WIDTH=10
-  HEIGHT=11
-  SKU=12
-  TAX_STATUS=15
-  TAX_CLASS=16
-
-  def getRemark(item):
-    res = {}
-    if item[WEIGHT]:
-      res["weight"] = item[WEIGHT]
-    if item[LENGTH]:
-      res["length"] = item[LENGTH]
-    if item[WIDTH]:
-      res["width"] = item[WIDTH]
-    if item[HEIGHT]:
-      res["height"] = item[HEIGHT]
-    if item[SALES_PRICE]:
-      res["sales_price"] = item[SALES_PRICE]
-    return json.dumps(res)
-
-  print "%d items to write" % len(items)
-  problemFiles = set()
-  newItemCt=0
-  for item,fname in items:
-    try:
-      if item[CATEGORY] and item[TITLE] and item[SKU] and item[PRICE] \
-          and item[TAX_STATUS] and item[TAX_CLASS]:
-        if len(Item.objects.filter(store=cloft, name=item[TITLE])) == 0:
-          newItemCt+=1
-          if not check_only:
-            Item(store = cloft, category = item[CATEGORY],
+            Item(store = store, category = item[CATEGORY],
                 name = item[TITLE], price = item[PRICE], sku = item[SKU],
                 tax_status = item[TAX_STATUS], tax_class = item[TAX_CLASS],
                 remark = getRemark(item)).save()
@@ -433,18 +281,13 @@ def addCLoftItems(fname, check_only):
 
 
 def addItems(store, f, check_only=False):
-  if store == 'sobeys':
+  if store == 'sobeys' or store == 'petcetera'\
+  or store == 'cloft' or store == 'campus':
     for fname in _getAllCsvFiles(f):
-      addSobeysItems(fname, check_only)
+      addRegularItems(store, fname, check_only)
   elif store == 'bookstore':
     for fname in _getAllCsvFiles(f):
       addBookstoreItems(fname, check_only)
-  elif store == 'petcetera':
-    for fname in _getAllCsvFiles(f):
-      addPetceteraItems(fname, check_only)
-  elif store == 'cloft':
-    for fname in _getAllCsvFiles(f):
-      addCLoftItems(fname, check_only)
   else:
     print "unknown store: %s" % store
 
@@ -452,16 +295,7 @@ def loadItem(store, f):
   if f == '':
     print 'need to specify directory'
     return
-  if store == 'sobeys':
-    loadSobeysItems(f)
-  elif store == 'bookstore':
-    loadBookstoreItems(f)
-  elif store == 'petcetera':
-  	loadPetceteraItems(f)
-  elif store == 'cloft':
-  	loadCLoftItems(f)
-  else:
-    print "unknown store: %s" % store
+  addItems(store, f, False);
 
 def onSale(store, fname, onSaleStart):
   f = csv.reader(open(fname))
