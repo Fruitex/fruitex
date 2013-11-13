@@ -11,8 +11,8 @@ import time
 import uuid
 from home.views import computeSummaryInternal
 from urllib import urlencode
-from fruitex.config import DOMAIN,DEBUG
-from fruitex.settings import PAYPAL_RECEIVER_EMAIL
+from config.environment import DOMAIN,DEBUG
+from config.paypal import PAYPAL_RECEIVER_EMAIL
 
 def cart(request):
     today = datetime.now()

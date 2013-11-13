@@ -5,7 +5,7 @@ from home.models import Item
 import json
 from django.core.mail import EmailMessage
 from django.template import loader
-from fruitex.settings import EMAIL_HOST_USER
+from config.email import EMAIL_HOST_USER
 
 # Create your models here.
 class Order(models.Model):
