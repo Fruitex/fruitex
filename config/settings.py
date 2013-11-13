@@ -170,3 +170,8 @@ COMPRESS_ENABLED = not DEBUG
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
