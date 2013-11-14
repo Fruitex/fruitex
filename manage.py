@@ -131,7 +131,7 @@ def addBookstoreItems(fname, check_only):
   bookstore = Store.objects.filter(name='bookstore')[0]
   items = []
   f = csv.reader(open(fname))
-  next(f) # eat the header 
+  next(f) # eat the header
   print 'loading %s' % fname
   for lst in f:
     items.append((map(trim, lst), fname))
@@ -222,7 +222,7 @@ def addRegularItems(store_name, fname, check_only):
   store = Store.objects.filter(name=store_name)[0]
   items = []
   f = csv.reader(open(fname))
-  next(f) # eat the header 
+  next(f) # eat the header
   print 'loading %s' %fname
   for lst in f:
     items.append((map(trim, lst), fname))
@@ -299,7 +299,7 @@ def loadItem(store, f):
 
 def onSale(store, fname, onSaleStart):
   f = csv.reader(open(fname))
-  next(f) # eat the header 
+  next(f) # eat the header
   for lst in f:
     l = map(trim, lst)
     if store == 'sobeys':
@@ -316,7 +316,7 @@ def onSale(store, fname, onSaleStart):
 
     if len(it) != 1:
       "%d items found with name %s" % (len(it), title)
-      return 
+      return
     if onSaleStart:
       it.update(sales_price = sales_price)
     else:
@@ -389,7 +389,7 @@ def main(argv):
     execute_from_command_line(sys.argv)
 
 if __name__ == "__main__":
-  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fruitex.settings")
+  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
   from home.models import Store, Item
   from cart.models import Order, Coupon
   main(sys.argv)

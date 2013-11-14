@@ -10,7 +10,7 @@ from home.views import toStructuredItem, getItemsByIds
 from django.shortcuts import render
 import json
 from django.core.mail import EmailMessage
-from fruitex.settings import EMAIL_HOST_USER
+from config.email import EMAIL_HOST_USER
 from django.core.mail import send_mail
 from threading import Thread
 
@@ -164,7 +164,7 @@ def get_order_detail(order):
     else:
       order_items[item.store.id] = {'id':item.store.id,'name':item.store.name,'address':item.store.address,'map':'map_'+item.store.name+'.png','items':[{'allow_sub':allow_sub,'quatity':ids_num[item.id],'id':item.id,'name':item.name,'price':item.price,'sku':item.sku}]}
   order['item_detail'] = order_items
-  return order    
+  return order
 def check_order(request):
   if 'invoice' in request.GET:
     invoice = request.GET['invoice']
