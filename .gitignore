@@ -6,6 +6,7 @@
 local_settings.py
 
 # All non-standard config files
+config/*
 config/**/*
 !settings.py
 !*.sample.py
