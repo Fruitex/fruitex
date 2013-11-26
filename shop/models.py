@@ -11,7 +11,7 @@ class Category(models.Model):
     def __unicode__(self):
         if self.parent is None:
             return self.name
-        return self.parent.unicode() + '->' + self.name
+        return self.parent.__unicode__() + '->' + self.name
     name = models.CharField(max_length=100)
     slug = models.SlugField()
     icon = models.CharField(max_length=100, blank=True)
