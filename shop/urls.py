@@ -1,10 +1,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('shop.views',
-  url(r'^$', 'toDefault', name='toDefault'),
-  url(r'^(?P<store_slug>\w*)/$', 'storeHome', name='storeHome'),
-  # url(r'^getItems$', views.getItems),
-  # url(r'^getPopularItems$', views.getPopularItems),
-  # url(r'^getOnSaleItems$', views.getOnSaleItems),
-  # url(r'^computeSummary$', views.computeSummary),
+  url(r'^$', 'to_default', name='to_default'),
+  url(r'^(?P<store_slug>\w+)/$', 'store_front', name='store_home'),
+  url(r'^(?P<store_slug>\w+)/(?P<category_id>\d+)/$', 'store_front', name='store_category'),
 )

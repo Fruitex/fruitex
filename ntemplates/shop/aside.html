@@ -4,7 +4,7 @@
 		<header>Store {{store.slug}}</header>
 		<ul>
 			{% for item in stores %}
-			<li{% if store.slug == item.slug %} class="current"{% endif %}><a href="{% url 'shop:storeHome' item.slug %}">{{item.name}}</a></li>
+			<li{% if store.slug == item.slug %} class="current"{% endif %}><a href="{% url 'shop:store_home' item.slug %}">{{item.name}}</a></li>
 			{% endfor %}
 		</ul>
 	</div>
@@ -20,11 +20,11 @@
 							<ul>
 								{% for cate2 in cate1.category_set.all %}
 								<li>
-									<a title="{{cate2.name}}" href="">{{cate2.name}}</a>
+									<a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
 									<ul>
 										{% for cate3 in cate2.category_set.all %}
 										<li>
-											<a title="{{cate3.name}}" href="">{{cate3.name}}</a>
+											<a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
 										</li>
 										{% endfor %}
 									</ul>
