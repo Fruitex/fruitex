@@ -13,10 +13,11 @@ class StoreAdmin(admin.ModelAdmin):
 admin.site.register(Store, StoreAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
-  list_display = ['__unicode__', 'id', 'store']
+  list_display = ['__unicode__', 'id', 'store', 'icon']
   ordering = ['store', 'parent']
   search_fields = ['__unicode__']
   list_filter = ['store']
+  prepopulated_fields = { 'slug': ['name'] }
 
 admin.site.register(Category, CategoryAdmin)
 

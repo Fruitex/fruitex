@@ -13,6 +13,8 @@ class Category(models.Model):
             return self.name
         return self.parent.unicode() + '->' + self.name
     name = models.CharField(max_length=100)
+    slug = models.SlugField()
+    icon = models.CharField(max_length=100)
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='categories')
     parent = models.ForeignKey('Category', blank=True, null=True)
 
