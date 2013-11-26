@@ -1,0 +1,70 @@
+{% extends "shop/base.html" %}
+{% block content%}
+<div class="search-items">
+	<article>
+		<ul></ul>
+		<div class="loading"></div>
+	</article>
+	<footer>
+		<span title="prev page" class="prev"></span>
+		<span title="next page" class="next"></span>
+	</footer>
+</div>
+{% endblock %}
+{% block page_script%}
+{% include "shop/item_detail.html" %}
+
+{% include "shop/item.html" %}
+
+<script type="text/javascript">
+	var truncate = function(str,len){
+		if (str.length > len) {
+			return str.substr(0,len - 3) + '...';
+		}
+		return str;
+	}
+	var image_loaded = function(image){
+		$(image).fadeIn();
+		$(image).next().hide();
+	}
+	var startId = 0;
+	var num = 12;
+	var item_template = $.template(null,$('#item_template').html());
+	var render_search = function(startId, num, callback){
+		$.post('{% url "shop:store_category_items" store.slug category.id %}',{ start: startId },function(data){
+			var containor = $('#content .content .search-items article');
+			var ul = containor.find('ul').empty();
+			data.forEach(function(item) {
+				console.log(JSON.stringify(item));
+				$.tmpl(item_template,{'item':item.fields}).appendTo(ul);
+			})
+			containor.find('.loading').fadeOut();
+			callback && callback();
+		},'json');
+	}
+	render_search(startId,num);
+	$('#content .content .search-items footer .prev').click(function(){
+		startId = startId - 12;
+		if (startId < 0) {
+			startId = 0;
+		}
+		var containor = $('#content .content .search-items article');
+		containor.find('.loading').fadeIn();
+		var self = $(this);
+		render_search(startId,num,function(){
+			if (startId == 0) {
+				self.hide();
+			}
+		});
+	});
+	$('#content .content .search-items footer .next').click(function(){
+		startId = startId + 12;
+		var containor = $('#content .content .search-items article');
+		containor.find('.loading').fadeIn();
+		render_search(startId,num,function(){
+			$('#content .content .search-items footer .prev').show();
+		});
+	});
+</script>
+
+{% endblock %}

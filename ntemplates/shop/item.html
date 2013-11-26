@@ -1,0 +1,14 @@
+{% load static %}
+<script type="text/template" id="item_template">
+  <li title="${item.name}" data-o="${JSON.stringify(item)}">
+  <p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{store.slug}}_imgs/${item.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
+  <p class="name">${truncate(item.name,50)}</p>
+  <p class="price">
+    {% templatetag openvariable %}if is_onsale{% templatetag closevariable %}
+    <span class="now">$ ${it.sales_price}</span>
+    {% templatetag openvariable %}/if{% templatetag closevariable %}
+    <span class="original">$ ${item.price}</span>
+  </p>
+  <p class="add"><i data-id="${item.id}">Add To Cart</i></p>
+  </li>
+</script>
