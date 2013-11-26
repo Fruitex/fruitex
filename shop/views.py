@@ -5,16 +5,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from shop.models import Store, Category, Item, ItemMeta
 
-# Views
+# Common operations
 
-@csrf_exempt
-def to_default(request):
-  return HttpResponseRedirect('sobeys');
+def empty_response():
+  return HttpResponse('[]', mimetype='application/json')
 
-@csrf_exempt
-def store_front(request, store_slug, category_id=None):
-  template = loader.get_template('shop/store_home.html')
-
+def common_context(store_slug):
   # Fetch all stores, current store and base categories of current store
   try:
     stores = Store.objects.all();
@@ -29,6 +25,25 @@ def store_front(request, store_slug, category_id=None):
     'store':store,
     'categories':categories,
   })
+
+  return context
+
+# Views
+
+@csrf_exempt
+def to_default(request):
+  return HttpResponseRedirect('sobeys');
+
+@csrf_exempt
+def store_home(request, store_slug):
+  template = loader.get_template('shop/store_home.html')
+  context = common_context(store_slug)
+  return HttpResponse(template.render(context))
+
+@csrf_exempt
+def store_category(request, store_slug, category_id=None):
+  template = loader.get_template('shop/store_search.html')
+  context = common_context(store_slug)
 
   # Fetch category for current selection
   if category_id is not None:
