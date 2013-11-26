@@ -4,6 +4,7 @@ class Store(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField(max_length=50)
+    slug = models.SlugField()
     address = models.TextField()
 
 class Category(models.Model):

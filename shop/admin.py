@@ -8,6 +8,7 @@ class StoreAdmin(admin.ModelAdmin):
   list_display = ['name', 'id', 'address']
   ordering = ['-id']
   search_fields = ['id', 'name']
+  prepopulated_fields = { 'slug': ['name'] }
 
 admin.site.register(Store, StoreAdmin)
 
