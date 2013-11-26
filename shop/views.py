@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
 from shop.models import Store, Category, Item, ItemMeta
@@ -55,6 +56,19 @@ def store_category(request, store_slug, category_id=None):
 
   return HttpResponse(template.render(context))
 
+# APIs
+
 @csrf_exempt
-def store_items(request, store_slug):
-  pass
+def store_items(request, store_slug, category_id=None):
+  # Fetch category for current selection
+  if category_id is None:
+    return empty_response()
+  else:
+    try:
+      category = Category.objects.get(id=category_id)
+    except ObjectDoesNotExist:
+      return empty_response()
+
+  items = category.items.all()
+
+  return HttpResponse(serializers.serialize('json', items), mimetype='application/json')
