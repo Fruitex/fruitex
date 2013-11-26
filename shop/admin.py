@@ -2,6 +2,7 @@ from django.contrib import admin
 from shop.models import Store
 from shop.models import Category
 from shop.models import Item
+from shop.models import ItemMeta
 
 class StoreAdmin(admin.ModelAdmin):
   list_display = ['name', 'id', 'address']
@@ -39,3 +40,11 @@ class ItemAdmin(admin.ModelAdmin):
   remove_sales.short_description = "Mark as not on sale"
 
 admin.site.register(Item, ItemAdmin)
+
+class ItemMetaAdmin(admin.ModelAdmin):
+  list_display = ['id', 'key', 'value', 'item']
+  ordering = [ 'item' ]
+  search_fields = ['item', 'key']
+  raw_id_fields = ['item']
+
+admin.site.register(ItemMeta, ItemMetaAdmin)

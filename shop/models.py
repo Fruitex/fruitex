@@ -1,5 +1,4 @@
 from django.db import models
-from jsonfield import JSONField
 
 class Store(models.Model):
     def __unicode__(self):
@@ -30,7 +29,6 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='items')
     sku = models.CharField(max_length=20)
-    meta = JSONField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     sales_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     out_of_stock = models.BooleanField(default=False)
@@ -39,3 +37,10 @@ class Item(models.Model):
     sold_number = models.IntegerField(editable=False, default=0)
     when_added = models.DateTimeField(auto_now_add=True)
     when_updated = models.DateTimeField(auto_now=True)
+
+class ItemMeta(models.Model):
+    def __unicode__(self):
+        return self.key + ': ' + self.value
+    item = models.ForeignKey(Item, related_name="metas")
+    key = models.CharField(max_length=256)
+    value = models.CharField(max_length=256)
