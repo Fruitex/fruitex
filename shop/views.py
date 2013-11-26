@@ -39,3 +39,7 @@ def store_front(request, store_slug, category_id=None):
       pass
 
   return HttpResponse(template.render(context))
+
+@csrf_exempt
+def store_items(request, store_slug):
+  pass
