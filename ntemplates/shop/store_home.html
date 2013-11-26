@@ -14,7 +14,7 @@
 </div>
 {% else %}
 <div class="ad">
-	<img src="{% static "imgs/"%}ad_{{current_store_name}}.png" alter="{{current_store_description}} Advertisement" />
+	<img src="{% static "imgs/"%}ad_{{ store.slug }}.png" alter="{{ store.name }} Advertisement" />
 </div>
 <div class="deal-sale">
 	<header>Deal OF THIS WEEK</header>
