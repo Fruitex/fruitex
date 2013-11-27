@@ -4,7 +4,7 @@ from django.template import Context, loader
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-from shop.models import Store, Category, Item, ItemMeta
+from shop.models import Store, Category, Item
 
 ITEM_PER_PAGE = 12
 POPULAR_ITEM_PER_PAGE = 8
@@ -36,6 +36,9 @@ def common_context(store_slug):
   })
 
   return context
+
+def items_for_store(store_slug):
+  return Item.objects.filter(category__store__slug=store_slug)
 
 def limit_to_page(queryset, page=1, per_page=ITEM_PER_PAGE):
   if type(page) is not int:
@@ -87,7 +90,7 @@ def store_search(request, store_slug, keyword=None):
 
 @csrf_exempt
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
-  items = Item.objects.order_by('name')
+  items = items_for_store(store_slug).order_by('name')
   if category_id is not None and len(category_id) > 0:
     items = items.filter(category__id=category_id)
   if keyword is not None and len(keyword) > 0:
@@ -98,21 +101,21 @@ def store_items(request, store_slug, category_id=None, keyword=None, page=1):
 
 @csrf_exempt
 def store_popular_items(request, store_slug, page=1):
-  items = Item.objects.order_by('-sold_number')
+  items = items_for_store(store_slug).order_by('-sold_number')
   items = limit_to_page(items, page, POPULAR_ITEM_PER_PAGE)
 
   return json_response(items)
 
 @csrf_exempt
 def store_onsale_items(request, store_slug, page=1):
-  items = Item.objects.filter(on_sale=True).order_by('-sold_number')
+  items = items_for_store(store_slug).filter(on_sale=True).order_by('-sold_number')
   items = limit_to_page(items, page, ON_SALE_ITEM_PER_PAGE)
 
   return json_response(items)
 
 @csrf_exempt
 def store_featured_items(request, store_slug, featured_in, page=1):
-  items = Item.objects.filter(featured=featured_in).order_by('name')
+  items = items_for_store(store_slug).filter(featured=featured_in).order_by('name')
   items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
 
   return json_response(items)
