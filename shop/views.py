@@ -9,6 +9,7 @@ from shop.models import Store, Category, Item, ItemMeta
 ITEM_PER_PAGE = 12
 POPULAR_ITEM_PER_PAGE = 8
 ON_SALE_ITEM_PER_PAGE = 4
+FEATURED_ITEM_PER_PAGE = 4
 
 # Common operations
 
@@ -93,5 +94,12 @@ def store_popular_items(request, store_slug, page=1):
 def store_onsale_items(request, store_slug, page=1):
   items = Item.objects.filter(on_sale=True).order_by('-sold_number')
   items = limit_to_page(items, page, ON_SALE_ITEM_PER_PAGE)
+
+  return json_response(items)
+
+@csrf_exempt
+def store_featured_items(request, store_slug, featured_in, page=1):
+  items = Item.objects.filter(featured=featured_in).order_by('name')
+  items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
 
   return json_response(items)
