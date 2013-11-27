@@ -16,22 +16,18 @@
         <span title="{{ cate1.name }}" style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')">{{ cate1.name }}</span>
         <div>
           <ul>
+            {% for cate2 in cate1.category_set.all %}
             <li>
+              <a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
               <ul>
-                {% for cate2 in cate1.category_set.all %}
+                {% for cate3 in cate2.category_set.all %}
                 <li>
-                  <a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
-                  <ul>
-                    {% for cate3 in cate2.category_set.all %}
-                    <li>
-                      <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
-                    </li>
-                    {% endfor %}
-                  </ul>
+                  <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
                 </li>
                 {% endfor %}
               </ul>
             </li>
+            {% endfor %}
           </ul>
         </div>
       </li>
