@@ -62,17 +62,10 @@ def store_category(request, store_slug, category_id=None):
 
 @csrf_exempt
 def store_items(request, store_slug, category_id=None, page=1):
-  # Fetch category for current selection
-  if category_id is None:
-    return empty_response()
-  else:
-    try:
-      category = Category.objects.get(id=category_id)
-    except ObjectDoesNotExist:
-      return empty_response()
-
-  items = category.items.order_by('name')
-  if len(page) > 0:
+  items = Item.objects.order_by('name')
+  if category_id is not None and len(category_id) > 0:
+    items = items.filter(category__id=category_id)
+  if page is not None and len(page) > 0:
     page = int(page)
     items = items[ITEM_PER_PAGE * (page - 1) : ITEM_PER_PAGE * page]
 
