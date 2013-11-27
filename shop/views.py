@@ -6,6 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from shop.models import Store, Category, Item, ItemMeta
 
+ITEM_PER_PAGE = 12
+
 # Common operations
 
 def empty_response():
@@ -70,5 +72,8 @@ def store_items(request, store_slug, category_id=None, page=1):
       return empty_response()
 
   items = category.items.order_by('name')
+  if len(page) > 0:
+    page = int(page)
+    items = items[ITEM_PER_PAGE * (page - 1) : ITEM_PER_PAGE * page]
 
   return HttpResponse(serializers.serialize('json', items), mimetype='application/json')
