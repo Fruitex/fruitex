@@ -27,9 +27,9 @@ class ItemAdmin(admin.ModelAdmin):
     'name', 'id', 'price', 'sales_price', 'category',
     'sold_number', 'out_of_stock', 'on_sale'
   ]
-  list_filter = [ 'category', 'out_of_stock', 'on_sale', 'tax_class' ]
+  list_filter = [ 'out_of_stock', 'on_sale', 'tax_class', 'featured' ]
   ordering = [ '-id' ]
-  search_fields = ['id', 'name', 'sku']
+  search_fields = ['id', 'name', 'sku', 'category', 'featured']
   actions = ['remove_sales']
 
   def remove_sales(self, request, queryset):
