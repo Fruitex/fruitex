@@ -5,7 +5,7 @@
 		{% if category %}
 		<span class="cate"><span>{{ category }}<i>×</i></span></span>
 		{% endif %}
-		<input class="search-content"{% if search_content %} value="{{search_content}}"{% endif %}/>
+		<input class="search-content"{% if search_keyword %} value="{{search_keyword}}"{% endif %}/>
 		<span class="search-btn"><i>Search</i></span>
 	</div>
 	<a class="cart" href="/cart">
@@ -14,7 +14,7 @@
 	</a>
 	<script type="text/javascript">
 	$('body>header .cate i').click(function(){
-		location.href = '{% url 'shop:store_home' store.slug %}';
+		location.href = '{% url "shop:store_home" store.slug %}';
 	});
 	</script>
 </header>

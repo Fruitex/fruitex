@@ -8,13 +8,6 @@
       <p>${item.name}</p>
       <p>Price: $${item.price}</p>
     </div>
-    {% templatetag openvariable %}if item.bookinfo {% templatetag closevariable %}
-    <div class="bookinfo">
-      <p>Course: ${item.bookinfo.dpt} ${item.bookinfo.crs}</p>
-      <p>Author: ${item.bookinfo.author}</p>
-      <p>Publisher: ${item.bookinfo.publisher}</p>
-    </div>
-    {% templatetag openvariable %}/if{% templatetag closevariable %}
   </div>
   <div class="ops">
     <button class="add" data-id="${item.id}">Add To Cart</button>
@@ -23,12 +16,12 @@
 </script>
 <script type="text/javascript">
   var search = function(){
-    var sc = $('body>header .search-content').val().trim();
-    if (!sc) {
+    var keyword = $('body>header .search-content').val().trim();
+    if (!keyword) {
       return false
     }
-    var query = 'store:{{current_store_name}} ' + sc;
-    location.href = '/home?query='+encodeURIComponent(query);
+    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
+    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
   }
   $('body>header .search-btn').click(function(){
     search();

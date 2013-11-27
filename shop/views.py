@@ -68,17 +68,30 @@ def store_category(request, store_slug, category_id=None):
       category = Category.objects.get(id=category_id)
       context['category'] = category
     except ObjectDoesNotExist:
-      pass
+      return store_home(request, store_slug)
+
+  return HttpResponse(template.render(context))
+
+@csrf_exempt
+def store_search(request, store_slug, keyword=None):
+  template = loader.get_template('shop/store_search.html')
+  context = common_context(store_slug)
+
+  # Add search_keyword to the context
+  if keyword is not None:
+    context['search_keyword'] = keyword
 
   return HttpResponse(template.render(context))
 
 # APIs
 
 @csrf_exempt
-def store_items(request, store_slug, category_id=None, page=1):
+def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = Item.objects.order_by('name')
   if category_id is not None and len(category_id) > 0:
     items = items.filter(category__id=category_id)
+  if keyword is not None and len(keyword) > 0:
+    items = items.filter(name__contains=keyword)
   items = limit_to_page(items, page, ITEM_PER_PAGE)
 
   return json_response(items)
