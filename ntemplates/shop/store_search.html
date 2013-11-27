@@ -1,7 +1,7 @@
 {% extends "shop/base.html" %}
 {% block content%}
 <div class="search-items">
-	<article>
+	<article data-source="{% url 'shop:store_category_items' store.slug category.id '' %}">
 		<ul></ul>
 		<div class="loading"></div>
 	</article>
@@ -12,56 +12,24 @@
 </div>
 {% endblock %}
 {% block page_script%}
-{% include "shop/item_detail.html" %}
 
+{% include "shop/item_detail.html" %}
 {% include "shop/item.html" %}
 
 <script type="text/javascript">
-	var truncate = function(str,len){
-		if (str.length > len) {
-			return str.substr(0,len - 3) + '...';
-		}
-		return str;
-	}
-	var image_loaded = function(image){
-		$(image).fadeIn();
-		$(image).next().hide();
-	}
-	var startId = 0;
-	var num = 12;
-	var item_template = $.template(null,$('#item_template').html());
-	var render_search = function(startId, num, callback){
-		$.post('{% url "shop:store_category_items" store.slug category.id %}',{ start: startId },function(data){
-			var containor = $('#content .content .search-items article');
-			var ul = containor.find('ul').empty();
-			data.forEach(function(item) {
-				console.log(JSON.stringify(item));
-				$.tmpl(item_template,{'item':item.fields}).appendTo(ul);
-			})
-			containor.find('.loading').fadeOut();
-			callback && callback();
-		},'json');
-	}
-	render_search(startId,num);
+	var page = 1;
+	var article = $('#content .content .search-items article');
+  load_items(article, page, null);
+
 	$('#content .content .search-items footer .prev').click(function(){
-		startId = startId - 12;
-		if (startId < 0) {
-			startId = 0;
-		}
-		var containor = $('#content .content .search-items article');
-		containor.find('.loading').fadeIn();
-		var self = $(this);
-		render_search(startId,num,function(){
-			if (startId == 0) {
-				self.hide();
-			}
-		});
+		page = page - 1 || 1;
+		if (page == 1) { $(this).hide(); }
+
+		load_items(article, page, null);
 	});
 	$('#content .content .search-items footer .next').click(function(){
-		startId = startId + 12;
-		var containor = $('#content .content .search-items article');
-		containor.find('.loading').fadeIn();
-		render_search(startId,num,function(){
+		page += 1;
+		load_items(article, page, function(){
 			$('#content .content .search-items footer .prev').show();
 		});
 	});

@@ -12,3 +12,33 @@
   <p class="add"><i data-id="${item.id}">Add To Cart</i></p>
   </li>
 </script>
+<script type="text/javascript">
+  var truncate = function(str,len){
+    if (str.length > len) {
+      return str.substr(0,len - 3) + '...';
+    }
+    return str;
+  }
+
+  var image_loaded = function(image){
+    $(image).fadeIn();
+    $(image).next().hide();
+  }
+
+  var load_items = function(article, page, callback){
+    var item_template = $.template(null,$('#item_template').html());
+    var loading = article.find('.loading');
+    var source = article.data('source');
+    loading.fadeIn();
+
+    $.post(source + page, function(data){
+      var ul = article.find('ul').empty();
+      data.forEach(function(item) {
+        $.tmpl(item_template,{'item':item.fields}).appendTo(ul);
+      })
+
+      loading.fadeOut();
+      callback && callback();
+    },'json');
+  }
+</script>
