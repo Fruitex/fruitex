@@ -59,7 +59,7 @@ def store_category(request, store_slug, category_id=None):
 # APIs
 
 @csrf_exempt
-def store_items(request, store_slug, category_id=None):
+def store_items(request, store_slug, category_id=None, page=1):
   # Fetch category for current selection
   if category_id is None:
     return empty_response()
@@ -69,6 +69,6 @@ def store_items(request, store_slug, category_id=None):
     except ObjectDoesNotExist:
       return empty_response()
 
-  items = category.items.all()
+  items = category.items.order_by('name')
 
   return HttpResponse(serializers.serialize('json', items), mimetype='application/json')
