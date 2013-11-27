@@ -29,7 +29,7 @@ class ItemAdmin(admin.ModelAdmin):
   ]
   list_filter = [ 'out_of_stock', 'on_sale', 'tax_class', 'featured' ]
   ordering = [ '-id' ]
-  search_fields = ['id', 'name', 'sku', 'category', 'featured']
+  search_fields = ['id', 'name', 'sku', 'category__name', 'featured']
   actions = ['remove_sales']
 
   def remove_sales(self, request, queryset):
