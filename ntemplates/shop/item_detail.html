@@ -1,0 +1,73 @@
+{% load static %}
+<script type="text/template" id="item_detail_template">
+  <div class="image">
+    <img src="{% static "" %}{{store.slug}}_imgs/${item.fields.sku}.JPG" />
+  </div>
+  <div class="detail">
+    <div class="common">
+      <p>${item.fields.name}</p>
+      <p>Price: $${item.fields.price}</p>
+    </div>
+  </div>
+  <div class="ops">
+    <button class="add" data-id="${item.pk}">Add To Cart</button>
+    <button class="close">Close</button>
+  </div>
+</script>
+<script type="text/javascript">
+  var search = function(){
+    var keyword = $('body>header .search-content').val().trim();
+    if (!keyword) {
+      return false
+    }
+    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
+    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
+  }
+  $('body>header .search-btn').click(function(){
+    search();
+  });
+  $("body>header .search-content").keyup(function (evt) {
+    if (evt.which == 13) {
+      search();
+    }
+  });
+  var addToCart = function(itemId) {
+    var cart;
+    if (!$.cookie("cart")) {
+      cart = new Array();
+    } else {
+      cart = JSON.parse($.cookie("cart"));
+    }
+    cart.push(itemId);
+    $.cookie("cart", JSON.stringify(cart), {path : '/'});
+    var plus = $('body>header .plus');
+    plus.fadeIn(500, function () {
+      setTimeout(function(){plus.fadeOut(1000);},2000);
+    });
+    $('body>header .num').html(cart.length).css('opacity',1);
+  };
+  $('#md_modal').delegate('.add','click',function(){
+    addToCart($(this).data('id'));
+    $('#md_modal').removeClass('md-show');
+  });
+  $('#md_modal').delegate('.close','click',function(){
+    $('#md_modal').removeClass('md-show');
+  });
+  var item_detail_template = $.template(null,$('#item_detail_template').html());
+  $('#content>.content>div>article>ul').delegate('li','click',function(e){
+    if (e.target.tagName.toLowerCase() == 'i') {
+      addToCart($(e.target).data('id'));
+      return false;
+    }
+    var o = $(this).data('o');
+    if (o.remark) {
+      var json_decoded = JSON.parse(o.remark);
+      if (json_decoded && json_decoded.crs) {
+        o.name = o.name.substr(0, 1) + o.name.substr(1).toLowerCase();
+        o.bookinfo = json_decoded;
+      }
+    }
+    $.tmpl(item_detail_template,{'item':o}).appendTo($('#md_modal .md-content').empty());
+    $('#md_modal').addClass('md-show');
+  });
+</script>

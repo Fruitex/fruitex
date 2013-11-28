@@ -1,0 +1,44 @@
+{% load static %}
+<aside>
+  <div class="stores">
+    <header>Store {{store.slug}}</header>
+    <ul>
+      {% for item in stores %}
+      <li{% if store.slug == item.slug %} class="current"{% endif %}><a href="{% url 'shop:store_home' item.slug %}">{{item.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="categories">
+    <header>Categories</header>
+    <ul>
+      {% for cate1 in categories %}
+      <li>
+        <span title="{{ cate1.name }}" style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')">{{ cate1.name }}</span>
+        <div>
+          <ul>
+            {% for cate2 in cate1.category_set.all %}
+            <li>
+              <a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
+              <ul>
+                {% for cate3 in cate2.category_set.all %}
+                <li>
+                  <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="help">
+    <header>Need Help?</header>
+    <ul>
+      <li>support@fruitex.ca</li>
+      <li>(226)606-4578</li>
+    </ul>
+  </div>
+</aside>

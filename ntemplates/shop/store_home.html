@@ -1,0 +1,40 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content%}
+<div class="ad">
+  <img src="{% static "imgs/"%}ad_{{ store.slug }}.png" alter="{{ store.name }} Advertisement" />
+</div>
+<div class="deal-sale">
+  <header>Deal OF THIS WEEK</header>
+  <article data-source="{% url 'shop:store_featured_items' store.slug 'deal_of_this_week' '' %}">
+    <ul></ul>
+    <div class="loading"></div>
+  </article>
+</div>
+<div class="week-sale">
+  <header>POPULAR ONSALES</header>
+  <article data-source="{% url 'shop:store_onsale_items' store.slug '' %}">
+    <ul></ul>
+    <div class="loading"></div>
+  </article>
+</div>
+<div class="popular">
+  <header>BEST SELLINGS</header>
+  <article data-source="{% url 'shop:store_popular_items' store.slug '' %}">
+    <ul></ul>
+    <div class="loading"></div>
+  </article>
+</div>
+{% endblock %}
+{% block page_script%}
+
+{% include "shop/item_detail.html" %}
+{% include "shop/item.html" %}
+
+<script type="text/javascript">
+  var articles = $('#content .content article');
+  articles.each(function(i, element) {
+    load_items($(element), '', null);
+  });
+</script>
+{% endblock %}

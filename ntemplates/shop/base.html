@@ -1,0 +1,43 @@
+<!doctype html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
+    {% block extra_css %}{% endblock %}
+    {% block page_css %}{% endblock %}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/jquery.cookie.js" %}"></script>
+    {% block extra_script %}{% endblock %}
+  </head>
+  <body>
+    {% include "shop/header.html" %}
+    <div id="content" class="clearfix">
+    <div class="content">{% block content %} {% endblock %}</div>
+    {% include "shop/aside.html" %}
+    </div>
+    {% include "shop/footer.html" %}
+    <div class="md-modal" id="md_modal">
+      <div class="md-content">
+        {% block md_content %}{% endblock %}
+      </div>
+    </div>
+    <div class="md-overlay"></div>
+    {% block page_script %}{% endblock %}
+    <script type="text/javascript">
+    $(document).keydown(function(e) {
+        if (e.keyCode == 27) {
+            $('.md-show').removeClass('md-show');
+            $('.md-content .header a').show();
+        }
+    });
+    $('.md-overlay').click(function(){
+      $('#md_modal').removeClass('md-show');
+    });
+    </script>
+  </body>
+</html>

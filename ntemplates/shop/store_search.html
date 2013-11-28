@@ -1,0 +1,42 @@
+{% extends "shop/base.html" %}
+{% block content%}
+<div class="search-items">
+  {% if search_keyword %}
+  <article data-source="{% url 'shop:store_search_items' store.slug search_keyword '' %}">
+  {% else %}
+  <article data-source="{% url 'shop:store_category_items' store.slug category.id '' %}">
+  {% endif %}
+    <ul></ul>
+    <div class="loading"></div>
+  </article>
+  <footer>
+    <span title="prev page" class="prev"></span>
+    <span title="next page" class="next"></span>
+  </footer>
+</div>
+{% endblock %}
+{% block page_script%}
+
+{% include "shop/item_detail.html" %}
+{% include "shop/item.html" %}
+
+<script type="text/javascript">
+  var page = 1;
+  var article = $('#content .content .search-items article');
+  load_items(article, page, null);
+
+  $('#content .content .search-items footer .prev').click(function(){
+    page = page - 1 || 1;
+    if (page == 1) { $(this).hide(); }
+
+    load_items(article, page, null);
+  });
+  $('#content .content .search-items footer .next').click(function(){
+    page += 1;
+    load_items(article, page, function(){
+      $('#content .content .search-items footer .prev').show();
+    });
+  });
+</script>
+
+{% endblock %}
