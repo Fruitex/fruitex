@@ -11,7 +11,10 @@ import json
 # Common operations
 
 def cart_from_request(request):
-  cart = urllib.unquote(request.COOKIES.get('cart'))
+  cart = request.COOKIES.get('cart')
+  if cart is None or len(cart) == 0:
+    return []
+  cart = urllib.unquote(cart)
   cart = json.loads(cart)
   return cart
 
