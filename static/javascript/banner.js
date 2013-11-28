@@ -1,5 +1,3 @@
-{% load static %}
-
 var SearchBox = function() {
   var submitQuery = function() {
     var query = '';
@@ -7,13 +5,13 @@ var SearchBox = function() {
       query = 'cate:\'' + $(".cate_tag").text() + '\'';
     }
     query += ' store:' + GetSelectedStore() + ' ';
-    query += $('#search-input')[0].value;        
+    query += $('#search-input')[0].value;
     window.location = '/home/?query=' + encodeURIComponent(query);
   };
 
   var createCateTag = function(value) {
     var closeBtn = $("<img>").attr("src", "{% static "imgs/btn_cross.png" %}");
-    closeBtn.click(function () { 
+    closeBtn.click(function () {
       $(this).parent().remove();
       submitQuery();
     });
