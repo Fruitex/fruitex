@@ -1,17 +1,17 @@
 {% load static %}
 <script type="text/template" id="item_template">
-  <li title="${item.name}" data-o="${JSON.stringify(item)}">
-  <p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{store.slug}}_imgs/${item.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
-  <p class="name">${truncate(item.name,50)}</p>
+  <li title="${item.fields.name}" data-o="${JSON.stringify(item)}">
+  <p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{store.slug}}_imgs/${item.fields.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
+  <p class="name">${truncate(item.fields.name,50)}</p>
   <p class="price">
-    {% templatetag openvariable %}if item.on_sale{% templatetag closevariable %}
-    <span class="now">$ ${item.sales_price}</span>
-    <span class="original line-through">$ ${item.price}</span>
+    {% templatetag openvariable %}if item.fields.on_sale{% templatetag closevariable %}
+    <span class="now">$ ${item.fields.sales_price}</span>
+    <span class="original line-through">$ ${item.fields.price}</span>
     {% templatetag openvariable %}else{% templatetag closevariable %}
-    <span class="original">$ ${item.price}</span>
+    <span class="original">$ ${item.fields.price}</span>
     {% templatetag openvariable %}/if{% templatetag closevariable %}
   </p>
-  <p class="add"><i data-id="${item.id}">Add To Cart</i></p>
+  <p class="add"><i data-id="${item.pk}">Add To Cart</i></p>
   </li>
 </script>
 <script type="text/javascript">
@@ -36,7 +36,7 @@
     $.post(source + page, function(data){
       var ul = article.find('ul').empty();
       data.forEach(function(item) {
-        $.tmpl(item_template,{'item':item.fields}).appendTo(ul);
+        $.tmpl(item_template,{'item':item}).appendTo(ul);
       })
 
       loading.fadeOut();

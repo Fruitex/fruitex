@@ -1,16 +1,16 @@
 {% load static %}
 <script type="text/template" id="item_detail_template">
   <div class="image">
-    <img src="{% static "" %}{{store.slug}}_imgs/${item.sku}.JPG" />
+    <img src="{% static "" %}{{store.slug}}_imgs/${item.fields.sku}.JPG" />
   </div>
   <div class="detail">
     <div class="common">
-      <p>${item.name}</p>
-      <p>Price: $${item.price}</p>
+      <p>${item.fields.name}</p>
+      <p>Price: $${item.fields.price}</p>
     </div>
   </div>
   <div class="ops">
-    <button class="add" data-id="${item.id}">Add To Cart</button>
+    <button class="add" data-id="${item.pk}">Add To Cart</button>
     <button class="close">Close</button>
   </div>
 </script>
