@@ -20,10 +20,10 @@ class Order(models.Model):
   STATUS_FLAGGED = 'FLAG'
   STATUS_DELIVERED = 'DELI'
   STATUSES = (
-      (STATUS_PENDING, 'Pending'),
-      (STATUS_PAID, 'Paid'),
-      (STATUS_FLAGGED, 'Flagged'),
-      (STATUS_DELIVERED, 'Delivered'),
+    (STATUS_PENDING, 'Pending'),
+    (STATUS_PAID, 'Paid'),
+    (STATUS_FLAGGED, 'Flagged'),
+    (STATUS_DELIVERED, 'Delivered'),
   )
 
   # Order
@@ -46,7 +46,7 @@ class Order(models.Model):
   address = models.TextField()
   postcode = models.CharField(max_length=16)
   phone = models.CharField(max_length=16)
-  email = models.CharField(max_length=128)
+  email = models.EmailField(max_length=128)
 
 
 class Coupon(models.Model):
