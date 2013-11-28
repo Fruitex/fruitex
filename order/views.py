@@ -42,5 +42,9 @@ def view_cart(request):
   })
   return HttpResponse(template.render(context))
 
+@csrf_exempt
 def new_order(request):
-  return HttpResponse('not implemented')
+  template = loader.get_template('order/new.html')
+  context = Context({
+  })
+  return HttpResponse(template.render(context))
