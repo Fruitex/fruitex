@@ -1,12 +1,17 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import Context, loader
 from django.core import serializers
 
 from shop.models import Item
+from order.models import Order, OrderItem
+from config.paypal import PAYPAL_RECEIVER_EMAIL
+from config.environment import DOMAIN,DEBUG
 
+from decimal import Decimal
 import urllib
 import json
+import uuid
 
 # Common operations
 
@@ -45,6 +50,91 @@ def view_cart(request):
 @csrf_exempt
 def new_order(request):
   template = loader.get_template('order/new.html')
+
+  # Gether info from POST to setup the order
+  # Customer infos
+  customer_name = request.POST['name']
+  address = request.POST['address']
+  postcode = request.POST['postcode']
+  phone = request.POST['phone']
+  email = request.POST['email']
+
+  # Order infos
+  invoice = str(uuid.uuid4())
+  delivery_window = request.POST['time']
+  coupon = request.POST['coupon']
+
+  # Validate coupon
+  # TODO
+  discount = Decimal(0)
+  shipping = Decimal(4)
+
+  # Create order
+  order = Order.objects.create(
+    # Order
+    invoice = invoice,
+    delivery_window = delivery_window,
+    subtotal = Decimal(0),
+    tax = Decimal(0),
+    shipping = shipping,
+    discount = discount,
+
+    # Metas
+    status = Order.STATUS_PENDING,
+
+    # Customer
+    customer_name = customer_name,
+    address = address,
+    postcode = postcode,
+    phone = phone,
+    email = email,
+  )
+
+  # Fetch items from cart and db
+  items = cart_items(cart_from_request(request)) # deprecate request.POST['ids']
+  allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
+  subtotal = Decimal(0);
+  tax = Decimal(0);
+
+  # Add order items and calculate subtotal and tax
+  for wrap in items:
+    item = wrap.obj
+    order_item = OrderItem.objects.create(
+      order = order,
+      item = item,
+      quantity = wrap.quantity,
+      allow_sub = True,
+    )
+    order_item.allow_sub = allow_sub_detail[item.id]
+    price = item.price * wrap.quantity
+    subtotal += price
+    tax += price * item.tax_class
+
+  # Update subtotal and tax
+  order.subtotal = subtotal
+  order.tax = tax
+  order.save()
+
+  # Setup paypal dict
+  paypal_dict = {
+      "business": PAYPAL_RECEIVER_EMAIL,
+      "currency_code": "CAD",
+      "amount": "%.2f" % order.total,
+      "item_name": "Fruitex order #%d" % order.id,
+      "invoice": invoice,
+      "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
+      "return_url": "http://%s/redir/?%s" % (DOMAIN, urllib.urlencode({"to" : "/check_order?invoice=" + invoice})),
+      "cancel_return": "http://%s/redir/?to=/home" % DOMAIN,
+      "custom": json.dumps({'coupon': coupon})
+  }
+
+  # Create the Paypal form
+  form = PayPalPaymentsForm(initial=paypal_dict)
+
+  # Setup context and render
   context = Context({
+    'order': order,
+    'form': form,
+    'sandbox': DEBUG,
   })
   return HttpResponse(template.render(context))
