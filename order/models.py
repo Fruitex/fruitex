@@ -1,11 +1,14 @@
 from django.db import models
 
 class OrderItem(models.Model):
+  def _get_price(self):
+    return self.item.price * self.quantity;
+
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
   quantity = models.IntegerField()
   allow_sub = models.BooleanField()
-
+  price = property(_get_price)
 
 class Order(models.Model):
   def __unicode__(self):
