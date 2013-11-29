@@ -58,8 +58,7 @@ def new_order(request):
   address = request.POST['address']
   postcode = request.POST['postcode']
   phone = request.POST['phone']
-  # email = request.POST['email']
-  email = 'noreply@fruitex.ca'
+  email = request.POST['email']
 
   # Order infos
   invoice = str(uuid.uuid4())
