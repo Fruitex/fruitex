@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from django.template import Context, loader
+from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from paypal.standard.forms import PayPalPaymentsForm
@@ -15,7 +15,7 @@ import uuid
 from shop.models import Item
 from order.models import Order, OrderItem
 from config.paypal import PAYPAL_RECEIVER_EMAIL
-from config.environment import DOMAIN,DEBUG
+from config.environment import DEBUG
 
 # Common operations
 
@@ -39,7 +39,6 @@ def cart_items(cart):
 
 # Views
 
-@csrf_exempt
 def view_cart(request):
   template = loader.get_template('order/cart.html')
 
@@ -48,13 +47,14 @@ def view_cart(request):
   today = datetime.now()
   tomorrow = today + timedelta(days=1)
 
-  context = Context({
+  context = RequestContext(request, {
     'items': items,
     'today': today,
     'tomorrow': tomorrow,
   })
   return HttpResponse(template.render(context))
 
+@csrf_exempt
 def show_order(request, order_id):
   template = loader.get_template('order/show.html')
 
@@ -67,7 +67,6 @@ def show_order(request, order_id):
   })
   return HttpResponse(template.render(context))
 
-@csrf_exempt
 def new_order(request):
   template = loader.get_template('order/show.html')
 
@@ -149,7 +148,7 @@ def new_order(request):
       "item_name": "Fruitex order #%d" % order.id,
       "invoice": invoice,
       "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-      "return_url": request.build_absolute_uri(reverse('order:show', {'order_id': order.id})),
+      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'order_id': order.id})),
       "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
       "custom": json.dumps({'coupon': coupon})
   }
