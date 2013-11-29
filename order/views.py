@@ -2,6 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core import serializers
+from django.core.urlresolvers import reverse
 from paypal.standard.forms import PayPalPaymentsForm
 
 from datetime import datetime
@@ -135,7 +136,7 @@ def new_order(request):
       "amount": "%.2f" % order.total,
       "item_name": "Fruitex order #%d" % order.id,
       "invoice": invoice,
-      "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
+      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
       "return_url": "http://%s/redir/?%s" % (DOMAIN, urllib.urlencode({"to" : "/check_order?invoice=" + invoice})),
       "cancel_return": "http://%s/redir/?to=/shop" % DOMAIN,
       "custom": json.dumps({'coupon': coupon})
