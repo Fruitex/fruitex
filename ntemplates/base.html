@@ -5,9 +5,8 @@
       <link rel="stylesheet" type="text/css" href="{% static "styles/global.css" %}"/>
       <link rel="stylesheet" type="text/css" href="{% static "styles/base.css" %}"/>
       <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-      <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-      <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+      <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
       <script src={% static "javascript/jquery.cookie.js" %}></script>
       <script src={% static "javascript/common.js" %}></script>
       <script src={% static "javascript/global.js" %}></script>
@@ -25,7 +24,6 @@
     <body>
     <script>
       $(document).ready(function () {
-        console.log(isIE(8, 'lte'));
         if(isIE(8, 'lte')) {
           window.location = '/not-support/';
         }
