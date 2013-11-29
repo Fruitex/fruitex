@@ -54,13 +54,11 @@ def limit_to_page(queryset, page=1, per_page=ITEM_PER_PAGE):
 def to_default(request):
   return HttpResponseRedirect('sobeys');
 
-@csrf_exempt
 def store_home(request, store_slug):
   template = loader.get_template('shop/store_home.html')
   context = common_context(store_slug)
   return HttpResponse(template.render(context))
 
-@csrf_exempt
 def store_category(request, store_slug, category_id=None):
   template = loader.get_template('shop/store_search.html')
   context = common_context(store_slug)
@@ -75,7 +73,6 @@ def store_category(request, store_slug, category_id=None):
 
   return HttpResponse(template.render(context))
 
-@csrf_exempt
 def store_search(request, store_slug, keyword=None):
   template = loader.get_template('shop/store_search.html')
   context = common_context(store_slug)
@@ -88,7 +85,6 @@ def store_search(request, store_slug, keyword=None):
 
 # APIs
 
-@csrf_exempt
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = items_for_store(store_slug).order_by('name')
   if category_id is not None and len(category_id) > 0:
@@ -99,21 +95,18 @@ def store_items(request, store_slug, category_id=None, keyword=None, page=1):
 
   return json_response(items)
 
-@csrf_exempt
 def store_popular_items(request, store_slug, page=1):
   items = items_for_store(store_slug).order_by('-sold_number')
   items = limit_to_page(items, page, POPULAR_ITEM_PER_PAGE)
 
   return json_response(items)
 
-@csrf_exempt
 def store_onsale_items(request, store_slug, page=1):
   items = items_for_store(store_slug).filter(on_sale=True).order_by('-sold_number')
   items = limit_to_page(items, page, ON_SALE_ITEM_PER_PAGE)
 
   return json_response(items)
 
-@csrf_exempt
 def store_featured_items(request, store_slug, featured_in, page=1):
   items = items_for_store(store_slug).filter(featured=featured_in).order_by('name')
   items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)

@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/cart.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/itemlist.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/input_validator.css" %}"/>
+<script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
+<script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
+<script src={% static "javascript/input_validator.js" %}></script>
+
+<div id='cart-wrapper'>
+  <p id="cart-header">Your cart</p>
+  <div id='cart-container'>
+    {% for item in items %}
+    <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
+      <img class="item-in-cart-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
+      <div class="item-info-wrapper">
+        <div class="item-info-left">
+          <span class="item-in-cart-name">{{ item.obj.name }}</span>
+          <span class="item-in-cart-store">From: {{ item.obj.category.store.name }}</span>
+          <label><input type="checkbox" checked="" data-id="{{ item.obj.id }}">Allow substitution</label>
+        </div>
+        <input class="item-quantity num-spinner ui-spinner-input" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+        <span class="item-in-cart-price">$ </span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div id='coupon_container'>
+    <label>Coupon: <input id='coupon-input' type='text'></input></label>
+  </div>
+  <div id='items-in-cart-summary-container'>
+  </div>
+</div>
+<div id='delivery-wrapper'>
+  <p id="delivery-header">Delivery Info</p>
+  <div id='delivery-container'>
+    <form id='checkout-form' action="{% url 'order:new' %}" method="POST">
+    <table id="delivery-container-table">
+      <tr>
+        <td>Name</td>
+        <td>
+          <input type="text" name="name" id="delivery_name"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Phone</td>
+        <td>
+          <input type="text" name="phone" id="delivery_phone"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>
+          <input type="email" name="email" id="delivery_email"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+          <input type="text" name="address" id="delivery_address"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Post Code</td>
+        <td>
+          <input type="text" name="postcode" id="delivery_postcode"></input>
+        </td>
+      </tr>
+      <tr>
+        <td>Time Window</td>
+        <td>
+          <table id="time-window-container-table">
+            <tr>
+              <td>
+                {{ today|date:'j F' }}:
+              </td>
+              <td>
+                <input type="radio" name="time" value="12:00-14:00">
+                12:00-14:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="16:00-18:00">
+                16:00-18:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="20:00-22:00">
+                20:00-22:00
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{ tomorrow|date:'j F' }}:
+              </td>
+              <td>
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 12:00-14:00" checked="checked">
+                12:00-14:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 16:00-18:00">
+                16:00-18:00
+              </td>
+              <td>
+                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 20:00-22:00">
+                20:00-22:00
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <input type="hidden" name="ids" id="delivery_item_ids"/>
+    <input id='coupon-input-hidden' name='coupon' type='hidden'></input>
+    <input id='allow_sub_detial_hidden' name='allow_sub_detail' type='hidden' value="1"></input>
+    {% csrf_token %}
+    </form>
+  </div>
+</div>
+<div id='cart-footer'>
+ <button id="checkout-button">CHECK OUT</button>
+</div>
+<script type="text/template" id="summary_template">
+  <table id="items-in-cart-summary-table">
+    <tbody>
+      <tr id="summary-sum">
+        <td class="summary-label">Subtotal : </td>
+        <td class="summary-value">$ ${subtotal.toFixed(2)}</td>
+      </tr>
+      <tr id="summary-tax">
+        <td class="summary-label">HST : </td>
+        <td class="summary-value">$ ${hst.toFixed(2)}</td>
+      </tr>
+      <tr id="summary-delivery">
+        <td class="summary-label">Delivery : </td>
+        <td class="summary-value">$ ${delivery.toFixed(2)}</td>
+      </tr>
+      {% templatetag openvariable %}if discount > 0.0 {% templatetag closevariable %}
+      <tr id="summary-discount">
+        <td class="summary-label">Discount : </td>
+        <td class="summary-value">$ ${discount.toFixed(2)}</td>
+      </tr>
+      {% templatetag openvariable %}/if{% templatetag closevariable %}
+      <tr id="summary-total">
+        <td class="summary-label">Total : </td>
+        <td class="summary-value">$ ${total.toFixed(2)}</td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+  // Gather items data
+  var items = _.object(_.map($('.item-in-cart'), function(el) {
+    return [$(el).data('id'), $(el).data('json')];
+  }));
+
+  // Defualt no discount
+  var discount = 0.0;
+
+  var updateSummary = function() {
+    var summary_template = $.template(null,$('#summary_template').html());
+    var subtotal = 0.0;
+    var hst_total = 0.0;
+    var delivery = 4.0;
+
+    $('.item-in-cart').each(function(i, el) {
+      var id = $(el).data('id');
+      var item = items[id];
+      var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
+      var quantity = $(el).find('.item-quantity').val();
+      var tax_class = parseFloat(item.fields.tax_class)
+      var price = parseFloat(unit_price) * quantity;
+      var hst = price * tax_class;
+      subtotal += price;
+      hst_total += hst;
+    });
+    var html = $.tmpl(summary_template,{
+      'subtotal':subtotal,
+      'hst':hst_total,
+      'delivery':delivery,
+      'discount':discount,
+      'total':subtotal + hst_total + delivery - discount
+    });
+
+    $('#items-in-cart-summary-container').html(html);
+  };
+
+  var updateCart = function() {
+    var item_ids = [];
+    $(".item-quantity").each(function(i, spinner) {
+      spinner = $(spinner);
+      for (var i = 0; i < spinner.val(); i++) {
+        item_ids.push(parseInt(spinner.data('id')));
+      }
+    });
+    $.cookie('cart', JSON.stringify(item_ids), { path: '/' });
+  };
+
+  var updateItemPriceTag = function(id, quantity) {
+    var item = items[id];
+    var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
+    var price = parseFloat(unit_price) * quantity;
+
+    var item_price_el = $('#item-' + id).find('.item-in-cart-price');
+    item_price_el.text('$ ' + price.toFixed(2));
+  };
+
+  var updateQuantity = function(id, quantity) {
+    updateItemPriceTag(id, quantity);
+    updateSummary();
+    updateCart();
+  };
+
+  var isCartEmpty = function() {
+    return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
+  };
+
+  var disableDeliveryTime = function(btn) {
+    btn.attr('disabled', true);
+    btn.parent().addClass('disabled')
+  };
+
+  var checkDeliveryTime = function() {
+    var d = new Date();
+    var h = d.getHours();
+    if (h > 11) {
+      disableDeliveryTime($('input[value="12:00-14:00"]'));
+    }
+    if (h > 15) {
+      disableDeliveryTime($('input[value="16:00-18:00"]'));
+    }
+    if (h > 19) {
+      disableDeliveryTime($('input[value="20:00-22:00"]'));
+    }
+  };
+
+  var clearCart = function() {
+    $.cookie('cart', '', { path: '/' });
+  };
+
+  var isValidUserInput = function() {
+    var v = InputValidator;
+    v.init();
+    return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
+        && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
+        && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"))
+        && v.email($("input[name=email]"));
+  };
+
+  // Checkout button
+  $("#checkout-button").click(function() {
+    if (isValidUserInput()) {
+      var allow_sub_detail = {};
+      $('.item-info-left input[type=checkbox]').each(function(){
+        allow_sub_detail[$(this).data('id')] = $(this).prop('checked')?1:0;
+      });
+      $('#allow_sub_detial_hidden').val(JSON.stringify(allow_sub_detail));
+      $('#delivery_item_ids').val($.cookie('cart'));
+      $("#checkout-form").submit();
+      clearCart();
+    }
+  });
+
+  // Coupon input
+  $('#coupon-input').keyup(function () {
+    var coupon = $('#coupon-input').val();
+    $('#coupon-input-hidden').val(coupon);
+    // TODO: Validate coupon with server
+  });
+
+  $('.item-quantity').change(function(e) {
+    console.log(e)
+  });
+
+  if (isCartEmpty()) {
+    $('.item-in-cart').remove()
+    $('#items-in-cart-summary-container').remove();
+    $('#cart-footer').remove();
+    $('#coupon_container').remove();
+    $('#delivery-wrapper').remove();
+    $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
+    $("#cart-container").append($('<p>').text('Return to shop')
+      .addClass('cart-btn-return')
+      .click(function () {
+        window.location = '{% url "shop:to_default" %}';
+      }));
+  } else {
+    // Setup spinner actions and update quantity prices
+    $('.num-spinner').spinner({
+      min: 0,
+      max: 100,
+      step: 1,
+    }).each(function(i, spinner) {
+      spinner = $(spinner);
+      updateItemPriceTag(spinner.data('id'), spinner.val());
+    }).on('spinstop', function (e) {
+      updateQuantity($(this).data('id'), $(this).val());
+    });
+
+    checkDeliveryTime();
+    updateSummary();
+  }
+});
+</script>
+{% endblock %}
