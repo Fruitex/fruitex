@@ -4,15 +4,17 @@ from django.template import Context, loader
 from django.core import serializers
 from paypal.standard.forms import PayPalPaymentsForm
 
-from shop.models import Item
-from order.models import Order, OrderItem
-from config.paypal import PAYPAL_RECEIVER_EMAIL
-from config.environment import DOMAIN,DEBUG
-
+from datetime import datetime
+from datetime import timedelta
 from decimal import Decimal
 import urllib
 import json
 import uuid
+
+from shop.models import Item
+from order.models import Order, OrderItem
+from config.paypal import PAYPAL_RECEIVER_EMAIL
+from config.environment import DOMAIN,DEBUG
 
 # Common operations
 
@@ -42,9 +44,13 @@ def view_cart(request):
 
   cart = cart_from_request(request)
   items = cart_items(cart)
+  today = datetime.now()
+  tomorrow = today + timedelta(days=1)
 
   context = Context({
     'items': items,
+    'today': today,
+    'tomorrow': tomorrow,
   })
   return HttpResponse(template.render(context))
 
