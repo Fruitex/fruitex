@@ -283,9 +283,6 @@ $(document).ready(function() {
     console.log(e)
   });
 
-  checkDeliveryTime();
-  updateSummary();
-
   if (isCartEmpty()) {
     $('#cart-container').remove()
     $('#items-in-cart-summary-container').remove();
@@ -298,6 +295,9 @@ $(document).ready(function() {
       .click(function () {
         window.location = '{% url "shop:to_default" %}';
       }));
+  } else {
+    checkDeliveryTime();
+    updateSummary();
   }
 });
 </script>
