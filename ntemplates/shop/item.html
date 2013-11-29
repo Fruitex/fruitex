@@ -33,7 +33,7 @@
     var source = article.data('source');
     loading.fadeIn();
 
-    $.post(source + page, function(data){
+    $.get(source + page, function(data){
       var ul = article.find('ul').empty();
       data.forEach(function(item) {
         $.tmpl(item_template,{'item':item}).appendTo(ul);
