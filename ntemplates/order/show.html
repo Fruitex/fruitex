@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static "styles/confirm.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/itemlist.css" %}"/>
+<script src={% static "javascript/itemlist.js" %}></script>
+<div id='order-confirm-wrapper'>
+  <p id="order-confirm-header">You Order Confirmation</p>
+  <p id="order-confirm-invoice">Your Invoice#: {{ order.invoice }}</p>
+  <div id="order-confirm-item-list">
+    {% for order_item in order_items %}
+    <div class="item-in-cart">
+      <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+      <div class="item-info-wrapper">
+        <div class="item-info-left">
+          <span class="item-in-cart-name">{{ order_item.item.name }}</span>
+          <span class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</span>
+          <label>
+            <input type="checkbox" {% if order_item.allow_sub %} checked="" {% endif %} disabled="disabled">
+            Allow substitution
+          </label>
+        </div>
+        <span class="item-in-cart-count">Quatity: {{ order_item.quantity }}</span>
+        <span class="item-in-cart-price">$ {{ order_item.price|floatformat:2 }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <table id='order-confirm-table'>
+    <tbody>
+    <tr>
+      <td>
+        Delivery Fee:
+      </td>
+      <td>
+        ${{ order.shipping|floatformat:2 }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Total Cost (Tax Inc.):
+      </td>
+      <td>
+        ${{ order.total|floatformat:2 }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Name:
+      </td>
+      <td>
+        {{ order.customer_name }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Address:
+      </td>
+      <td>
+        {{ order.address }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        ZIP:
+      </td>
+      <td>
+        {{ order.postcode }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Phone:
+      </td>
+      <td>
+        {{ order.phone }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Delivery Time:
+      </td>
+      <td>
+        {{ order.delivery_window }}
+      </td>
+    </tr>
+    <tr>
+    </tr>
+  </tbody>
+  </table>
+</div>
+<div id='payment-container'>
+      <p id='payment-title'>Payment with PayPal</p>
+      <span id='payment-note-title'>Do not have a paypal account?</span>
+      <span>You can always pay with credit card</span>
+      <img id='payment-note' src={% static "imgs/paypal_note.png" %}></img>
+    <div id='paypal-container'>
+      {% if sandbox %}
+        {{ form.sandbox }}
+      {% else %}
+        {{ form.render }}
+      {% endif %}
+    </div>
+  </div>
+<script>
+</script>
+{% endblock %}
