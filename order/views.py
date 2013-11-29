@@ -2,6 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core import serializers
+from paypal.standard.forms import PayPalPaymentsForm
 
 from shop.models import Item
 from order.models import Order, OrderItem

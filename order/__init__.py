@@ -8,7 +8,6 @@ from paypal.standard.ipn.signals import payment_was_flagged
 from threading import Thread
 import json
 
-from home.models import Item
 from order.models import Order, OrderItem, Coupon
 from config.email import EMAIL_HOST_USER
 
