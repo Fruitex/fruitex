@@ -31,21 +31,6 @@
       search();
     }
   });
-  var addToCart = function(itemId) {
-    var cart;
-    if (!$.cookie("cart")) {
-      cart = new Array();
-    } else {
-      cart = JSON.parse($.cookie("cart"));
-    }
-    cart.push(itemId);
-    $.cookie("cart", JSON.stringify(cart), {path : '/'});
-    var plus = $('body>header .plus');
-    plus.fadeIn(500, function () {
-      setTimeout(function(){plus.fadeOut(1000);},2000);
-    });
-    $('body>header .num').html(cart.length).css('opacity',1);
-  };
   $('#md_modal').delegate('.add','click',function(){
     addToCart($(this).data('id'));
     $('#md_modal').removeClass('md-show');

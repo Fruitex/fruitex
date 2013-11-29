@@ -1,0 +1,34 @@
+<a class="cart" href="{% url 'order:cart' %}">
+  <span class="num" style="opacity:0"></span>
+  <span class="plus"></span>
+</a>
+<script type="text/javascript">
+  var getCart = function() {
+    var cart;
+    if (!$.cookie("cart")) {
+      cart = new Array();
+    } else {
+      cart = JSON.parse($.cookie("cart"));
+    }
+    return cart;
+  };
+  var saveCart = function(cart) {
+    $.cookie("cart", JSON.stringify(cart), {path : '/'});
+  };
+  var addToCart = function(itemId) {
+    var cart = getCart();
+    cart.push(itemId);
+    saveCart(cart);
+    $('.cart .num').html(cart.length).css('opacity',1);
+    var plus = $('.cart .plus');
+    plus.fadeIn(500, function () {
+      setTimeout(function(){plus.fadeOut(1000);},2000);
+    });
+  };
+  $(document).ready(function() {
+    var cart = getCart();
+    if (cart.length > 0) {
+      $('.cart .num').html(cart.length).css('opacity',1);
+    }
+  });
+</script>
