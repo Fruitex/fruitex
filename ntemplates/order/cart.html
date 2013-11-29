@@ -246,18 +246,6 @@ $(document).ready(function() {
         && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"));
   };
 
-  // Setup spinner actions and update quantity prices
-  $('.num-spinner').spinner({
-    min: 0,
-    max: 100,
-    step: 1,
-  }).each(function(i, spinner) {
-    spinner = $(spinner);
-    updateItemPriceTag(spinner.data('id'), spinner.val());
-  }).on('spinstop', function (e) {
-    updateQuantity($(this).data('id'), $(this).val());
-  });
-
   // Checkout button
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
@@ -284,7 +272,7 @@ $(document).ready(function() {
   });
 
   if (isCartEmpty()) {
-    $('#cart-container').remove()
+    $('.item-in-cart').remove()
     $('#items-in-cart-summary-container').remove();
     $('#cart-footer').remove();
     $('#coupon_container').remove();
@@ -296,6 +284,18 @@ $(document).ready(function() {
         window.location = '{% url "shop:to_default" %}';
       }));
   } else {
+    // Setup spinner actions and update quantity prices
+    $('.num-spinner').spinner({
+      min: 0,
+      max: 100,
+      step: 1,
+    }).each(function(i, spinner) {
+      spinner = $(spinner);
+      updateItemPriceTag(spinner.data('id'), spinner.val());
+    }).on('spinstop', function (e) {
+      updateQuantity($(this).data('id'), $(this).val());
+    });
+
     checkDeliveryTime();
     updateSummary();
   }
