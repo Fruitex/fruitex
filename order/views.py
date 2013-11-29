@@ -50,7 +50,7 @@ def view_cart(request):
 
 @csrf_exempt
 def new_order(request):
-  template = loader.get_template('order/new.html')
+  template = loader.get_template('order/show.html')
 
   # Gether info from POST to setup the order
   # Customer infos
@@ -58,7 +58,8 @@ def new_order(request):
   address = request.POST['address']
   postcode = request.POST['postcode']
   phone = request.POST['phone']
-  email = request.POST['email']
+  # email = request.POST['email']
+  email = 'noreply@fruitex.ca'
 
   # Order infos
   invoice = str(uuid.uuid4())
@@ -92,22 +93,22 @@ def new_order(request):
   )
 
   # Fetch items from cart and db
-  items = cart_items(cart_from_request(request)) # deprecate request.POST['ids']
+  items = cart_items(json.loads(request.POST['ids']))
   allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
   subtotal = Decimal(0);
   tax = Decimal(0);
 
   # Add order items and calculate subtotal and tax
   for wrap in items:
-    item = wrap.obj
+    item = wrap['obj']
     order_item = OrderItem.objects.create(
       order = order,
       item = item,
-      quantity = wrap.quantity,
+      quantity = wrap['quantity'],
       allow_sub = True,
     )
-    order_item.allow_sub = allow_sub_detail[item.id]
-    price = item.price * wrap.quantity
+    order_item.allow_sub = allow_sub_detail[unicode(item.id)]
+    price = item.price * wrap['quantity']
     subtotal += price
     tax += price * item.tax_class
 
@@ -135,6 +136,7 @@ def new_order(request):
   # Setup context and render
   context = Context({
     'order': order,
+    'order_items': OrderItem.objects.filter(order__id=order.id),
     'form': form,
     'sandbox': DEBUG,
   })
