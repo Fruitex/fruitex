@@ -23,7 +23,7 @@
           </label>
         </div>
         <span class="item-in-cart-count">Quatity: {{ order_item.quantity }}</span>
-        <span class="item-in-cart-price">$ {{ order_item.price|floatformat:2 }}</span>
+        <span class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</span>
       </div>
     </div>
     {% endfor %}

@@ -160,10 +160,10 @@ $(document).ready(function() {
     $('.item-in-cart').each(function(i, el) {
       var id = $(el).data('id');
       var item = items[id];
-      var unit_price = parseFloat(item.fields.price);
+      var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
       var quantity = $(el).find('.item-quantity').val();
       var tax_class = parseFloat(item.fields.tax_class)
-      var price = unit_price * quantity;
+      var price = parseFloat(unit_price) * quantity;
       var hst = price * tax_class;
       subtotal += price;
       hst_total += hst;
@@ -192,7 +192,8 @@ $(document).ready(function() {
 
   var updateItemPriceTag = function(id, quantity) {
     var item = items[id];
-    var price = parseFloat(item.fields.price) * quantity;
+    var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
+    var price = parseFloat(unit_price) * quantity;
 
     var item_price_el = $('#item-' + id).find('.item-in-cart-price');
     item_price_el.text('$ ' + price.toFixed(2));

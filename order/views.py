@@ -101,16 +101,22 @@ def new_order(request):
   # Add order items and calculate subtotal and tax
   for wrap in items:
     item = wrap['obj']
-    order_item = OrderItem.objects.create(
+    allow_sub = allow_sub_detail[unicode(item.id)]
+    unit_price = item.sales_price if item.on_sale else item.price
+    item_cost = unit_price * wrap['quantity']
+    item_tax = item_cost * item.tax_class
+
+    OrderItem.objects.create(
       order = order,
       item = item,
       quantity = wrap['quantity'],
-      allow_sub = True,
+      allow_sub = allow_sub,
+      item_cost = item_cost,
+      item_tax = item_tax,
     )
-    order_item.allow_sub = allow_sub_detail[unicode(item.id)]
-    price = item.price * wrap['quantity']
-    subtotal += price
-    tax += price * item.tax_class
+
+    subtotal += item_cost
+    tax += item_tax
 
   # Update subtotal and tax
   order.subtotal = subtotal
@@ -126,7 +132,7 @@ def new_order(request):
       "invoice": invoice,
       "notify_url": "http://%s/fruitex-magic-ipn/" % DOMAIN,
       "return_url": "http://%s/redir/?%s" % (DOMAIN, urllib.urlencode({"to" : "/check_order?invoice=" + invoice})),
-      "cancel_return": "http://%s/redir/?to=/home" % DOMAIN,
+      "cancel_return": "http://%s/redir/?to=/shop" % DOMAIN,
       "custom": json.dumps({'coupon': coupon})
   }
 
