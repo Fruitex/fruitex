@@ -1,31 +1,15 @@
 {% load staticfiles %}
-{% load compress %}
-<link rel="stylesheet" type="text/css" href="{% static "styles/banner.css" %}"/>
-{% compress js inline %}
-<script src="{% static "javascript/banner.js" %}"></script>
-{% endcompress %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/banner.css' %}"/>
 <div id="banner">
   <div id='banner-bg'></div>
-  <a href="/home/?query=store:sobeys"/>
-    <img id="logo" src={% static "imgs/logo.png" %}></img>
+  <a href="{% url 'shop:to_default' %}"/>
+    <img id="logo" src="{% static 'imgs/logo.png' %}"></img>
   </a>
-<a href="/cart/">
-  <img id="btn_cart" src={% static "imgs/btn_cart.png" %}></img>
-  <div id="cart_bubble">
-    <p></p>
-    <img src={% static "imgs/cart_bubble.png" %}></img>
-  </div>
-</a>
-<img id="img_add_success" src={% static "imgs/add_success.png" %}></img>
-<div class="center-container">
-  <span class="store-tag">
-    <img src={% static "imgs/store_tag.png" %}></img>
-    <span class="store-name"></span>
-  </span>
-  <span id="search-container">
-    <div id="search-input-wrapper">
-      <input id="search-input" type="text"></input>
+  <a href="{% url 'order:cart' %}">
+    <img id="btn_cart" src="{% static 'imgs/btn_cart.png' %}"></img>
+    <div id="cart_bubble">
+      <p></p>
+      <img src="{% static 'imgs/cart_bubble.png' %}"></img>
     </div>
-    <img id="search-btn" src={% static "imgs/search_btn.png" %}></imgs>
-  </span>
+  </a>
 </div>
