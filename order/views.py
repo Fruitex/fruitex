@@ -55,6 +55,18 @@ def view_cart(request):
   })
   return HttpResponse(template.render(context))
 
+def show_order(request, order_id):
+  template = loader.get_template('order/show.html')
+
+  order = Order.objects.get(id=order_id)
+
+  # Setup context and render
+  context = Context({
+    'order': order,
+    'order_items': OrderItem.objects.filter(order__id=order.id),
+  })
+  return HttpResponse(template.render(context))
+
 @csrf_exempt
 def new_order(request):
   template = loader.get_template('order/show.html')
@@ -137,8 +149,8 @@ def new_order(request):
       "item_name": "Fruitex order #%d" % order.id,
       "invoice": invoice,
       "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-      "return_url": "http://%s/redir/?%s" % (DOMAIN, urllib.urlencode({"to" : "/check_order?invoice=" + invoice})),
-      "cancel_return": "http://%s/redir/?to=/shop" % DOMAIN,
+      "return_url": request.build_absolute_uri(reverse('order:show', {'order_id': order.id})),
+      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
       "custom": json.dumps({'coupon': coupon})
   }
 

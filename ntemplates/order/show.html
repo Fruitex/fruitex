@@ -99,19 +99,19 @@
   </tbody>
   </table>
 </div>
+{% if form %}
 <div id='payment-container'>
-      <p id='payment-title'>Payment with PayPal</p>
-      <span id='payment-note-title'>Do not have a paypal account?</span>
-      <span>You can always pay with credit card</span>
-      <img id='payment-note' src={% static "imgs/paypal_note.png" %}></img>
-    <div id='paypal-container'>
-      {% if sandbox %}
-        {{ form.sandbox }}
-      {% else %}
-        {{ form.render }}
-      {% endif %}
-    </div>
+  <p id='payment-title'>Payment with PayPal</p>
+  <span id='payment-note-title'>Do not have a paypal account?</span>
+  <span>You can always pay with credit card</span>
+  <img id='payment-note' src={% static "imgs/paypal_note.png" %}></img>
+  <div id='paypal-container'>
+    {% if sandbox %}
+      {{ form.sandbox }}
+    {% else %}
+      {{ form.render }}
+    {% endif %}
   </div>
-<script>
-</script>
+</div>
+{% endif %}
 {% endblock %}
