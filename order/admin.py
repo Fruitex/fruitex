@@ -1,11 +1,21 @@
 from django.contrib import admin
-from order.models import Order, OrderItem, Coupon
+from order.models import Invoice, Order, OrderItem, Coupon
+
+class InvoiceAdmin(admin.ModelAdmin):
+  date_hierarchy = 'when_created'
+  list_display = [
+    'invoice_num', 'status', 'payer', 'total', 'when_created'
+  ]
+  list_filter = [ 'status' ]
+  search_fields = ['invoice', 'payer']
+
+admin.site.register(Invoice, InvoiceAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_placed'
   list_display = [
-    'invoice', 'id', 'customer_name', 'email', 'status', 'total',
-    'delivery_window', 'when_placed'
+    'id', 'customer_name', 'email', 'status', 'delivery_window',
+    'when_updated',
   ]
   list_filter = [ 'status' ]
   ordering = [ '-when_placed' ]
