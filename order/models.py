@@ -43,7 +43,7 @@ class Invoice(models.Model):
 
 class OrderItem(models.Model):
   def __unicode__(self):
-    return self.item + ' * ' + self.quantity
+    return str(self.item) + ' * ' + str(self.quantity)
 
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
@@ -55,7 +55,7 @@ class OrderItem(models.Model):
 
 class Order(models.Model):
   def __unicode__(self):
-    return '#' + self.id
+    return '#' + str(self.id)
 
   def _get_order_items(self):
     return OrderItem.objects.filter(order__id=self.id)
