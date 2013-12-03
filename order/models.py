@@ -57,6 +57,9 @@ class Order(models.Model):
   def __unicode__(self):
     return '#' + self.id
 
+  def _get_order_items(self):
+    return OrderItem.objects.filter(order__id=self.id)
+
   # Status
   STATUS_PENDING = 'PEND'                 # Pending until invoice has been paid
   STATUS_WAITING = 'WAIT'                 # Waiting for the delivery time
@@ -73,6 +76,7 @@ class Order(models.Model):
 
   # Order
   items = models.ManyToManyField('shop.Item', related_name='orders', through=OrderItem)
+  order_items = property(_get_order_items)
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
   delivery_window = models.CharField(max_length=32)
