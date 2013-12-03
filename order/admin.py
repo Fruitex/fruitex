@@ -36,8 +36,8 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 class CouponAdmin(admin.ModelAdmin):
-  list_display = [ 'code', 'id', 'value', 'used' ]
-  list_filter = [ 'used' ]
+  list_display = [ 'code', 'id', 'type', 'value', 'used' ]
+  list_filter = [ 'type', 'used' ]
   ordering = [ '-id' ]
   search_fields = [ 'code' ]
 

@@ -35,6 +35,9 @@ class Invoice(models.Model):
 
 
 class OrderItem(models.Model):
+  def __unicode__(self):
+      return self.item + ' * ' + self.quantity
+
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
   quantity = models.IntegerField()
@@ -45,7 +48,7 @@ class OrderItem(models.Model):
 
 class Order(models.Model):
   def __unicode__(self):
-      return self.invoice
+      return '#' + self.id + ' (' + self.email + ')'
 
   # Status
   STATUS_PENDING = 'PEND'                 # Pending until invoice has been paid
