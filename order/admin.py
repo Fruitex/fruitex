@@ -4,22 +4,22 @@ from order.models import Invoice, Order, OrderItem, Coupon
 class InvoiceAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_created'
   list_display = [
-    'invoice_num', 'status', 'payer', 'total', 'when_created'
+    'invoice_num', 'customer_name', 'email', 'status', 'total', 'when_created'
   ]
   list_filter = [ 'status' ]
-  search_fields = ['invoice', 'payer']
+  ordering = [ '-when_created' ]
+  search_fields = ['invoice', 'payer', 'customer_name', 'email', 'phone', 'address', 'postcode']
 
 admin.site.register(Invoice, InvoiceAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-  date_hierarchy = 'when_placed'
+  date_hierarchy = 'when_created'
   list_display = [
-    'id', 'customer_name', 'email', 'status', 'delivery_window',
-    'when_updated',
+    'id', 'invoice', 'status', 'delivery_window', 'when_created',
   ]
   list_filter = [ 'status' ]
-  ordering = [ '-when_placed' ]
-  search_fields = ['id', 'invoice', 'customer_name', 'email', 'phone', 'address', 'postcode']
+  ordering = [ '-when_created' ]
+  search_fields = ['id', 'invoice']
 
 admin.site.register(Order, OrderAdmin)
 

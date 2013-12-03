@@ -33,10 +33,17 @@ class Invoice(models.Model):
   discount = models.DecimalField(max_digits=16, decimal_places=2)
   total = property(_get_total)
 
+  # Customer
+  customer_name = models.CharField(max_length=64)
+  address = models.TextField()
+  postcode = models.CharField(max_length=16)
+  phone = models.CharField(max_length=16)
+  email = models.EmailField(max_length=256)
+
 
 class OrderItem(models.Model):
   def __unicode__(self):
-      return self.item + ' * ' + self.quantity
+    return self.item + ' * ' + self.quantity
 
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
@@ -48,7 +55,7 @@ class OrderItem(models.Model):
 
 class Order(models.Model):
   def __unicode__(self):
-      return '#' + self.id + ' (' + self.email + ')'
+    return '#' + self.id
 
   # Status
   STATUS_PENDING = 'PEND'                 # Pending until invoice has been paid
@@ -73,15 +80,8 @@ class Order(models.Model):
   # Metas
   invoice = models.ForeignKey('Invoice', related_name='orders', on_delete=models.PROTECT)
   status = models.CharField(max_length=4, choices=STATUSES)
-  when_placed = models.DateTimeField(auto_now_add=True)
+  when_created = models.DateTimeField(auto_now_add=True)
   when_updated = models.DateTimeField(auto_now=True)
-
-  # Customer
-  customer_name = models.CharField(max_length=64)
-  address = models.TextField()
-  postcode = models.CharField(max_length=16)
-  phone = models.CharField(max_length=16)
-  email = models.EmailField(max_length=256)
 
 
 class Coupon(models.Model):
