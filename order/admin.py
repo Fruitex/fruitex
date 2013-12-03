@@ -1,15 +1,25 @@
 from django.contrib import admin
-from order.models import Order, OrderItem, Coupon
+from order.models import Invoice, Order, OrderItem, Coupon
 
-class OrderAdmin(admin.ModelAdmin):
-  date_hierarchy = 'when_placed'
+class InvoiceAdmin(admin.ModelAdmin):
+  date_hierarchy = 'when_created'
   list_display = [
-    'invoice', 'id', 'customer_name', 'email', 'status', 'total',
-    'delivery_window', 'when_placed'
+    'invoice_num', 'customer_name', 'email', 'status', 'total', 'when_created'
   ]
   list_filter = [ 'status' ]
-  ordering = [ '-when_placed' ]
-  search_fields = ['id', 'invoice', 'customer_name', 'email', 'phone', 'address', 'postcode']
+  ordering = [ '-when_created' ]
+  search_fields = ['invoice', 'payer', 'customer_name', 'email', 'phone', 'address', 'postcode']
+
+admin.site.register(Invoice, InvoiceAdmin)
+
+class OrderAdmin(admin.ModelAdmin):
+  date_hierarchy = 'when_created'
+  list_display = [
+    'id', 'invoice', 'status', 'delivery_window', 'when_created',
+  ]
+  list_filter = [ 'status' ]
+  ordering = [ '-when_created' ]
+  search_fields = ['id', 'invoice']
 
 admin.site.register(Order, OrderAdmin)
 
@@ -26,8 +36,8 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 class CouponAdmin(admin.ModelAdmin):
-  list_display = [ 'code', 'id', 'value', 'used' ]
-  list_filter = [ 'used' ]
+  list_display = [ 'code', 'id', 'type', 'value', 'used' ]
+  list_filter = [ 'type', 'used' ]
   ordering = [ '-id' ]
   search_fields = [ 'code' ]
 

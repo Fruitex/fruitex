@@ -8,24 +8,29 @@
 <script src={% static "javascript/itemlist.js" %}></script>
 <div id='order-confirm-wrapper'>
   <p id="order-confirm-header">You Order Confirmation</p>
-  <p id="order-confirm-invoice">Your Invoice#: {{ order.invoice }}</p>
+  <p id="order-confirm-invoice">Your Invoice#: {{ invoice.invoice_num }}</p>
   <div id="order-confirm-item-list">
-    {% for order_item in order_items %}
-    <div class="item-in-cart">
-      <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
-      <div class="item-info-wrapper">
-        <div class="item-info-left">
-          <span class="item-in-cart-name">{{ order_item.item.name }}</span>
-          <span class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</span>
-          <label>
-            <input type="checkbox" {% if order_item.allow_sub %} checked="" {% endif %} disabled="disabled">
-            Allow substitution
-          </label>
+    {% for order in invoice.orders.all %}
+      {% for order_item in order.order_items.all %}
+      <div class="item-in-cart">
+        <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+        <div class="item-info-wrapper">
+          <div class="item-info-left">
+            <span class="item-in-cart-name">{{ order_item.item.name }}</span>
+            <span class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</span>
+            <label>
+              <input type="checkbox" {% if order_item.allow_sub %} checked="" {% endif %} disabled="disabled">
+              Allow substitution
+            </label>
+          </div>
+          <span class="item-in-cart-count">Quatity: {{ order_item.quantity }}</span>
+          <span class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</span>
         </div>
-        <span class="item-in-cart-count">Quatity: {{ order_item.quantity }}</span>
-        <span class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</span>
       </div>
-    </div>
+      {% endfor %}
+      <div class="item-list-order-summary">
+        Delivery: {{ order.delivery_window }}
+      </div>
     {% endfor %}
   </div>
   <table id='order-confirm-table'>
@@ -35,7 +40,7 @@
         Delivery Fee:
       </td>
       <td>
-        ${{ order.shipping|floatformat:2 }}
+        ${{ invoice.shipping|floatformat:2 }}
       </td>
     </tr>
     <tr>
@@ -43,7 +48,7 @@
         Total Cost (Tax Inc.):
       </td>
       <td>
-        ${{ order.total|floatformat:2 }}
+        ${{ invoice.total|floatformat:2 }}
       </td>
     </tr>
     <tr>
@@ -51,7 +56,7 @@
         Name:
       </td>
       <td>
-        {{ order.customer_name }}
+        {{ invoice.customer_name }}
       </td>
     </tr>
     <tr>
@@ -59,7 +64,7 @@
         Address:
       </td>
       <td>
-        {{ order.address }}
+        {{ invoice.address }}
       </td>
     </tr>
     <tr>
@@ -67,7 +72,7 @@
         ZIP:
       </td>
       <td>
-        {{ order.postcode }}
+        {{ invoice.postcode }}
       </td>
     </tr>
     <tr>
@@ -75,7 +80,7 @@
         Phone:
       </td>
       <td>
-        {{ order.phone }}
+        {{ invoice.phone }}
       </td>
     </tr>
     <tr>
@@ -83,18 +88,8 @@
         Email:
       </td>
       <td>
-        {{ order.email }}
+        {{ invoice.email }}
       </td>
-    </tr>
-    <tr>
-      <td>
-        Delivery Time:
-      </td>
-      <td>
-        {{ order.delivery_window }}
-      </td>
-    </tr>
-    <tr>
     </tr>
   </tbody>
   </table>

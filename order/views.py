@@ -13,7 +13,7 @@ import json
 import uuid
 
 from shop.models import Item
-from order.models import Order, OrderItem
+from order.models import Order, OrderItem, Invoice
 from config.paypal import PAYPAL_RECEIVER_EMAIL
 from config.environment import DEBUG
 
@@ -55,19 +55,18 @@ def view_cart(request):
   return HttpResponse(template.render(context))
 
 @csrf_exempt
-def show_order(request, order_id):
+def show_invoice(request, id):
   template = loader.get_template('order/show.html')
 
-  order = Order.objects.get(id=order_id)
+  invoice = Invoice.objects.get(id=id)
 
   # Setup context and render
   context = Context({
-    'order': order,
-    'order_items': OrderItem.objects.filter(order__id=order.id),
+    'invoice': invoice,
   })
   return HttpResponse(template.render(context))
 
-def new_order(request):
+def new_from_cart(request):
   template = loader.get_template('order/show.html')
 
   # Gether info from POST to setup the order
@@ -79,27 +78,28 @@ def new_order(request):
   email = request.POST['email']
 
   # Order infos
-  invoice = str(uuid.uuid4())
+  invoice_num = str(uuid.uuid4())
   delivery_window = request.POST['time']
-  coupon = request.POST['coupon']
+  coupon_code = request.POST['coupon']
 
   # Validate coupon
   # TODO
+  coupon = None
   discount = Decimal(0)
   shipping = Decimal(4)
 
-  # Create order
-  order = Order.objects.create(
-    # Order
-    invoice = invoice,
-    delivery_window = delivery_window,
+  # Create invoice
+  invoice = Invoice.objects.create(
+    # Infos
+    invoice_num = invoice_num,
+    status = Invoice.STATUS_PENDING,
+    coupon = coupon,
+
+    # Amount
     subtotal = Decimal(0),
     tax = Decimal(0),
     shipping = shipping,
     discount = discount,
-
-    # Metas
-    status = Order.STATUS_PENDING,
 
     # Customer
     customer_name = customer_name,
@@ -109,15 +109,33 @@ def new_order(request):
     email = email,
   )
 
+  # Construct orders
+  orders = {}
+  def get_order_for_store(store_slug):
+    if store_slug in orders:
+      return orders.get(store_slug)
+    order = Order.objects.create(
+      # Order
+      subtotal = Decimal(0),
+      tax = Decimal(0),
+      delivery_window = delivery_window,
+
+      # Meta
+      invoice = invoice,
+      status = Order.STATUS_PENDING,
+    )
+    orders[store_slug] = order
+    return order
+
   # Fetch items from cart and db
   items = cart_items(json.loads(request.POST['ids']))
   allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
-  subtotal = Decimal(0);
-  tax = Decimal(0);
 
   # Add order items and calculate subtotal and tax
   for wrap in items:
     item = wrap['obj']
+    order = get_order_for_store(item.category.store.slug)
+
     allow_sub = allow_sub_detail[unicode(item.id)]
     unit_price = item.sales_price if item.on_sale else item.price
     item_cost = unit_price * wrap['quantity']
@@ -132,25 +150,28 @@ def new_order(request):
       item_tax = item_tax,
     )
 
-    subtotal += item_cost
-    tax += item_tax
+    # Update subtotal and tax
+    order.subtotal += item_cost
+    order.tax += item_tax
 
-  # Update subtotal and tax
-  order.subtotal = subtotal
-  order.tax = tax
-  order.save()
+  # Save orders and invoice
+  for (store_slug, order) in orders.items():
+    invoice.subtotal += order.subtotal;
+    invoice.tax += order.tax;
+    order.save()
+  invoice.save()
 
   # Setup paypal dict
   paypal_dict = {
-      "business": PAYPAL_RECEIVER_EMAIL,
-      "currency_code": "CAD",
-      "amount": "%.2f" % order.total,
-      "item_name": "Fruitex order #%d" % order.id,
-      "invoice": invoice,
-      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'order_id': order.id})),
-      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
-      "custom": json.dumps({'coupon': coupon})
+    "business": PAYPAL_RECEIVER_EMAIL,
+    "currency_code": "CAD",
+    "amount": "%.2f" % invoice.total,
+    "item_name": "Fruitex order #%d" % invoice.id,
+    "invoice": invoice_num,
+    "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
+    "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
+    "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
+    "custom": json.dumps({'coupon': coupon_code})
   }
 
   # Create the Paypal form
@@ -158,8 +179,7 @@ def new_order(request):
 
   # Setup context and render
   context = Context({
-    'order': order,
-    'order_items': OrderItem.objects.filter(order__id=order.id),
+    'invoice': invoice,
     'form': form,
     'sandbox': DEBUG,
   })
