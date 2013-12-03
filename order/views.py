@@ -13,7 +13,7 @@ import json
 import uuid
 
 from shop.models import Item
-from order.models import Order, OrderItem
+from order.models import Order, OrderItem, Invoice
 from config.paypal import PAYPAL_RECEIVER_EMAIL
 from config.environment import DEBUG
 
@@ -55,19 +55,18 @@ def view_cart(request):
   return HttpResponse(template.render(context))
 
 @csrf_exempt
-def show_order(request, order_id):
+def show_invoice(request, id):
   template = loader.get_template('order/show.html')
 
-  order = Order.objects.get(id=order_id)
+  invoice = Invoice.objects.get(id=id)
 
   # Setup context and render
   context = Context({
-    'order': order,
-    'order_items': OrderItem.objects.filter(order__id=order.id),
+    'invoice': invoice,
   })
   return HttpResponse(template.render(context))
 
-def new_order(request):
+def new_from_cart(request):
   template = loader.get_template('order/show.html')
 
   # Gether info from POST to setup the order

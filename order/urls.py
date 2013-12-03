@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url, include
 urlpatterns = patterns('order.views',
   # Views
   url(r'^cart/$', 'view_cart', name='cart'),
-  url(r'^show/(?P<order_id>\d+)/$', 'show_order', name='show'),
-  url(r'^new/$', 'new_order', name='new'),
+  url(r'^invoice/(?P<id>\d+)/$', 'show_invoice', name='show'),
+  url(r'^new/$', 'new_from_cart', name='new'),
   url(r'^paypal-ipn/', include('paypal.standard.ipn.urls'), name='paypal-ipn'),
 )
