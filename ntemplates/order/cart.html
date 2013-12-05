@@ -27,8 +27,8 @@
     </div>
     {% endfor %}
   </div>
-  <div id='coupon_container'>
     <label>Coupon: <input id='coupon-input' type='text'></input></label>
+  <div id="coupon-container">
   </div>
   <div id='items-in-cart-summary-container'>
   </div>
@@ -277,7 +277,7 @@ $(document).ready(function() {
     $('.item-in-cart').remove()
     $('#items-in-cart-summary-container').remove();
     $('#cart-footer').remove();
-    $('#coupon_container').remove();
+    $('#coupon-container').remove();
     $('#delivery-wrapper').remove();
     $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
     $("#cart-container").append($('<p>').text('Return to shop')

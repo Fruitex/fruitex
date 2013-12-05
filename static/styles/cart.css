@@ -112,7 +112,7 @@
   height: 30px;
   padding: 10px;
   font-size: 14px;
-  vertical-align:text-top; 
+  vertical-align:text-top;
 }
 #delivery-container input {
   border: 1px solid #d3d3d3;
@@ -147,13 +147,13 @@
   color: #d3d3d3;
 }
 
-#coupon_container {
-  text-align: right; 
-  padding-bottom: 20px; 
+#coupon-container {
+  text-align: right;
+  padding-bottom: 20px;
   padding-right: 80px;
   font-weight: bold;
 }
-#coupon_container input {
+#coupon-container input {
   margin-left: 5px;
   border: 1px solid #d3d3d3;
   width: 100px;
