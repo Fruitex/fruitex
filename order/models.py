@@ -1,4 +1,7 @@
 from django.db import models
+from shop.models import Store
+from shop.models import DeliveryOption
+
 
 from datetime import date
 
@@ -43,6 +46,28 @@ class Invoice(models.Model):
   postcode = models.CharField(max_length=16)
   phone = models.CharField(max_length=16)
   email = models.EmailField(max_length=256)
+  
+  
+class DeliveryWindowManager(models.Manager):
+  def get_window(self, option, date):
+    for window in DeliveryWindow.objects.all():
+      if option.store == window.store and window.date == date:
+        if window.start_time <= option.start_time and window.start_time + window.time_interval > option.start_time:
+          return window
+    window = self.create(store = option.store, date = date, start_time = option.start_time, time_interval = option.time_interval)
+    return window
+      
+    
+class DeliveryWindow(models.Model):
+  def __unicode__(self):
+    return str(self.date.month) + "/" + str(self.date.day) + " (" + str(self.start_time/60) + " - " \
+             + str((self.start_time + self.time_interval)/60) + ")"
+  store = models.ForeignKey(Store, related_name='Store')
+  date = models.DateTimeField(null=True)
+  start_time = models.IntegerField(null=True)
+  time_interval = models.IntegerField(null=True)
+  
+  objects = DeliveryWindowManager()
 
 
 class OrderItem(models.Model):
@@ -83,7 +108,7 @@ class Order(models.Model):
   order_items = property(_get_order_items)
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
-  delivery_window = models.CharField(max_length=32)
+  delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', blank=True, null=True)
 
   # Metas
   invoice = models.ForeignKey('Invoice', related_name='orders', on_delete=models.PROTECT)
