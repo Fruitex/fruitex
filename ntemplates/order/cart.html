@@ -27,8 +27,9 @@
     </div>
     {% endfor %}
   </div>
-  <div id='coupon_container'>
-    <label>Coupon: <input id='coupon-input' type='text'></input></label>
+  <div id="coupon-container">
+    <label>Coupon: <input id="coupon-input" type="text"></input></label>
+    <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
   </div>
@@ -264,9 +265,26 @@ $(document).ready(function() {
 
   // Coupon input
   $('#coupon-input').keyup(function () {
-    var coupon = $('#coupon-input').val();
-    $('#coupon-input-hidden').val(coupon);
-    // TODO: Validate coupon with server
+    var coupon_input = $('#coupon-input-hidden');
+    var tick = $('#coupon-container .tick');
+    var code = $('#coupon-input').val();
+    var url_template = '{% url "order:coupon" "coupon_code" %}';
+
+    $.get(url_template.replace('coupon_code', code), function(data) {
+      console.log(data);
+      if (data.length > 0) {
+        var coupon = data[0].fields;
+        discount = parseFloat(coupon.value);
+        updateSummary();
+        coupon_input.val(code);
+        tick.removeClass('hidden');
+      } else {
+        discount = 0.0;
+        updateSummary();
+        coupon_input.val('');
+        tick.addClass('hidden');
+      }
+    }, 'json');
   });
 
   $('.item-quantity').change(function(e) {
@@ -277,7 +295,7 @@ $(document).ready(function() {
     $('.item-in-cart').remove()
     $('#items-in-cart-summary-container').remove();
     $('#cart-footer').remove();
-    $('#coupon_container').remove();
+    $('#coupon-container').remove();
     $('#delivery-wrapper').remove();
     $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
     $("#cart-container").append($('<p>').text('Return to shop')

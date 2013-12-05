@@ -13,11 +13,17 @@ import json
 import uuid
 
 from shop.models import Item
-from order.models import Order, OrderItem, Invoice
+from order.models import Order, OrderItem, Invoice, Coupon
 from config.paypal import PAYPAL_RECEIVER_EMAIL
 from config.environment import DEBUG
 
 # Common operations
+
+def empty_response():
+  return HttpResponse('[]', mimetype='application/json')
+
+def json_response(queryset):
+  return HttpResponse(serializers.serialize('json', queryset), mimetype='application/json')
 
 def cart_from_request(request):
   cart = request.COOKIES.get('cart')
@@ -83,10 +89,17 @@ def new_from_cart(request):
   coupon_code = request.POST['coupon']
 
   # Validate coupon
-  # TODO
   coupon = None
   discount = Decimal(0)
   shipping = Decimal(4)
+
+  if coupon_code is not None and len(coupon_code) > 0:
+    coupon = Coupon.objects.get_valid_coupon(coupon_code)
+    if coupon == False:
+      return HttpResponse('Invalid coupon code')
+    # TODO: handle percentage coupon
+    discount = coupon.value
+
 
   # Create invoice
   invoice = Invoice.objects.create(
@@ -184,3 +197,11 @@ def new_from_cart(request):
     'sandbox': DEBUG,
   })
   return HttpResponse(template.render(context))
+
+# API
+
+def coupon(request, code):
+  coupon = Coupon.objects.get_valid_coupon(code)
+  if coupon is False:
+    return empty_response()
+  return json_response([coupon])

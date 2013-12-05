@@ -1,5 +1,9 @@
 from django.db import models
 
+from datetime import date
+
+from order import managers
+
 class Invoice(models.Model):
   def __unicode__(self):
     return self.invoice_num
@@ -100,7 +104,10 @@ class Coupon(models.Model):
     (TYPE_PERCENTAGE, 'Percentage'),
   )
 
-  code = models.CharField(max_length=32)
+  objects = managers.CouponManager()
+
+  code = models.CharField(max_length=32, unique=True)
   type = models.CharField(max_length=4, choices=TYPES)
   value = models.DecimalField(max_digits=16, decimal_places=2)
   used = models.BooleanField()
+  expire = models.DateField(blank=True, default=date.max)
