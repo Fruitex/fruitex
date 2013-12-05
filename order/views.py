@@ -19,6 +19,12 @@ from config.environment import DEBUG
 
 # Common operations
 
+def empty_response():
+  return HttpResponse('[]', mimetype='application/json')
+
+def json_response(queryset):
+  return HttpResponse(serializers.serialize('json', queryset), mimetype='application/json')
+
 def cart_from_request(request):
   cart = request.COOKIES.get('cart')
   if cart is None or len(cart) == 0:
@@ -191,3 +197,11 @@ def new_from_cart(request):
     'sandbox': DEBUG,
   })
   return HttpResponse(template.render(context))
+
+# API
+
+def coupon(request, code):
+  coupon = Coupon.objects.get_valid_coupon(code)
+  if coupon is False:
+    return empty_response()
+  return json_response([coupon])
