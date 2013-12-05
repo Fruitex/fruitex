@@ -11,7 +11,7 @@ def import_from_csv(filename, store_name):
   print 'Starting to import from CSV file %s' % filename
   with open(filename, 'r') as csvfile:
 
-    print 'file opened'
+    
 
     spamreader = csv.reader(csvfile)
     
@@ -44,25 +44,25 @@ def import_from_csv(filename, store_name):
         for index, item in enumerate(head):
           if (item == "Name"):
               name_index = index
-              print 'name = '+str(name_index)
+              #print 'name = '+str(name_index)
           elif (item == "Category"):
               category_index = index
-              print 'category = '+str(category_index)
+              #print 'category = '+str(category_index)
           elif (item == "Description"):
               description_index = index
-              print 'description = '+str(description_index)
+              #print 'description = '+str(description_index)
           elif (item == "SKU"):
               sku_index = index
-              print 'sku = '+str(sku_index)
+              #print 'sku = '+str(sku_index)
           elif (item == "Price"):
               price_index = index
-              print 'price = '+str(price_index)
+              #print 'price = '+str(price_index)
           elif (item == "Tax Class"):
               tax_class_index = index
-              print 'tax_class = '+str(tax_class_index) 
+              #print 'tax_class = '+str(tax_class_index) 
           else:
               metaList[index] = item
-              print metaList
+              #print metaList
 
 
       else:
@@ -108,8 +108,4 @@ def import_from_csv(filename, store_name):
         del itemMeta[:]
     
 
-  print Store.objects.all()
-  print Category.objects.all()
-  print Item.objects.all()
-  print ItemMeta.objects.all()
 
