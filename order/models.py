@@ -46,18 +46,8 @@ class Invoice(models.Model):
   postcode = models.CharField(max_length=16)
   phone = models.CharField(max_length=16)
   email = models.EmailField(max_length=256)
-  
-  
-class DeliveryWindowManager(models.Manager):
-  def get_window(self, option, date):
-    for window in DeliveryWindow.objects.all():
-      if option.store == window.store and window.date == date:
-        if window.start_time <= option.start_time and window.start_time + window.time_interval > option.start_time:
-          return window
-    window = self.create(store = option.store, date = date, start_time = option.start_time, time_interval = option.time_interval)
-    return window
-      
-    
+
+
 class DeliveryWindow(models.Model):
   def __unicode__(self):
     return str(self.date.month) + "/" + str(self.date.day) + " (" + str(self.start_time/60) + " - " \

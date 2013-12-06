@@ -14,3 +14,13 @@ class CouponManager(models.Manager):
     if coupon.used:
       return False
     return coupon
+
+
+class DeliveryWindowManager(models.Manager):
+  def get_window(self, option, date):
+    for window in DeliveryWindow.objects.all():
+      if option.store == window.store and window.date == date:
+        if window.start_time <= option.start_time and window.start_time + window.time_interval > option.start_time:
+          return window
+    window = self.create(store = option.store, date = date, start_time = option.start_time, time_interval = option.time_interval)
+    return window
