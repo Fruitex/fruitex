@@ -53,11 +53,11 @@ class DeliveryWindow(models.Model):
     return str(self.date.month) + "/" + str(self.date.day) + " (" + str(self.start_time/60) + " - " \
              + str((self.start_time + self.time_interval)/60) + ")"
   store = models.ForeignKey(Store, related_name='Store')
-  date = models.DateTimeField(null=True)
-  start_time = models.IntegerField(null=True)
-  time_interval = models.IntegerField(null=True)
+  date = models.DateTimeField()
+  start_time = models.IntegerField()
+  time_interval = models.IntegerField()
   
-  objects = DeliveryWindowManager()
+  objects = managers.DeliveryWindowManager()
 
 
 class OrderItem(models.Model):
@@ -98,7 +98,7 @@ class Order(models.Model):
   order_items = property(_get_order_items)
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
-  delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', blank=True, null=True)
+  delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', on_delete=models.PROTECT)
 
   # Metas
   invoice = models.ForeignKey('Invoice', related_name='orders', on_delete=models.PROTECT)
