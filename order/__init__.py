@@ -40,7 +40,8 @@ def handle_payment_received(status, ipn):
   # Invalidate coupon
   coupon = invoice.coupon
   if coupon is not None:
-    coupon.update(used=True)
+    coupon.used=True
+    coupon.save()
 
   # Update order
   invoice.status=status
