@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import os
-import sys
 import csv
 import re
 from decimal import Decimal
@@ -23,11 +21,10 @@ def import_from_csv(filename, store_name):
     # ItemMeta list
     metaList = dict()
     
-
     # Store
     if not Store.objects.filter(name=store_name).exists():
-      store = Store(name = store_name, slug = store_name, address = 'TBD')
-      store.save()
+      store = Store.objects.create(name = store_name, 
+        slug = (store_name.lower()).replace(" ", "_"), address = 'TBD')
     for row in csvreader:
       if rownum == 0:
         # Store header row and recognize column name accordingly
@@ -63,15 +60,19 @@ def import_from_csv(filename, store_name):
             for catName in result:
               if not Category.objects.filter(name=catName).exists():
                 # If no such Category exists
+                slugName = (catName.lower()).replace(" ", "_")
                 if not catParent=='':
-                  # Category don't have a parent
-                  p = Category.objects.create(name = catName, store = Store.objects.get(name = store_name),
+                  # Current category has a parent
+                  p = Category.objects.create(name = catName, slug = slugName, 
+                      store = Store.objects.get(name = store_name),
                       parent = Category.objects.get(name = catParent))
                 else:
-                  p = Category.objects.create(name = catName, store = Store.objects.get(name = store_name))
-              # Remember current category(parent for next level)
+                  # Current category is of top layer(eg.Beverages)
+                  p = Category.objects.create(name = catName, slug = slugName, 
+                      store = Store.objects.get(name = store_name))
+              # Remember current category(as parent for next layer cat)
               catParent = catName
-            # Assign Item's category and we know it exists now
+            # Assign Item's category since we know it exists now
             item.category = Category.objects.get(name = catName)
           elif value == description_index:
             item.description = row[description_index]
