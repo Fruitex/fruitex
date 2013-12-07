@@ -2,7 +2,7 @@ from django.db import models
 from shop.models import Store
 from shop.models import DeliveryOption
 
-
+import datetime
 from datetime import date
 
 from order import managers
@@ -50,12 +50,10 @@ class Invoice(models.Model):
 
 class DeliveryWindow(models.Model):
   def __unicode__(self):
-    return str(self.date.month) + "/" + str(self.date.day) + " (" + str(self.start_time/60) + " - " \
-             + str((self.start_time + self.time_interval)/60) + ")"
+    return self.store.name + ": " + "%s"%self.start_time + "-" + "%s"%self.end_time
   store = models.ForeignKey(Store, related_name='Store')
-  date = models.DateTimeField()
-  start_time = models.IntegerField()
-  time_interval = models.IntegerField()
+  start_time = models.DateTimeField()
+  end_time = models.DateTimeField()
   
   objects = managers.DeliveryWindowManager()
 

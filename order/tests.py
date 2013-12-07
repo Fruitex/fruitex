@@ -25,4 +25,3 @@ class SimpleTest(TestCase):
     self.assertEqual(DeliveryWindow.objects.count(), 5)
     print option1
     print DeliveryWindow.objects.all()[0]
-    self.assertEqual(1 + 1, 2)  
