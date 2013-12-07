@@ -9,7 +9,7 @@ from shop.models import Store, Category, Item, ItemMeta
 def import_from_csv(filename, store_name):
   print 'Starting to import from CSV file %s' % filename
   with open(filename, 'r') as csvfile:
-    spamreader = csv.reader(csvfile)
+    csvreader = csv.reader(csvfile)
     rownum = 0
 
     # Remember Col index
@@ -22,43 +22,44 @@ def import_from_csv(filename, store_name):
 
     # ItemMeta list
     metaList = dict()
-    itemMeta = []
+    
 
     # Store
     if not Store.objects.filter(name=store_name).exists():
       store = Store(name = store_name, slug = store_name, address = 'TBD')
       store.save()
-    for row in spamreader:
+    for row in csvreader:
       if rownum == 0:
         # Store header row and recognize column name accordingly
         head = row
         rownum = 1
-        for index, item in enumerate(head):
-          if item == "Name":
+        for index, colname in enumerate(head):
+          if colname == "Name":
               name_index = index
-          elif item == "Category":
+          elif colname == "Category":
               category_index = index
-          elif item == "Description":
+          elif colname == "Description":
               description_index = index
-          elif item == "SKU":
+          elif colname == "SKU":
               sku_index = index
-          elif item == "Price":
+          elif colname == "Price":
               price_index = index
-          elif item == "Tax Class":
+          elif colname == "Tax Class":
               tax_class_index = index
           else:
               # metaList (key=index, value = column_title)
-              metaList[index] = item
+              metaList[index] = colname
       else:
-        p1 = Item()
-        for index, item in enumerate(row):
+        item = Item()
+        itemMeta = []
+        for value, attribute in enumerate(row):
           # Add Item attributes according to column index
-          if index == name_index:
-            p1.name = row[name_index]
-          elif index == category_index:
+          if value == name_index:
+            item.name = row[name_index]
+          elif value == category_index:
             catParent = ''
             result = re.split('->', row[category_index])
-            # Split up Category content, interate from top layer
+            # Split up Category content, iterate from top layer
             for catName in result:
               if not Category.objects.filter(name=catName).exists():
                 # If no such Category exists
@@ -70,29 +71,26 @@ def import_from_csv(filename, store_name):
                   p = Category.objects.create(name = catName, store = Store.objects.get(name = store_name))
               # Remember current category(parent for next level)
               catParent = catName
-            # Assign item's category and we know it exists now
-            p1.category = Category.objects.get(name = catName)
-          elif index == description_index:
-            p1.description = row[description_index]
-          elif index == sku_index:
-            p1.sku = row[sku_index]
-          elif index == price_index:
-            p1.price = Decimal(row[price_index])
-          elif index == tax_class_index:
-            p1.tax_class = Decimal(row[tax_class_index])
+            # Assign Item's category and we know it exists now
+            item.category = Category.objects.get(name = catName)
+          elif value == description_index:
+            item.description = row[description_index]
+          elif value == sku_index:
+            item.sku = row[sku_index]
+          elif value == price_index:
+            item.price = Decimal(row[price_index])
+          elif value == tax_class_index:
+            item.tax_class = Decimal(row[tax_class_index])
           else:
             # Any other column index belong to metaData
             m = ItemMeta()
             # Retrieve column name from metaList
-            m.key = metaList[index]
-            m.value = item
+            m.key = metaList[value]
+            m.value = attribute
             # We can't save itemMeta until the Item is saved
             itemMeta.append(m)
-        p1.save()
+        item.save()
         for me in itemMeta:
           # Now Item is successfully saved, we can save all lingering meta
-          me.item = p1
+          me.item = item
           me.save()
-        # Flush metaData list for next row
-        del itemMeta[:]
-
