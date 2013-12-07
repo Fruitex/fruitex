@@ -50,10 +50,10 @@ class Invoice(models.Model):
 
 class DeliveryWindow(models.Model):
   def __unicode__(self):
-    return self.store.name + ": " + "%s"%self.start_time + "-" + "%s"%self.end_time
+    return self.store.name + ": " + "%s"%self.start + "-" + "%s"%self.end
   store = models.ForeignKey(Store, related_name='Store')
-  start_time = models.DateTimeField()
-  end_time = models.DateTimeField()
+  start = models.DateTimeField()
+  end = models.DateTimeField()
   
   objects = managers.DeliveryWindowManager()
 

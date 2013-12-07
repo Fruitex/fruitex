@@ -19,12 +19,12 @@ class CouponManager(models.Manager):
 
 class DeliveryWindowManager(models.Manager):
   def get_window(self, option, date):
-    option_start_time = datetime.datetime(date.year, date.month, date.day, option.start_time/60, option.start_time%60)
+    option_start_time = datetime.datetime(date.year, date.month, date.day, 0, 0) + datetime.timedelta(minutes=option.start_time)
     option_end_time = option_start_time + datetime.timedelta(minutes=option.time_interval)
     option_store = option.store
-    windows = self.filter(start_time=option_start_time, end_time=option_end_time,store=option_store)
+    windows = self.filter(start=option_start_time, end=option_end_time,store=option_store)
     if windows.count() > 0:
       return windows[0]
-    window = self.create(store = option.store,start_time=option_start_time,end_time=option_end_time)
+    window = self.create(store = option.store,start=option_start_time,end=option_end_time)
 
     return window
