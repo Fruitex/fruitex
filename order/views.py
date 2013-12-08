@@ -33,15 +33,25 @@ def cart_from_request(request):
   cart = json.loads(cart)
   return cart
 
-def cart_items(cart):
-  items = Item.objects.filter(id__in=cart)
-  json_value = serializers.serialize('json', items)
-  json_value = json.loads(json_value)
-  return [{
-    'obj': item,
-    'quantity': cart.count(item.id),
-    'json': json.dumps(json_value[i])
-  } for i, item in enumerate(items)]
+def cart_to_store_items(cart):
+  cart_items = Item.objects.filter(id__in=cart)
+  json_value = json.loads(serializers.serialize('json', cart_items))
+
+  store_items = {}
+
+  for i, item in enumerate(cart_items):
+    store = item.category.store
+
+    if store.slug not in store_items:
+      store_items[store] = []
+
+    store_items[store].append({
+      'obj': item,
+      'quantity': cart.count(item.id),
+      'json': json.dumps(json_value[i])
+    })
+
+  return store_items
 
 # Views
 
@@ -49,12 +59,12 @@ def view_cart(request):
   template = loader.get_template('order/cart.html')
 
   cart = cart_from_request(request)
-  items = cart_items(cart)
+  store_items = cart_to_store_items(cart)
   today = datetime.now()
   tomorrow = today + timedelta(days=1)
 
   context = RequestContext(request, {
-    'items': items,
+    'store_items': store_items,
     'today': today,
     'tomorrow': tomorrow,
   })
@@ -141,7 +151,7 @@ def new_from_cart(request):
     return order
 
   # Fetch items from cart and db
-  items = cart_items(json.loads(request.POST['ids']))
+  items = cart_to_store_items(json.loads(request.POST['ids']))
   allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
 
   # Add order items and calculate subtotal and tax
