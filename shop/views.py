@@ -7,9 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from shop.models import Store, Category, Item
 
 ITEM_PER_PAGE = 12
-POPULAR_ITEM_PER_PAGE = 8
-ON_SALE_ITEM_PER_PAGE = 4
-FEATURED_ITEM_PER_PAGE = 4
+POPULAR_ITEM_PER_PAGE = 10
+ON_SALE_ITEM_PER_PAGE = 5
+FEATURED_ITEM_PER_PAGE = 5
 
 # Common operations
 

@@ -196,7 +196,9 @@ def new_from_cart(request):
     'form': form,
     'sandbox': settings.DEBUG,
   })
-  return HttpResponse(template.render(context))
+  response = HttpResponse(template.render(context))
+  response.set_cookie('cart', '')
+  return response
 
 # API
 

@@ -236,10 +236,6 @@ $(document).ready(function() {
     }
   };
 
-  var clearCart = function() {
-    $.cookie('cart', '', { path: '/' });
-  };
-
   var isValidUserInput = function() {
     var v = InputValidator;
     v.init();
@@ -259,7 +255,6 @@ $(document).ready(function() {
       $('#allow_sub_detial_hidden').val(JSON.stringify(allow_sub_detail));
       $('#delivery_item_ids').val($.cookie('cart'));
       $("#checkout-form").submit();
-      clearCart();
     }
   });
 
