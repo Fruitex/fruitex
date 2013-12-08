@@ -1,6 +1,6 @@
 from django.db import models
 from decimal import Decimal
-
+from datetime import date, datetime, timedelta
 
 class Store(models.Model):
     def __unicode__(self):
@@ -20,10 +20,22 @@ class Store(models.Model):
 class DeliveryOption(models.Model):
     def __unicode__(self):
         return self.name
+
+    def _is_in_effect(self):
+        now = datetime.now()
+        start = datetime(now.year, now.month, now.day) + timedelta(minutes=self.start_time)
+        diff = start - now
+        return (((diff.days * 86400) + diff.seconds) / 60) > DeliveryOption.EFFECTIVE_THRESHOLD
+
+    # Delivery option lost effect one hour before the start time
+    EFFECTIVE_THRESHOLD = 60
+
     store = models.ForeignKey('Store', related_name='delivery_options')
     name = models.CharField(max_length=100)
+    # Start time: Number of minutes since the beginning of the day
     start_time = models.IntegerField()
     time_interval = models.IntegerField()
+    in_effect = property(_is_in_effect)
 
 
 class Category(models.Model):
