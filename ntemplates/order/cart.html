@@ -9,6 +9,7 @@
 <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
 <script src={% static "javascript/input_validator.js" %}></script>
 
+<form id='checkout-form' action="{% url 'order:new' %}" method="POST">
 <div id='cart-wrapper'>
   <p id="cart-header">Your cart</p>
   <div id='cart-container'>
@@ -20,9 +21,9 @@
           <div class="item-info-left">
             <span class="item-in-cart-name">{{ item.obj.name }}</span>
             <span class="item-in-cart-store">From: {{ item.obj.category.store.name }}</span>
-            <label><input type="checkbox" checked="" data-id="{{ item.obj.id }}">Allow substitution</label>
+            <label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label>
           </div>
-          <input class="item-quantity num-spinner ui-spinner-input" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+          <input class="item-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
           <span class="item-in-cart-price">$ </span>
         </div>
       </div>
@@ -30,7 +31,7 @@
       <div class="cart-store-summary">
         <div>Store: {{ store.name }}</div>
         <div>Delivery Options:
-          <select name="delivery_window[{{ store.slug }}]">
+          <select name="delivery_options[{{ store.slug }}]">
           {% for option in store.delivery_options.all %}
           {% if option.in_effect %}
           <option value="{{ option.id }}">{{ option.name }}</option>
@@ -42,7 +43,7 @@
     {% endfor %}
   </div>
   <div id="coupon-container">
-    <label>Coupon: <input id="coupon-input" type="text"></input></label>
+    <label>Coupon: <input id="coupon-input" name="coupon_code" type="text"></input></label>
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
@@ -51,7 +52,6 @@
 <div id='delivery-wrapper'>
   <p id="delivery-header">Delivery Info</p>
   <div id='delivery-container'>
-    <form id='checkout-form' action="{% url 'order:new' %}" method="POST">
     <table id="delivery-container-table">
       <tr>
         <td>Name</td>
@@ -83,55 +83,12 @@
           <input type="text" name="postcode" id="delivery_postcode"></input>
         </td>
       </tr>
-      <tr>
-        <td>Time Window</td>
-        <td>
-          <table id="time-window-container-table">
-            <tr>
-              <td>
-                {{ today|date:'j F' }}:
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 12:00-14:00">
-                12:00-14:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 16:00-18:00">
-                16:00-18:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 20:00-22:00">
-                20:00-22:00
-              </td>
-            </tr>
-            <tr>
-              <td>
-                {{ tomorrow|date:'j F' }}:
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 12:00-14:00" checked="checked">
-                12:00-14:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 16:00-18:00">
-                16:00-18:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 20:00-22:00">
-                20:00-22:00
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
     </table>
-    <input type="hidden" name="ids" id="delivery_item_ids"/>
-    <input id='coupon-input-hidden' name='coupon' type='hidden'></input>
-    <input id='allow_sub_detial_hidden' name='allow_sub_detail' type='hidden' value="1"></input>
-    {% csrf_token %}
-    </form>
   </div>
 </div>
+<input type="hidden" name="item_ids" id="delivery_item_ids"/>
+{% csrf_token %}
+</form>
 <div id='cart-footer'>
  <button id="checkout-button">CHECK OUT</button>
 </div>
@@ -231,25 +188,6 @@ $(document).ready(function() {
     return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
   };
 
-  var disableDeliveryTime = function(btn) {
-    btn.attr('disabled', true);
-    btn.parent().addClass('disabled')
-  };
-
-  var checkDeliveryTime = function() {
-    var d = new Date();
-    var h = d.getHours();
-    if (h > 11) {
-      disableDeliveryTime($('input[value="12:00-14:00"]'));
-    }
-    if (h > 15) {
-      disableDeliveryTime($('input[value="16:00-18:00"]'));
-    }
-    if (h > 19) {
-      disableDeliveryTime($('input[value="20:00-22:00"]'));
-    }
-  };
-
   var isValidUserInput = function() {
     var v = InputValidator;
     v.init();
@@ -262,11 +200,6 @@ $(document).ready(function() {
   // Checkout button
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
-      var allow_sub_detail = {};
-      $('.item-info-left input[type=checkbox]').each(function(){
-        allow_sub_detail[$(this).data('id')] = $(this).prop('checked')?1:0;
-      });
-      $('#allow_sub_detial_hidden').val(JSON.stringify(allow_sub_detail));
       $('#delivery_item_ids').val($.cookie('cart'));
       $("#checkout-form").submit();
     }
@@ -274,7 +207,6 @@ $(document).ready(function() {
 
   // Coupon input
   $('#coupon-input').keyup(function () {
-    var coupon_input = $('#coupon-input-hidden');
     var tick = $('#coupon-container .tick');
     var code = $('#coupon-input').val();
     var url_template = '{% url "order:coupon" "coupon_code" %}';
@@ -285,19 +217,13 @@ $(document).ready(function() {
         var coupon = data[0].fields;
         discount = parseFloat(coupon.value);
         updateSummary();
-        coupon_input.val(code);
         tick.removeClass('hidden');
       } else {
         discount = 0.0;
         updateSummary();
-        coupon_input.val('');
         tick.addClass('hidden');
       }
     }, 'json');
-  });
-
-  $('.item-quantity').change(function(e) {
-    console.log(e)
   });
 
   if (isCartEmpty()) {
@@ -314,7 +240,7 @@ $(document).ready(function() {
       }));
   } else {
     // Setup spinner actions and update quantity prices
-    $('.num-spinner').spinner({
+    $('.item-quantity').spinner({
       min: 0,
       max: 100,
       step: 1,
@@ -325,7 +251,6 @@ $(document).ready(function() {
       updateQuantity($(this).data('id'), $(this).val());
     });
 
-    checkDeliveryTime();
     updateSummary();
   }
 });
