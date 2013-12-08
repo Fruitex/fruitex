@@ -5,8 +5,15 @@ from decimal import Decimal
 class Store(models.Model):
     def __unicode__(self):
         return self.name
+
+    def __hash__(self):
+        return hash(self.slug)
+
+    def __eq__(self, other):
+        return (self.slug, self.address) == (other.slug, other.address)
+
     name = models.CharField(max_length=50)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     address = models.TextField()
 
 
