@@ -1,16 +1,14 @@
 # Django settings for fruitex project.
-import environment
-import paypal
 import os
 
 # Environment values
-DEBUG = environment.DEBUG
-TEMPLATE_DEBUG = DEBUG
-BASE_DIR = environment.BASE_DIR
+from environment import *
 
 # Django-paypal required values
-PAYPAL_RECEIVER_EMAIL = paypal.PAYPAL_RECEIVER_EMAIL
-MERCHANT_ID = paypal.MERCHANT_ID
+from paypal import *
+
+# Email values
+from email import *
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -21,7 +19,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(environment.BASE_DIR, environment.DB_FILE),
+        'NAME': os.path.join(BASE_DIR, DB_FILE),
     }
 }
 
@@ -76,7 +74,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(environment.BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -117,7 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(environment.BASE_DIR, "ntemplates"),
+    os.path.join(BASE_DIR, "ntemplates"),
 )
 
 INSTALLED_APPS = (
