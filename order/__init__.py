@@ -1,6 +1,7 @@
 # Paypal setup
 from django.core.mail import EmailMessage
 from django.template import loader
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
@@ -11,13 +12,16 @@ from threading import Thread
 
 from order.models import Invoice, Order
 
-def send_receipt(to, invoice_num):
-  html_content = loader.render_to_string('reply.html',{'invoice':invoice_num})
-  msg = EmailMessage('[Fruitex] Payment of your order %s received.' % invoice_num, html_content, settings.EMAIL_HOST_USER, [to])
+def send_receipt(to, invoice):
+  html_content = loader.render_to_string('email/reply.html',{
+    'invoice': invoice,
+    'order_url': 'http://' + settings.DOMAIN + reverse('order:show', kwargs={'id': invoice.id}),
+  })
+  msg = EmailMessage('[Fruitex] Payment of your order %s received.' % invoice.invoice_num, html_content, settings.EMAIL_HOST_USER, [to])
   msg.content_subtype = "html"
   msg.send()
-def send_receipt_async(to, invoice_num):
-  Thread(target=lambda:send_receipt(to, invoice_num)).start()
+def send_receipt_async(to, invoice):
+  Thread(target=lambda:send_receipt(to, invoice)).start()
 
 
 def send_warning(payer, invoice_num):
@@ -58,7 +62,7 @@ def handle_payment_received(status, ipn):
     order.save()
 
   # Send receipt
-  send_receipt_async(invoice.email, invoice_num)
+  send_receipt_async(invoice.email, invoice)
 
 def payment_successful(sender, **kwargs):
   handle_payment_received(Invoice.STATUS_PAID, sender)
