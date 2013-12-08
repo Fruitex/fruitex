@@ -10,7 +10,7 @@ class Store(models.Model):
         return hash(self.slug)
 
     def __eq__(self, other):
-        return (self.slug, self.address) == (other.slug, other.address)
+        return type(self) == type(other) and (self.slug, self.address) == (other.slug, other.address)
 
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)

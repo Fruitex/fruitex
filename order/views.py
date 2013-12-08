@@ -42,7 +42,7 @@ def cart_to_store_items(cart):
   for i, item in enumerate(cart_items):
     store = item.category.store
 
-    if store.slug not in store_items:
+    if store not in store_items:
       store_items[store] = []
 
     store_items[store].append({
@@ -60,13 +60,9 @@ def view_cart(request):
 
   cart = cart_from_request(request)
   store_items = cart_to_store_items(cart)
-  today = datetime.now()
-  tomorrow = today + timedelta(days=1)
 
   context = RequestContext(request, {
     'store_items': store_items,
-    'today': today,
-    'tomorrow': tomorrow,
   })
   return HttpResponse(template.render(context))
 
