@@ -6,16 +6,16 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from paypal.standard.forms import PayPalPaymentsForm
+from querystring_parser import parser
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import date
 from decimal import Decimal
 import urllib
 import json
 import uuid
 
-from shop.models import Item
-from order.models import Order, OrderItem, Invoice, Coupon
+from shop.models import Item, DeliveryOption
+from order.models import Order, OrderItem, Invoice, Coupon, DeliveryWindow
 
 # Common operations
 
@@ -81,31 +81,35 @@ def show_invoice(request, id):
 def new_from_cart(request):
   template = loader.get_template('order/show.html')
 
+  post = parser.parse(request.POST.urlencode())
+  # return HttpResponse(json.dumps(post))
+
   # Gether info from POST to setup the order
   # Customer infos
-  customer_name = request.POST['name']
-  address = request.POST['address']
-  postcode = request.POST['postcode']
-  phone = request.POST['phone']
-  email = request.POST['email']
+  customer_name = str(post['name'])
+  address = str(post['address'])
+  postcode = str(post['postcode'])
+  phone = str(post['phone'])
+  email = str(post['email'])
 
   # Order infos
   invoice_num = str(uuid.uuid4())
-  delivery_window = request.POST['time']
-  coupon_code = request.POST['coupon']
+  delivery_options = post['delivery_options']
+  coupon_code = str(post['coupon_code'])
+  item_ids = json.loads(post['item_ids']);
+  allow_sub_detail = post['allow_sub_detail']
 
   # Validate coupon
-  coupon = None
   discount = Decimal(0)
   shipping = Decimal(4)
 
   if coupon_code is not None and len(coupon_code) > 0:
     coupon = Coupon.objects.get_valid_coupon(coupon_code)
-    if coupon == False:
-      return HttpResponse('Invalid coupon code')
-    # TODO: handle percentage coupon
-    discount = coupon.value
-
+    if coupon != False:
+      # TODO: handle percentage coupon
+      discount = coupon.value
+    else:
+      coupon = None
 
   # Create invoice
   invoice = Invoice.objects.create(
@@ -130,48 +134,53 @@ def new_from_cart(request):
 
   # Construct orders
   orders = {}
-  def get_order_for_store(store_slug):
-    if store_slug in orders:
+  def get_order_for_store(store):
+    if store in orders:
       return orders.get(store_slug)
+
+    # Fetch Delivery Option
+    option = DeliveryOption.objects.get(id=delivery_options[store.slug])
+
+    # Create order
     order = Order.objects.create(
       # Order
       subtotal = Decimal(0),
       tax = Decimal(0),
-      delivery_window = delivery_window,
+      delivery_window = DeliveryWindow.objects.get_window(option, date.today()),
 
       # Meta
       invoice = invoice,
       status = Order.STATUS_PENDING,
     )
-    orders[store_slug] = order
+    orders[store] = order
     return order
 
   # Fetch items from cart and db
-  items = cart_to_store_items(json.loads(request.POST['ids']))
-  allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
+  store_items = cart_to_store_items(item_ids)
 
   # Add order items and calculate subtotal and tax
-  for wrap in items:
-    item = wrap['obj']
-    order = get_order_for_store(item.category.store.slug)
+  for (store, items) in store_items.items():
+    order = get_order_for_store(store)
+    for wrap in items:
+      item = wrap['obj']
 
-    allow_sub = allow_sub_detail[unicode(item.id)]
-    unit_price = item.sales_price if item.on_sale else item.price
-    item_cost = unit_price * wrap['quantity']
-    item_tax = item_cost * item.tax_class
+      allow_sub = allow_sub_detail.get(item.id) == "on"
+      unit_price = item.sales_price if item.on_sale else item.price
+      item_cost = unit_price * wrap['quantity']
+      item_tax = item_cost * item.tax_class
 
-    OrderItem.objects.create(
-      order = order,
-      item = item,
-      quantity = wrap['quantity'],
-      allow_sub = allow_sub,
-      item_cost = item_cost,
-      item_tax = item_tax,
-    )
+      OrderItem.objects.create(
+        order = order,
+        item = item,
+        quantity = wrap['quantity'],
+        allow_sub = allow_sub,
+        item_cost = item_cost,
+        item_tax = item_tax,
+      )
 
-    # Update subtotal and tax
-    order.subtotal += item_cost
-    order.tax += item_tax
+      # Update subtotal and tax
+      order.subtotal += item_cost
+      order.tax += item_tax
 
   # Save orders and invoice
   for (store_slug, order) in orders.items():
