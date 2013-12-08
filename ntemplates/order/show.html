@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
+
+{% localtime on %}
 
 {% block content %}
 
@@ -29,7 +32,7 @@
       </div>
       {% endfor %}
       <div class="item-list-order-summary">
-        Delivery: {{ order.delivery_window }}
+        Delivery: {{ order.delivery_window.start }} - {{ order.delivery_window.end }}
       </div>
     {% endfor %}
   </div>
@@ -110,3 +113,5 @@
 </div>
 {% endif %}
 {% endblock %}
+
+{% endlocaltime %}

@@ -212,7 +212,6 @@ $(document).ready(function() {
     var url_template = '{% url "order:coupon" "coupon_code" %}';
 
     $.get(url_template.replace('coupon_code', code), function(data) {
-      console.log(data);
       if (data.length > 0) {
         var coupon = data[0].fields;
         discount = parseFloat(coupon.value);
