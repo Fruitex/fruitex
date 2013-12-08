@@ -78,15 +78,15 @@
                 {{ today|date:'j F' }}:
               </td>
               <td>
-                <input type="radio" name="time" value="12:00-14:00">
+                <input type="radio" name="time" value="{{ today|date:'j F' }} 12:00-14:00">
                 12:00-14:00
               </td>
               <td>
-                <input type="radio" name="time" value="16:00-18:00">
+                <input type="radio" name="time" value="{{ today|date:'j F' }} 16:00-18:00">
                 16:00-18:00
               </td>
               <td>
-                <input type="radio" name="time" value="20:00-22:00">
+                <input type="radio" name="time" value="{{ today|date:'j F' }} 20:00-22:00">
                 20:00-22:00
               </td>
             </tr>
