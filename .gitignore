@@ -3,6 +3,7 @@
 *.pyc
 *.db
 *.sqlite
+*.csv
 local_settings.py
 
 # All non-standard config files

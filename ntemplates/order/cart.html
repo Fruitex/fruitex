@@ -27,6 +27,18 @@
         </div>
       </div>
       {% endfor %}
+      <div class="cart-store-summary">
+        <div>Store: {{ store.name }}</div>
+        <div>Delivery Options:
+          <select name="delivery_window[{{ store.slug }}]">
+          {% for option in store.delivery_options.all %}
+          {% if option.in_effect %}
+          <option value="{{ option.id }}">{{ option.name }}</option>
+          {% endif %}
+          {% endfor %}
+          </select>
+        </div>
+      </div>
     {% endfor %}
   </div>
   <div id="coupon-container">
