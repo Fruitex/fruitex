@@ -8,16 +8,16 @@ class Store(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField()
     address = models.TextField()
-    
+
 
 class DeliveryOption(models.Model):
     def __unicode__(self):
         return self.name
-    store = models.ForeignKey(Store, related_name='Store')
-    name = models.CharField(max_length=10)
+    store = models.ForeignKey('Store', related_name='delivery_options')
+    name = models.CharField(max_length=100)
     start_time = models.IntegerField()
     time_interval = models.IntegerField()
-    
+
 
 class Category(models.Model):
     def __unicode__(self):
