@@ -32,7 +32,7 @@
       </div>
       {% endfor %}
       <div class="item-list-order-summary">
-        Delivery: {{ order.delivery_window.start }} - {{ order.delivery_window.end }}
+        Delivery: {{ order.delivery_window.start|date:'Y-m-d H:i' }} - {{ order.delivery_window.end|date:'Y-m-d H:i' }}
       </div>
     {% endfor %}
   </div>

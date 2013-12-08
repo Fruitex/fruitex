@@ -100,6 +100,7 @@ def new_from_cart(request):
   allow_sub_detail = post['allow_sub_detail']
 
   # Validate coupon
+  coupon = None
   discount = Decimal(0)
   shipping = Decimal(4)
 
