@@ -50,10 +50,11 @@ def handle_payment_received(status, ipn):
 
   # Update items
   for order in invoice.orders.all():
-    order.status = Order.STATUS_WAITING
     for order_item in order.order_items.all():
       order_item.item.sold_number += order_item.quantity;
       order_item.item.save()
+    order.status = Order.STATUS_WAITING
+    order.save()
 
   # Send receipt
   send_receipt_async(invoice.email, invoice_num)
