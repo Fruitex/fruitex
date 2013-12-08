@@ -2,17 +2,18 @@
 from django.core.mail import EmailMessage
 from django.template import loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
 from paypal.standard.ipn.signals import payment_was_successful
 from paypal.standard.ipn.signals import payment_was_flagged
 
 from threading import Thread
 
 from order.models import Invoice, Order
-from config.email import EMAIL_HOST_USER
 
 def send_receipt(to, invoice_num):
   html_content = loader.render_to_string('reply.html',{'invoice':invoice_num})
-  msg = EmailMessage('[Fruitex] Payment of your order %s received.' % invoice_num,html_content,EMAIL_HOST_USER,[to])
+  msg = EmailMessage('[Fruitex] Payment of your order %s received.' % invoice_num, html_content, settings.EMAIL_HOST_USER, [to])
   msg.content_subtype = "html"
   msg.send()
 def send_receipt_async(to, invoice_num):
@@ -20,7 +21,7 @@ def send_receipt_async(to, invoice_num):
 
 
 def send_warning(payer, invoice_num):
-  msg = EmailMessage('[Fruitex] Received unexpected payment from %s' % payer, 'invoice: ' % invoice_num, EMAIL_HOST_USER, ['admin@fruitex.ca'])
+  msg = EmailMessage('[Fruitex] Received unexpected payment from %s' % payer, 'invoice: ' % invoice_num, settings.EMAIL_HOST_USER, ['admin@fruitex.ca'])
   msg.content_subtype = 'text'
   msg.send()
 def send_warning_async(payer, invoice):

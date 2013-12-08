@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
+from django.conf import settings
+
 from paypal.standard.forms import PayPalPaymentsForm
 
 from datetime import datetime
@@ -14,8 +16,6 @@ import uuid
 
 from shop.models import Item
 from order.models import Order, OrderItem, Invoice, Coupon
-from config.paypal import PAYPAL_RECEIVER_EMAIL
-from config.environment import DEBUG
 
 # Common operations
 
@@ -176,7 +176,7 @@ def new_from_cart(request):
 
   # Setup paypal dict
   paypal_dict = {
-    "business": PAYPAL_RECEIVER_EMAIL,
+    "business": settings.PAYPAL_RECEIVER_EMAIL,
     "currency_code": "CAD",
     "amount": "%.2f" % invoice.total,
     "item_name": "Fruitex order #%d" % invoice.id,
@@ -194,7 +194,7 @@ def new_from_cart(request):
   context = Context({
     'invoice': invoice,
     'form': form,
-    'sandbox': DEBUG,
+    'sandbox': settings.DEBUG,
   })
   return HttpResponse(template.render(context))
 
