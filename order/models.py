@@ -1,5 +1,8 @@
 from django.db import models
+from shop.models import Store
+from shop.models import DeliveryOption
 
+import datetime
 from datetime import date
 
 from order import managers
@@ -45,6 +48,16 @@ class Invoice(models.Model):
   email = models.EmailField(max_length=256)
 
 
+class DeliveryWindow(models.Model):
+  def __unicode__(self):
+    return self.store.name + ": " + "%s"%self.start + "-" + "%s"%self.end
+  store = models.ForeignKey(Store, related_name='Store')
+  start = models.DateTimeField()
+  end = models.DateTimeField()
+  
+  objects = managers.DeliveryWindowManager()
+
+
 class OrderItem(models.Model):
   def __unicode__(self):
     return str(self.item) + ' * ' + str(self.quantity)
@@ -83,7 +96,7 @@ class Order(models.Model):
   order_items = property(_get_order_items)
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
-  delivery_window = models.CharField(max_length=32)
+  delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', on_delete=models.PROTECT)
 
   # Metas
   invoice = models.ForeignKey('Invoice', related_name='orders', on_delete=models.PROTECT)
