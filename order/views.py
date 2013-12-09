@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 from paypal.standard.forms import PayPalPaymentsForm
 from querystring_parser import parser
 
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 import urllib
 import json
@@ -87,6 +87,7 @@ def view_cart(request):
 
   context = RequestContext(request, {
     'store_items': store_items,
+    'datetime': datetime.now(),
   })
   return HttpResponse(template.render(context))
 

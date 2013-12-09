@@ -87,6 +87,7 @@
   </div>
 </div>
 <input type="hidden" name="item_ids" id="delivery_item_ids"/>
+<input type="hidden" name="datetime" id="datetime"/>
 {% csrf_token %}
 </form>
 <div id='cart-footer'>
@@ -126,6 +127,7 @@ $(document).ready(function() {
   var items = _.object(_.map($('.item-in-cart'), function(el) {
     return [$(el).data('id'), $(el).data('json')];
   }));
+  var datetime = {{ datetime|date:"U" }};
 
   // Defualt no discount
   var discount = 0.0;
@@ -201,6 +203,7 @@ $(document).ready(function() {
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
       $('#delivery_item_ids').val($.cookie('cart'));
+      $('#datetime').val(datetime);
       $("#checkout-form").submit();
     }
   });
