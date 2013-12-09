@@ -97,10 +97,34 @@ def show_invoice(request, id):
 
   invoice = Invoice.objects.get(id=id)
 
+  if invoice.status == invoice.STATUS_PENDING:
+    custom = None if invoice.coupon is None else {'coupon': invoice.coupon.code}
+
+    # Setup paypal dict
+    paypal_dict = {
+      "business": settings.PAYPAL_RECEIVER_EMAIL,
+      "currency_code": "CAD",
+      "amount": "%.2f" % invoice.total,
+      "item_name": "Fruitex order #%d" % invoice.id,
+      "invoice": invoice.invoice_num,
+      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
+      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
+      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
+      "custom": json.dumps(custom)
+    }
+
+    # Create the Paypal form
+    form = PayPalPaymentsForm(initial=paypal_dict)
+  else:
+    form = None
+
   # Setup context and render
   context = Context({
     'invoice': invoice,
+    'form': form,
+    'sandbox': settings.DEBUG,
   })
+
   return HttpResponse(template.render(context))
 
 def new_from_cart(request):
