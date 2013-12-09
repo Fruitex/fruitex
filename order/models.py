@@ -9,7 +9,7 @@ class Invoice(models.Model):
     return self.invoice_num
 
   def _get_total(self):
-    return self.subtotal + self.tax + self.shipping - self.discount;
+    return self.subtotal + self.tax + self.delivery - self.discount;
 
   # Status
   STATUS_PENDING = 'PEND'
@@ -33,7 +33,7 @@ class Invoice(models.Model):
   # Amounts
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
-  shipping = models.DecimalField(max_digits=16, decimal_places=2)
+  delivery = models.DecimalField(max_digits=16, decimal_places=2)
   discount = models.DecimalField(max_digits=16, decimal_places=2)
   total = property(_get_total)
 

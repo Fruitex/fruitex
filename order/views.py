@@ -179,7 +179,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail):
 
   # Invoice infos
   invoice_num = str(uuid.uuid4())
-  shipping = Decimal(4)
+  delivery = Decimal(4)
   discount = Decimal(0)
   coupon_code = checkout_form.cleaned_data['coupon_code']
 
@@ -200,7 +200,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail):
     # Amount
     subtotal = Decimal(0),
     tax = Decimal(0),
-    shipping = shipping,
+    delivery = delivery,
     discount = discount,
 
     # Customer
