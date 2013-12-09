@@ -1,6 +1,6 @@
 from django.db import models
 from decimal import Decimal
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 class Store(models.Model):
     def __unicode__(self):
@@ -35,6 +35,7 @@ class DeliveryOption(models.Model):
     # Start time: Number of minutes since the beginning of the day
     start_time = models.IntegerField()
     time_interval = models.IntegerField()
+    cost = models.DecimalField(max_digits=16, decimal_places=2)
     in_effect = property(_is_in_effect)
 
 
