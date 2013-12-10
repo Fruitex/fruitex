@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import localtime
 
 from datetime import date
 
@@ -47,7 +48,12 @@ class Invoice(models.Model):
 
 class DeliveryWindow(models.Model):
   def __unicode__(self):
-    return self.store.name + ": " + "%s"%self.start + "-" + "%s"%self.end
+    start = localtime(self.start)
+    end = localtime(self.end)
+    return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
+
+  DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+
   store = models.ForeignKey('shop.Store', related_name='delivery_windows')
   start = models.DateTimeField()
   end = models.DateTimeField()
