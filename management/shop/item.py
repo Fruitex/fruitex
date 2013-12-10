@@ -72,7 +72,9 @@ def import_from_csv(filename, store_name):
                 categories = allCategories.filter(name=name)
                 if category is None:
                   # If is top layer, try to find a category without parent
-                  categories = allCategories.filter(parent__isnull=True)
+                  categories = categories.filter(parent__isnull=True)
+                else:
+                  categories = categories.filter(parent=category)
 
                 if not categories.exists():
                   # If no such Category exists, create one
