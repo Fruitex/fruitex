@@ -6,7 +6,7 @@ from shop.models import Store, Category, Item, ItemMeta
 
 def import_from_csv(filename, store_name):
   print 'Starting to import from CSV file %s' % filename
-  with open(filename, 'r') as csvfile:
+  with open(filename, 'rU') as csvfile:
     csvreader = csv.reader(csvfile)
     rownum = 0
 
@@ -20,11 +20,19 @@ def import_from_csv(filename, store_name):
 
     # ItemMeta list
     metaList = dict()
-    
+
     # Store
-    if not Store.objects.filter(name=store_name).exists():
-      store = Store.objects.create(name = store_name, 
-        slug = (store_name.lower()).replace(" ", "_"), address = 'TBD')
+    StoreQS = Store.objects.filter(name=store_name)
+    store = None
+    if not StoreQS.exists():
+      store = Store.objects.create(
+        name = unicode(store_name),
+        slug = (store_name.lower()).replace(" ", "_"),
+        address = 'TBD'
+      )
+    else:
+      store = StoreQS[0]
+
     for row in csvreader:
       if rownum == 0:
         # Store header row and recognize column name accordingly
@@ -47,51 +55,60 @@ def import_from_csv(filename, store_name):
               # metaList (key=index, value = column_title)
               metaList[index] = colname
       else:
-        item = Item()
-        itemMeta = []
-        for value, attribute in enumerate(row):
-          # Add Item attributes according to column index
-          if value == name_index:
-            item.name = row[name_index]
-          elif value == category_index:
-            catParent = ''
-            result = re.split('->', row[category_index])
-            # Split up Category content, iterate from top layer
-            for catName in result:
-              if not Category.objects.filter(name=catName).exists():
-                # If no such Category exists
-                slugName = (catName.lower()).replace(" ", "_")
-                if not catParent=='':
-                  # Current category has a parent
-                  p = Category.objects.create(name = catName, slug = slugName, 
-                      store = Store.objects.get(name = store_name),
-                      parent = Category.objects.get(name = catParent))
+        try:
+          item = Item()
+          itemMeta = []
+          for value, attribute in enumerate(row):
+            # Add Item attributes according to column index
+            if value == name_index:
+              item.name = unicode(row[name_index])
+            elif value == category_index:
+              category = None
+              names = re.split('->', row[category_index])
+              allCategories = Category.objects.filter(store=store)
+
+              # Split up Category content, iterate from top layer
+              for name in names:
+                categories = allCategories.filter(name=name)
+                if category is None:
+                  # If is top layer, try to find a category without parent
+                  categories = allCategories.filter(parent__isnull=True)
+
+                if not categories.exists():
+                  # If no such Category exists, create one
+                  slug = name.lower().replace(" ", "_")
+                  category = Category.objects.create(
+                    name = name,
+                    slug = slug,
+                    store = store,
+                    parent = category,
+                  )
                 else:
-                  # Current category is of top layer(eg.Beverages)
-                  p = Category.objects.create(name = catName, slug = slugName, 
-                      store = Store.objects.get(name = store_name))
-              # Remember current category(as parent for next layer cat)
-              catParent = catName
-            # Assign Item's category since we know it exists now
-            item.category = Category.objects.get(name = catName)
-          elif value == description_index:
-            item.description = row[description_index]
-          elif value == sku_index:
-            item.sku = row[sku_index]
-          elif value == price_index:
-            item.price = Decimal(row[price_index])
-          elif value == tax_class_index:
-            item.tax_class = Decimal(row[tax_class_index])
-          else:
-            # Any other column index belong to metaData
-            m = ItemMeta()
-            # Retrieve column name from metaList
-            m.key = metaList[value]
-            m.value = attribute
-            # We can't save itemMeta until the Item is saved
-            itemMeta.append(m)
-        item.save()
-        for me in itemMeta:
+                  category = categories[0]
+
+              # Assign Item's category since we know it exists now
+              item.category = category
+            elif value == description_index:
+              item.description = unicode(row[description_index].decode('utf-8'))
+            elif value == sku_index:
+              item.sku = unicode(row[sku_index])
+            elif value == price_index:
+              item.price = Decimal(row[price_index])
+            elif value == tax_class_index:
+              item.tax_class = Decimal(row[tax_class_index])
+            else:
+              # Any other column index belong to metaData
+              meta = ItemMeta()
+              # Retrieve column name from metaList
+              meta.key = unicode(metaList[value])
+              meta.value = unicode(attribute)
+              # We can't save itemMeta until the Item is saved
+              itemMeta.append(meta)
+          item.save()
+        except Exception as e:
+          print row[name_index]
+          print e
+        for meta in itemMeta:
           # Now Item is successfully saved, we can save all lingering meta
-          me.item = item
-          me.save()
+          meta.item = item
+          meta.save()
