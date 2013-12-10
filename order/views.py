@@ -89,8 +89,7 @@ def view_cart(request):
       options[option.store] = option
     return options
 
-  # Get template and store_items
-  template = loader.get_template('order/cart.html')
+  # Get store_items
   cart = cart_from_request(request)
   store_items = cart_to_store_items(cart)
 
@@ -111,10 +110,12 @@ def view_cart(request):
       allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
 
       if delivery_options != False:
-        return place_order(store_items, checkout_form, delivery_options, allow_sub_detail)
+        return place_order(store_items, checkout_form, delivery_options,
+                           allow_sub_detail, page_datetime)
   else:
     checkout_form = CheckoutForm()
 
+  template = loader.get_template('order/cart.html')
   context = RequestContext(request, {
     'store_items': store_items,
     'datetime': datetime.now(),
@@ -170,7 +171,7 @@ def coupon(request, code):
 
 # Invoice and Order process
 
-def place_order(store_items, checkout_form, delivery_options, allow_sub_detail):
+def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime):
   # Gether info from POST to setup the order
   # Customer infos
   customer_name = checkout_form.cleaned_data['name']
@@ -227,7 +228,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail):
       # Order
       subtotal = Decimal(0),
       tax = Decimal(0),
-      delivery_window = DeliveryWindow.objects.get_window(option, date.today()),
+      delivery_window = DeliveryWindow.objects.get_window(option, page_datetime),
 
       # Meta
       invoice = invoice,
