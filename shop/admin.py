@@ -1,5 +1,6 @@
 from django.contrib import admin
 from shop.models import Store
+from shop.models import DeliveryOption
 from shop.models import Category
 from shop.models import Item
 from shop.models import ItemMeta
@@ -11,6 +12,13 @@ class StoreAdmin(admin.ModelAdmin):
   prepopulated_fields = { 'slug': ['name'] }
 
 admin.site.register(Store, StoreAdmin)
+
+class DeliveryOptionAdmin(admin.ModelAdmin):
+  list_display = ['id', 'store', 'name', 'start_time', 'time_interval']
+  ordering = ['store', 'start_time']
+  list_filter = ['store']
+
+admin.site.register(DeliveryOption, DeliveryOptionAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
   list_display = ['__unicode__', 'id', 'store', 'icon']

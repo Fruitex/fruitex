@@ -1,21 +1,45 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 from django.conf import settings
+from django import forms
+from django.core.exceptions import ValidationError
 
 from paypal.standard.forms import PayPalPaymentsForm
+from querystring_parser import parser
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import date, datetime
 from decimal import Decimal
 import urllib
 import json
 import uuid
 
-from shop.models import Item
-from order.models import Order, OrderItem, Invoice, Coupon
+from shop.models import Item, DeliveryOption
+from order.models import Order, OrderItem, Invoice, Coupon, DeliveryWindow
+
+# Checkout form definition
+
+class CheckoutForm(forms.Form):
+  def _validate_coupon_code(coupon_code):
+    coupon = Coupon.objects.get_valid_coupon(coupon_code)
+    if coupon == False:
+      raise ValidationError(u'%s is not a valid coupon' % coupon_code)
+
+  name = forms.CharField(max_length=64, validators=[
+    RegexValidator(regex=r'^[a-zA-Z ]+$'),
+  ])
+  phone = forms.CharField(max_length=16, validators=[
+    RegexValidator(regex=r'^(\+1){0,1}\({0,1}\d{3}[ -\)]{0,1}\d{3}[ -]{0,1}\d{4}$'),
+  ])
+  email = forms.EmailField()
+  address = forms.CharField(min_length=8)
+  postcode = forms.CharField(max_length=8, validators=[
+    RegexValidator(regex=r'^[a-zA-Z]\d[a-zA-Z] {0,1}\d[a-zA-Z]\d$'),
+  ])
+  coupon_code = forms.CharField(required=False, validators=[_validate_coupon_code])
 
 # Common operations
 
@@ -33,30 +57,66 @@ def cart_from_request(request):
   cart = json.loads(cart)
   return cart
 
-def cart_items(cart):
-  items = Item.objects.filter(id__in=cart)
-  json_value = serializers.serialize('json', items)
-  json_value = json.loads(json_value)
-  return [{
-    'obj': item,
-    'quantity': cart.count(item.id),
-    'json': json.dumps(json_value[i])
-  } for i, item in enumerate(items)]
+def cart_to_store_items(cart):
+  cart_items = Item.objects.filter(id__in=cart)
+  json_value = json.loads(serializers.serialize('json', cart_items))
+
+  store_items = {}
+
+  for i, item in enumerate(cart_items):
+    store = item.category.store
+
+    if store not in store_items:
+      store_items[store] = []
+
+    store_items[store].append({
+      'obj': item,
+      'quantity': cart.count(item.id),
+      'json': json.dumps(json_value[i])
+    })
+
+  return store_items
 
 # Views
 
 def view_cart(request):
-  template = loader.get_template('order/cart.html')
+  def _validate_delivery_choices(delivery_choices):
+    options = {}
+    for (store_slug, option_id) in delivery_choices.items():
+      option = DeliveryOption.objects.get(id=option_id)
+      if option.store.slug != store_slug or not option.in_effect:
+        return False
+      options[option.store] = option
+    return options
 
+  # Get template and store_items
+  template = loader.get_template('order/cart.html')
   cart = cart_from_request(request)
-  items = cart_items(cart)
-  today = datetime.now()
-  tomorrow = today + timedelta(days=1)
+  store_items = cart_to_store_items(cart)
+
+  # If is a submit, pre validate the data
+  if request.method == 'POST':
+    checkout_form = CheckoutForm(request.POST)
+
+    # Validate form
+    if checkout_form.is_valid():
+      post = parser.parse(request.POST.urlencode())
+
+      # Validate delivery choices
+      delivery_choices = post['delivery_choices']
+      allow_sub_detail = post['allow_sub_detail']
+      # page_datetime = datetime.fromtimestamp(post['datetime'])
+      delivery_options = _validate_delivery_choices(delivery_choices)
+
+      if delivery_options != False:
+        return place_order(store_items, checkout_form, delivery_options, allow_sub_detail)
+  else:
+    checkout_form = CheckoutForm()
 
   context = RequestContext(request, {
-    'items': items,
-    'today': today,
-    'tomorrow': tomorrow,
+    'store_items': store_items,
+    'datetime': datetime.now(),
+    'checkout_form': checkout_form,
   })
   return HttpResponse(template.render(context))
 
@@ -66,40 +126,69 @@ def show_invoice(request, id):
 
   invoice = Invoice.objects.get(id=id)
 
+  if invoice.status == invoice.STATUS_PENDING:
+    custom = None if invoice.coupon is None else {'coupon': invoice.coupon.code}
+
+    # Setup paypal dict
+    paypal_dict = {
+      "business": settings.PAYPAL_RECEIVER_EMAIL,
+      "currency_code": "CAD",
+      "amount": "%.2f" % invoice.total,
+      "item_name": "Fruitex order #%d" % invoice.id,
+      "invoice": invoice.invoice_num,
+      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
+      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
+      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
+      "custom": json.dumps(custom)
+    }
+
+    # Create the Paypal form
+    form = PayPalPaymentsForm(initial=paypal_dict)
+  else:
+    form = None
+
   # Setup context and render
   context = Context({
     'invoice': invoice,
+    'form': form,
+    'sandbox': settings.DEBUG,
   })
+
   return HttpResponse(template.render(context))
 
-def new_from_cart(request):
-  template = loader.get_template('order/show.html')
 
+# API
+
+def coupon(request, code):
+  coupon = Coupon.objects.get_valid_coupon(code)
+  if coupon is False:
+    return empty_response()
+  return json_response([coupon])
+
+
+# Invoice and Order process
+
+def place_order(store_items, checkout_form, delivery_options, allow_sub_detail):
   # Gether info from POST to setup the order
   # Customer infos
-  customer_name = request.POST['name']
-  address = request.POST['address']
-  postcode = request.POST['postcode']
-  phone = request.POST['phone']
-  email = request.POST['email']
+  customer_name = checkout_form.cleaned_data['name']
+  address = checkout_form.cleaned_data['address']
+  postcode = checkout_form.cleaned_data['postcode']
+  phone = checkout_form.cleaned_data['phone']
+  email = checkout_form.cleaned_data['email']
 
-  # Order infos
+  # Invoice infos
   invoice_num = str(uuid.uuid4())
-  delivery_window = request.POST['time']
-  coupon_code = request.POST['coupon']
-
-  # Validate coupon
-  coupon = None
+  delivery = Decimal(4)
   discount = Decimal(0)
-  shipping = Decimal(4)
+  coupon_code = checkout_form.cleaned_data['coupon_code']
 
+  # Get coupon
+  coupon = None
   if coupon_code is not None and len(coupon_code) > 0:
     coupon = Coupon.objects.get_valid_coupon(coupon_code)
-    if coupon == False:
-      return HttpResponse('Invalid coupon code')
-    # TODO: handle percentage coupon
     discount = coupon.value
-
+    # TODO: handle percentage coupon
 
   # Create invoice
   invoice = Invoice.objects.create(
@@ -111,7 +200,7 @@ def new_from_cart(request):
     # Amount
     subtotal = Decimal(0),
     tax = Decimal(0),
-    shipping = shipping,
+    delivery = delivery,
     discount = discount,
 
     # Customer
@@ -124,48 +213,50 @@ def new_from_cart(request):
 
   # Construct orders
   orders = {}
-  def get_order_for_store(store_slug):
-    if store_slug in orders:
+  def get_order_for_store(store):
+    if store in orders:
       return orders.get(store_slug)
+
+    # Fetch Delivery Option
+    option = delivery_options[store]
+
+    # Create order
     order = Order.objects.create(
       # Order
       subtotal = Decimal(0),
       tax = Decimal(0),
-      delivery_window = delivery_window,
+      delivery_window = DeliveryWindow.objects.get_window(option, date.today()),
 
       # Meta
       invoice = invoice,
       status = Order.STATUS_PENDING,
     )
-    orders[store_slug] = order
+    orders[store] = order
     return order
 
-  # Fetch items from cart and db
-  items = cart_items(json.loads(request.POST['ids']))
-  allow_sub_detail = json.loads(request.POST['allow_sub_detail'])
-
   # Add order items and calculate subtotal and tax
-  for wrap in items:
-    item = wrap['obj']
-    order = get_order_for_store(item.category.store.slug)
+  for (store, items) in store_items.items():
+    order = get_order_for_store(store)
+    for wrap in items:
+      item = wrap['obj']
 
-    allow_sub = allow_sub_detail[unicode(item.id)]
-    unit_price = item.sales_price if item.on_sale else item.price
-    item_cost = unit_price * wrap['quantity']
-    item_tax = item_cost * item.tax_class
+      allow_sub = allow_sub_detail.get(item.id) == "on"
+      unit_price = item.sales_price if item.on_sale else item.price
+      item_cost = unit_price * wrap['quantity']
+      item_tax = item_cost * item.tax_class
 
-    OrderItem.objects.create(
-      order = order,
-      item = item,
-      quantity = wrap['quantity'],
-      allow_sub = allow_sub,
-      item_cost = item_cost,
-      item_tax = item_tax,
-    )
+      OrderItem.objects.create(
+        order = order,
+        item = item,
+        quantity = wrap['quantity'],
+        allow_sub = allow_sub,
+        item_cost = item_cost,
+        item_tax = item_tax,
+      )
 
-    # Update subtotal and tax
-    order.subtotal += item_cost
-    order.tax += item_tax
+      # Update subtotal and tax
+      order.subtotal += item_cost
+      order.tax += item_tax
 
   # Save orders and invoice
   for (store_slug, order) in orders.items():
@@ -174,36 +265,7 @@ def new_from_cart(request):
     order.save()
   invoice.save()
 
-  # Setup paypal dict
-  paypal_dict = {
-    "business": settings.PAYPAL_RECEIVER_EMAIL,
-    "currency_code": "CAD",
-    "amount": "%.2f" % invoice.total,
-    "item_name": "Fruitex order #%d" % invoice.id,
-    "invoice": invoice_num,
-    "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-    "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
-    "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
-    "custom": json.dumps({'coupon': coupon_code})
-  }
-
-  # Create the Paypal form
-  form = PayPalPaymentsForm(initial=paypal_dict)
-
-  # Setup context and render
-  context = Context({
-    'invoice': invoice,
-    'form': form,
-    'sandbox': settings.DEBUG,
-  })
-  response = HttpResponse(template.render(context))
+  response = HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
   response.set_cookie('cart', '')
+
   return response
-
-# API
-
-def coupon(request, code):
-  coupon = Coupon.objects.get_valid_coupon(code)
-  if coupon is False:
-    return empty_response()
-  return json_response([coupon])

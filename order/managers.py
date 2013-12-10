@@ -25,6 +25,6 @@ class DeliveryWindowManager(models.Manager):
     windows = self.filter(start=option_start_time, end=option_end_time,store=option_store)
     if windows.count() > 0:
       return windows[0]
-    window = self.create(store = option.store,start=option_start_time,end=option_end_time)
+    window = self.create(store = option_store,start=option_start_time,end=option_end_time)
 
     return window

@@ -9,26 +9,41 @@
 <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
 <script src={% static "javascript/input_validator.js" %}></script>
 
+<form id='checkout-form' action="{% url 'order:cart' %}" method="POST">
 <div id='cart-wrapper'>
   <p id="cart-header">Your cart</p>
   <div id='cart-container'>
-    {% for item in items %}
-    <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
-      <img class="item-in-cart-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
-      <div class="item-info-wrapper">
-        <div class="item-info-left">
-          <span class="item-in-cart-name">{{ item.obj.name }}</span>
-          <span class="item-in-cart-store">From: {{ item.obj.category.store.name }}</span>
-          <label><input type="checkbox" checked="" data-id="{{ item.obj.id }}">Allow substitution</label>
+    {% for store, items in store_items.items %}
+      {% for item in items %}
+      <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
+        <img class="item-in-cart-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
+        <div class="item-info-wrapper">
+          <div class="item-info-left">
+            <span class="item-in-cart-name">{{ item.obj.name }}</span>
+            <span class="item-in-cart-store">From: {{ item.obj.category.store.name }}</span>
+            <label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label>
+          </div>
+          <input class="item-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+          <span class="item-in-cart-price">$ </span>
         </div>
-        <input class="item-quantity num-spinner ui-spinner-input" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
-        <span class="item-in-cart-price">$ </span>
       </div>
-    </div>
+      {% endfor %}
+      <div class="cart-store-summary">
+        <div>Store: {{ store.name }}</div>
+        <div>Delivery Options:
+          <select name="delivery_choices[{{ store.slug }}]">
+          {% for option in store.delivery_options.all %}
+          {% if option.in_effect %}
+          <option value="{{ option.id }}">{{ option.name }}</option>
+          {% endif %}
+          {% endfor %}
+          </select>
+        </div>
+      </div>
     {% endfor %}
   </div>
   <div id="coupon-container">
-    <label>Coupon: <input id="coupon-input" type="text"></input></label>
+    <label>Coupon: </label>{{ checkout_form.coupon_code }}{{ checkout_form.coupon_code.errors }}
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
@@ -37,87 +52,44 @@
 <div id='delivery-wrapper'>
   <p id="delivery-header">Delivery Info</p>
   <div id='delivery-container'>
-    <form id='checkout-form' action="{% url 'order:new' %}" method="POST">
+    {{ form.non_field_errors }}
     <table id="delivery-container-table">
       <tr>
         <td>Name</td>
         <td>
-          <input type="text" name="name" id="delivery_name"></input>
+          {{ checkout_form.name }}{{ checkout_form.name.errors }}
         </td>
       </tr>
       <tr>
         <td>Phone</td>
         <td>
-          <input type="text" name="phone" id="delivery_phone"></input>
+          {{ checkout_form.phone }}{{ checkout_form.phone.errors }}
         </td>
       </tr>
       <tr>
         <td>Email</td>
         <td>
-          <input type="email" name="email" id="delivery_email"></input>
+          {{ checkout_form.email }}{{ checkout_form.email.errors }}
         </td>
       </tr>
       <tr>
         <td>Address</td>
         <td>
-          <input type="text" name="address" id="delivery_address"></input>
+          {{ checkout_form.address }}{{ checkout_form.address.errors }}
         </td>
       </tr>
       <tr>
         <td>Post Code</td>
         <td>
-          <input type="text" name="postcode" id="delivery_postcode"></input>
-        </td>
-      </tr>
-      <tr>
-        <td>Time Window</td>
-        <td>
-          <table id="time-window-container-table">
-            <tr>
-              <td>
-                {{ today|date:'j F' }}:
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 12:00-14:00">
-                12:00-14:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 16:00-18:00">
-                16:00-18:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ today|date:'j F' }} 20:00-22:00">
-                20:00-22:00
-              </td>
-            </tr>
-            <tr>
-              <td>
-                {{ tomorrow|date:'j F' }}:
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 12:00-14:00" checked="checked">
-                12:00-14:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 16:00-18:00">
-                16:00-18:00
-              </td>
-              <td>
-                <input type="radio" name="time" value="{{ tomorrow|date:'j F' }} 20:00-22:00">
-                20:00-22:00
-              </td>
-            </tr>
-          </table>
+          {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
         </td>
       </tr>
     </table>
-    <input type="hidden" name="ids" id="delivery_item_ids"/>
-    <input id='coupon-input-hidden' name='coupon' type='hidden'></input>
-    <input id='allow_sub_detial_hidden' name='allow_sub_detail' type='hidden' value="1"></input>
-    {% csrf_token %}
-    </form>
   </div>
 </div>
+<input type="hidden" name="datetime" id="datetime"/>
+{% csrf_token %}
+</form>
 <div id='cart-footer'>
  <button id="checkout-button">CHECK OUT</button>
 </div>
@@ -155,16 +127,19 @@ $(document).ready(function() {
   var items = _.object(_.map($('.item-in-cart'), function(el) {
     return [$(el).data('id'), $(el).data('json')];
   }));
+  var datetime = {{ datetime|date:"U" }};
 
-  // Defualt no discount
-  var discount = 0.0;
+  // Defualt no coupon
+  var coupon = null;
 
   var updateSummary = function() {
     var summary_template = $.template(null,$('#summary_template').html());
     var subtotal = 0.0;
     var hst_total = 0.0;
     var delivery = 4.0;
+    var discount = 0.0;
 
+    // Calculate subtotal for all items
     $('.item-in-cart').each(function(i, el) {
       var id = $(el).data('id');
       var item = items[id];
@@ -176,6 +151,13 @@ $(document).ready(function() {
       subtotal += price;
       hst_total += hst;
     });
+
+    // Calculate coupon discount
+    // TODO: handle percentage coupon
+    if (coupon != null) {
+      discount = parseFloat(coupon.value);
+    }
+
     var html = $.tmpl(summary_template,{
       'subtotal':subtotal,
       'hst':hst_total,
@@ -217,25 +199,6 @@ $(document).ready(function() {
     return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
   };
 
-  var disableDeliveryTime = function(btn) {
-    btn.attr('disabled', true);
-    btn.parent().addClass('disabled')
-  };
-
-  var checkDeliveryTime = function() {
-    var d = new Date();
-    var h = d.getHours();
-    if (h > 11) {
-      disableDeliveryTime($('input[value="12:00-14:00"]'));
-    }
-    if (h > 15) {
-      disableDeliveryTime($('input[value="16:00-18:00"]'));
-    }
-    if (h > 19) {
-      disableDeliveryTime($('input[value="20:00-22:00"]'));
-    }
-  };
-
   var isValidUserInput = function() {
     var v = InputValidator;
     v.init();
@@ -247,43 +210,32 @@ $(document).ready(function() {
 
   // Checkout button
   $("#checkout-button").click(function() {
+    if (coupon == null) {
+      $('#id_coupon_code').val('');
+    }
     if (isValidUserInput()) {
-      var allow_sub_detail = {};
-      $('.item-info-left input[type=checkbox]').each(function(){
-        allow_sub_detail[$(this).data('id')] = $(this).prop('checked')?1:0;
-      });
-      $('#allow_sub_detial_hidden').val(JSON.stringify(allow_sub_detail));
-      $('#delivery_item_ids').val($.cookie('cart'));
+      $('#datetime').val(datetime);
       $("#checkout-form").submit();
     }
   });
 
   // Coupon input
-  $('#coupon-input').keyup(function () {
-    var coupon_input = $('#coupon-input-hidden');
+  $('#id_coupon_code').keyup(function () {
     var tick = $('#coupon-container .tick');
-    var code = $('#coupon-input').val();
+    var code = $('#id_coupon_code').val();
     var url_template = '{% url "order:coupon" "coupon_code" %}';
 
     $.get(url_template.replace('coupon_code', code), function(data) {
-      console.log(data);
       if (data.length > 0) {
-        var coupon = data[0].fields;
-        discount = parseFloat(coupon.value);
+        coupon = data[0].fields;
         updateSummary();
-        coupon_input.val(code);
         tick.removeClass('hidden');
       } else {
-        discount = 0.0;
+        coupon = null;
         updateSummary();
-        coupon_input.val('');
         tick.addClass('hidden');
       }
     }, 'json');
-  });
-
-  $('.item-quantity').change(function(e) {
-    console.log(e)
   });
 
   if (isCartEmpty()) {
@@ -300,7 +252,7 @@ $(document).ready(function() {
       }));
   } else {
     // Setup spinner actions and update quantity prices
-    $('.num-spinner').spinner({
+    $('.item-quantity').spinner({
       min: 0,
       max: 100,
       step: 1,
@@ -311,7 +263,6 @@ $(document).ready(function() {
       updateQuantity($(this).data('id'), $(this).val());
     });
 
-    checkDeliveryTime();
     updateSummary();
   }
 });

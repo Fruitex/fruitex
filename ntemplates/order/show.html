@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tz %}
+
+{% localtime on %}
 
 {% block content %}
 
@@ -40,7 +43,7 @@
         Delivery Fee:
       </td>
       <td>
-        ${{ invoice.shipping|floatformat:2 }}
+        ${{ invoice.delivery|floatformat:2 }}
       </td>
     </tr>
     <tr>
@@ -110,3 +113,5 @@
 </div>
 {% endif %}
 {% endblock %}
+
+{% endlocaltime %}

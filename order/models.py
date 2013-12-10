@@ -1,8 +1,6 @@
 from django.db import models
-from shop.models import Store
-from shop.models import DeliveryOption
+from django.utils.timezone import localtime
 
-import datetime
 from datetime import date
 
 from order import managers
@@ -12,7 +10,7 @@ class Invoice(models.Model):
     return self.invoice_num
 
   def _get_total(self):
-    return self.subtotal + self.tax + self.shipping - self.discount;
+    return self.subtotal + self.tax + self.delivery - self.discount;
 
   # Status
   STATUS_PENDING = 'PEND'
@@ -36,7 +34,7 @@ class Invoice(models.Model):
   # Amounts
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
-  shipping = models.DecimalField(max_digits=16, decimal_places=2)
+  delivery = models.DecimalField(max_digits=16, decimal_places=2)
   discount = models.DecimalField(max_digits=16, decimal_places=2)
   total = property(_get_total)
 
@@ -50,11 +48,16 @@ class Invoice(models.Model):
 
 class DeliveryWindow(models.Model):
   def __unicode__(self):
-    return self.store.name + ": " + "%s"%self.start + "-" + "%s"%self.end
-  store = models.ForeignKey(Store, related_name='Store')
+    start = localtime(self.start)
+    end = localtime(self.end)
+    return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
+
+  DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+
+  store = models.ForeignKey('shop.Store', related_name='delivery_windows')
   start = models.DateTimeField()
   end = models.DateTimeField()
-  
+
   objects = managers.DeliveryWindowManager()
 
 
