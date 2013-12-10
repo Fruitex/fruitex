@@ -95,7 +95,7 @@ def view_cart(request):
   store_items = cart_to_store_items(cart)
 
   # If is a submit, pre validate the data
-  if request.method == 'POST':
+  if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
     checkout_form = CheckoutForm(request.POST)
 
     # Validate form
@@ -103,10 +103,12 @@ def view_cart(request):
       post = parser.parse(request.POST.urlencode())
 
       # Validate delivery choices
-      delivery_choices = post['delivery_choices']
-      allow_sub_detail = post['allow_sub_detail']
-      # page_datetime = datetime.fromtimestamp(post['datetime'])
+      delivery_choices = post.get('delivery_choices')
+      page_datetime = datetime.fromtimestamp(post.get('datetime'))
       delivery_options = _validate_delivery_choices(delivery_choices)
+
+      allow_sub_detail = post.get('allow_sub_detail')
+      allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
 
       if delivery_options != False:
         return place_order(store_items, checkout_form, delivery_options, allow_sub_detail)
