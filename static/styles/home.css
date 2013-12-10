@@ -248,17 +248,13 @@ body>header>a.cart .plus {
     display: block;
 }
 #content>aside .categories > ul >li > div>ul {
-    display: table;
     padding: 16px;
     border: 1px solid #ccc;
     border-bottom-width: 5px;
     margin-left: 10px;
     border-radius: 8px;
 }
-#content>aside .categories > ul >li > div>ul>li {
-    display: table-cell;
-}
-#content>aside .categories > ul >li > div>ul>li a {
+#content>aside .categories > ul >li > div a {
     display: inline-block;
     white-space: nowrap;
     width: 180px;
@@ -270,13 +266,13 @@ body>header>a.cart .plus {
 #content>aside .categories li li {
     line-height: 20px;
 }
-#content>aside .categories > ul >li > div>ul>li>ul>li>a {
+#content>aside .categories > ul >li > div>ul>li>a {
     color: #000;
     font-weight: 700;
     line-height: 24px;
     font-size: 1.1em;
 }
-#content>aside .categories > ul >li > div>ul>li>ul>li>ul a {
+#content>aside .categories > ul >li > div>ul>li>ul a {
     color: rgb(120,120,120);
     font-size: 0.9em;
 }
