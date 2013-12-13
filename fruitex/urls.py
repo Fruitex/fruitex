@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^$', 'fruitex.views.home', name='home'),
     url(r'^shop/', include('shop.urls', namespace='shop')),
     url(r'^order/', include('order.urls', namespace='order')),
+    url(r'^delivery/', include('delivery.urls', namespace='delivery')),
 
     # Dango admin
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

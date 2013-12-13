@@ -54,6 +54,13 @@ class Item(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __hash__(self):
+        return hash(self.id)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and (self.id) == (other.id)
+
+
     # Tax Classes
     TAX_CLASSES = (
         (Decimal('0.0'), 'Non-Taxable'),
