@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^shop/', include('shop.urls', namespace='shop')),
     url(r'^order/', include('order.urls', namespace='order')),
     url(r'^delivery/', include('delivery.urls', namespace='delivery')),
+    url(r'^page/', include('page.urls', namespace='page')),
 
     # Dango admin
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

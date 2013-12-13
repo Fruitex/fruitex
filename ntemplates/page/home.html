@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content%}
+<div class="banner">
+  <img src="{% static 'imgs/' %}" alter="Banner" />
+</div>
+<div class="stores">
+  <ul>
+    {% for store in stores %}
+    <li>
+      <img src="{% static 'imgs/' %}logos/{{ store.slug }}.png">
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="deals">
+  {% for store in stores %}
+  <div class="deal-sale">
+    <header>Deal OF THE WEEK</header>
+    <article data-source="{% url 'shop:store_featured_items' store.slug 'deal_of_the_week' '' %}">
+      <ul></ul>
+      <div class="loading"></div>
+    </article>
+  </div>
+  {% endfor %}
+</div>
+
+{% include "shop/item.html" %}
+
+<script type="text/javascript">
+  var articles = $('.deals article');
+  articles.each(function(i, element) {
+    load_items($(element), '', null);
+  });
+</script>
+{% endblock %}
