@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tz %}
+
+{% localtime on %}
+
+{% block content %}
+
+<h1>Delivery Window</h1>
+<h2>{{ delivery_window.store }}: {{ delivery_window }}</h2>
+<ul>
+  {% for order in delivery_window.orders.all %}
+  <li>
+    <span>Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)</span>
+    <ul>
+      {% for order_item in order.order_items %}
+      <li>
+        <img src="{% static '' %}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+        <span>
+          <span>{{ order_item.item.name }}</span>
+          <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Allow substitution</label>
+        </span>
+        <span>Quantity: {{ order_item.quantity }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
+<h1>Shopping List</h1>
+<ul>
+  {% for item, quantity in combined_items.items %}
+  <li>
+    <img src="{% static '' %}{{ item.category.store.slug }}_imgs/{{ item.sku }}.JPG">
+    <span>
+      <span>{{ item.name }}</span>
+    </span>
+    <span>Quantity: {{ quantity }}</span>
+  </li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'delivery:summary' %}">Go back to summary</a>
+
+{% endblock %}
+
+{% endlocaltime %}

@@ -17,3 +17,23 @@ def summary(request):
   template = loader.get_template('delivery/summary.html')
   return HttpResponse(template.render(context))
 
+def detail(request, id):
+  def combine_items(orders):
+    items = {}
+    for order in orders:
+      for order_item in order.order_items:
+        if order_item.item in items:
+          items[order_item.item] += order_item.quantity
+        else:
+          items[order_item.item] = order_item.quantity
+    return items
+
+  delivery_window = DeliveryWindow.objects.get(id=id)
+
+  context = Context({
+    'delivery_window': delivery_window,
+    'combined_items': combine_items(delivery_window.orders.all())
+  })
+
+  template = loader.get_template('delivery/detail.html')
+  return HttpResponse(template.render(context))
