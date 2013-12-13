@@ -11,7 +11,57 @@
 <ul>
   {% for order in delivery_window.orders.all %}
   <li>
-    <span>Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)</span>
+    <div>
+      <a href="{% url 'order:show' order.invoice.id %}">
+        Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)
+      </a>
+    </div>
+    <div>
+      <table id='order-confirm-table'>
+      <tbody>
+        <tr>
+          <td>
+            Name:
+          </td>
+          <td>
+            {{ order.invoice.customer_name }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Address:
+          </td>
+          <td>
+            {{ order.invoice.address }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            ZIP:
+          </td>
+          <td>
+            {{ order.invoice.postcode }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Phone:
+          </td>
+          <td>
+            {{ order.invoice.phone }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Email:
+          </td>
+          <td>
+            {{ order.invoice.email }}
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
     <ul>
       {% for order_item in order.order_items %}
       <li>

@@ -10,15 +10,19 @@
 <ul>
   {% for delivery_window in delivery_windows %}
   <li>
-    <span>
+    <div>
       <a href="{% url 'delivery:detail' delivery_window.id %}">
         {{ delivery_window.store }}: {{ delivery_window }} ({{ delivery_window.orders.count }} orders)
       </a>
-    </span>
+    </div>
     <ul>
       {% for order in delivery_window.orders.all %}
       <li>
-        <span>Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)</span>
+        <div>
+          <a href="{% url 'order:show' order.invoice.id %}">
+            Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)
+          </a>
+        </div>
         <ul>
           {% for order_item in order.order_items %}
           <li>
