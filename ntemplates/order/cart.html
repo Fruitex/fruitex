@@ -14,7 +14,6 @@
 <script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
 <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-
 {% endblock %}
 
 {% block content %}
@@ -25,16 +24,16 @@
     {% for store, items in store_items.items %}
       {% for item in items %}
       <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
-        <div class="item-img-wrapper">
-          <img class="item-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
+        <div>
+          <img class="item-in-cart-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
         </div>
         <div class="item-info-left">
           <div class="item-in-cart-name">{{ item.obj.name }}</div>
           <div class="item-in-cart-store">From: {{ item.obj.category.store.name }}</div>
           <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label></div>
         </div>
-        <div class="item-quantity-wrapper">
-          <input class="item-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+        <div>
+          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
         </div>
         <div class="item-in-cart-price">$ </div>
       </div>
@@ -158,7 +157,7 @@ $(document).ready(function() {
       var id = $(el).data('id');
       var item = items[id];
       var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
-      var quantity = $(el).find('.item-quantity').val();
+      var quantity = $(el).find('.item-in-cart-quantity').val();
       var tax_class = parseFloat(item.fields.tax_class)
       var price = parseFloat(unit_price) * quantity;
       var hst = price * tax_class;
@@ -185,7 +184,7 @@ $(document).ready(function() {
 
   var updateCart = function() {
     var item_ids = [];
-    $(".item-quantity").each(function(i, spinner) {
+    $(".item-in-cart-quantity").each(function(i, spinner) {
       spinner = $(spinner);
       for (var i = 0; i < spinner.val(); i++) {
         item_ids.push(parseInt(spinner.data('id')));
@@ -266,7 +265,7 @@ $(document).ready(function() {
       }));
   } else {
     // Setup spinner actions and update quantity prices
-    $('.item-quantity').spinner({
+    $('.item-in-cart-quantity').spinner({
       min: 0,
       max: 100,
       step: 1,
