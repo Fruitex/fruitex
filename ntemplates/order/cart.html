@@ -1,14 +1,23 @@
-{% extends "base.html" %}
+{% extends "common/base.html" %}
 {% load static %}
 
-{% block content %}
-<link rel="stylesheet" type="text/css" href="{% static "styles/cart.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "styles/itemlist.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "styles/input_validator.css" %}"/>
-<script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
-<script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
-<script src={% static "javascript/input_validator.js" %}></script>
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/itemlist.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/input_validator.css' %}"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+{% endblock %}
 
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'javascript/lib/underscore.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/lib/jquery.tmpl.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+{% endblock %}
+
+{% block content %}
 <form id='checkout-form' action="{% url 'order:cart' %}" method="POST">
 <div id='cart-wrapper'>
   <p id="cart-header">Your cart</p>
@@ -16,16 +25,18 @@
     {% for store, items in store_items.items %}
       {% for item in items %}
       <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
-        <img class="item-in-cart-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
-        <div class="item-info-wrapper">
-          <div class="item-info-left">
-            <span class="item-in-cart-name">{{ item.obj.name }}</span>
-            <span class="item-in-cart-store">From: {{ item.obj.category.store.name }}</span>
-            <label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label>
-          </div>
-          <input class="item-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
-          <span class="item-in-cart-price">$ </span>
+        <div class="item-img-wrapper">
+          <img class="item-img" src="{% static ''%}{{ item.obj.category.store.slug }}_imgs/{{ item.obj.sku }}.JPG">
         </div>
+        <div class="item-info-left">
+          <div class="item-in-cart-name">{{ item.obj.name }}</div>
+          <div class="item-in-cart-store">From: {{ item.obj.category.store.name }}</div>
+          <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label></div>
+        </div>
+        <div class="item-quantity-wrapper">
+          <input class="item-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+        </div>
+        <div class="item-in-cart-price">$ </div>
       </div>
       {% endfor %}
       <div class="cart-store-summary">
@@ -93,6 +104,9 @@
 <div id='cart-footer'>
  <button id="checkout-button">CHECK OUT</button>
 </div>
+{% endblock %}
+
+{% block page_script %}
 <script type="text/template" id="summary_template">
   <table id="items-in-cart-summary-table">
     <tbody>

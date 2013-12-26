@@ -33,15 +33,18 @@ body>footer{
     padding: 56px 0 0 0;
 }
 .clearfix:after {
-     visibility: hidden;
-     display: block;
-     font-size: 0;
-     content: " ";
-     clear: both;
-     height: 0;
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
 }
 .hidden {
     display:none;
+}
+.clear {
+    clear: both;
 }
 a:link {
     color: black;
