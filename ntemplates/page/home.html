@@ -1,6 +1,18 @@
-{% extends "base.html" %}
+{% extends "common/base.html" %}
 {% load static %}
-{% block content%}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/cart_button.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/item_article.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/item_detail.css" %}"/>
+{% endblock %}
+
+{% block header_content %}
+{% include 'common/cart_button.html' %}
+{% endblock %}
+
+{% block content %}
 <div class="banner">
   <img src="{% static 'imgs/' %}" alter="Banner" />
 </div>
@@ -23,10 +35,12 @@
     </article>
   </div>
   {% endfor %}
-</div>
+</div>x
+{% endblock %}
 
-{% include "shop/item.html" %}
-
+{% block page_script %}
+{% include "common/item_detail.html" %}
+{% include "common/item.html" %}
 <script type="text/javascript">
   var articles = $('.deals article');
   articles.each(function(i, element) {
