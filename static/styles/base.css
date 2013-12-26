@@ -9,7 +9,7 @@ body>header {
     width: 100%;
     z-index: 999;
 }
-body>header>a.home {
+body>header>.home {
     display: inline-block;
     width: 170px;
     height: 50px;
@@ -25,7 +25,7 @@ body>footer{
     text-align: center;
     margin-top: 30px;
     border-top: 1px solid #d3d3d3;
-    color: grey;
+    color: #808080;
 }
 .container{
     width: 996px;
