@@ -1,4 +1,11 @@
 {% load static %}
+
+<div class="md-modal" id="md_modal">
+  <div class="md-content">
+    {% block md_content %}{% endblock %}
+  </div>
+</div>
+<div class="md-overlay"></div>
 <script type="text/template" id="item_detail_template">
   <div class="image">
     <img src="{% static "" %}{{store.slug}}_imgs/${item.fields.sku}.JPG" />
@@ -40,7 +47,7 @@
     $('#md_modal').removeClass('md-show');
   });
   var item_detail_template = $.template(null,$('#item_detail_template').html());
-  $('#content>.content>div>article>ul').delegate('li','click',function(e){
+  $('article > ul').delegate('li','click',function(e){
     if (e.target.tagName.toLowerCase() == 'i') {
       addToCart($(e.target).data('id'));
       return false;

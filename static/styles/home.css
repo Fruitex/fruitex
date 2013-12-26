@@ -111,10 +111,10 @@ body>header>a.cart {
     border-top: none;
     box-shadow: 0px 1px 1px;
 }
-#content{
+.container{
     width: 996px;
     margin: auto;
-    padding-top: 56px;
+    padding: 56px 0 0 0;
 }
 body>header>a.cart .num {
     position: absolute;
@@ -142,48 +142,48 @@ body>header>a.cart .plus {
     left:10px;
     display: none;
 }
-#content>aside {
+.container>aside {
     width: 200px;
     float: left;
     margin-top: 25px;
 }
-#content>aside .stores ul{
+.container>aside .stores ul{
     border: 1px solid #ccc;
     border-bottom-width: 3px;
     border-radius: 0 0 8px 8px;
     border-top:none;
     padding: 0;
 }
-#content>aside .stores header{
+.container>aside .stores header{
     text-indent:16px;
     background: rgb(50, 50, 50);
     color:#fff;
     line-height:35px;
     border-radius:8px 8px 0 0;
 }
-#content>aside .stores ul li {
+.container>aside .stores ul li {
     line-height: 36px;
     list-style: none;
     padding-left: 16px;
     border-bottom: 1px solid #ccc;
     position: relative;
 }
-#content>aside .stores ul li a {
+.container>aside .stores ul li a {
     display: inline-block;
     width: 100%;
     color: #000;
 }
-#content>aside .stores ul li a:hover {
+.container>aside .stores ul li a:hover {
     text-decoration: none;
 }
-#content>aside .stores ul li:hover{
+.container>aside .stores ul li:hover{
     background: rgb(243, 251, 231);
 }
-#content>aside .stores ul li:last-child {
+.container>aside .stores ul li:last-child {
     border-bottom: none;
     border-radius: 0 0 8px 8px;
 }
-#content>aside .stores ul li.current:after {
+.container>aside .stores ul li.current:after {
     content: '';
     position: absolute;
     width: 12px;
@@ -193,10 +193,10 @@ body>header>a.cart .plus {
     right: 12px;
     top: 16px;
 }
-#content>aside .categories {
+.container>aside .categories {
     margin-top: 12px;
 }
-#content>aside .categories > ul >li > div {
+.container>aside .categories > ul >li > div {
     display: none;
     position: absolute;
     left: 199px;
@@ -204,25 +204,25 @@ body>header>a.cart .plus {
     top: -42px;
     border-radius: 8px;
 }
-#content>aside .categories li {
+.container>aside .categories li {
     list-style: none;
 }
-#content>aside .categories ul {
+.container>aside .categories ul {
     padding: 0;
     margin: 0;
 }
-#content>aside .categories >header {
+.container>aside .categories >header {
     line-height: 35px;
     background: rgb(192,232,100);
     padding-left: 16px;
     border-radius: 8px 8px 0 0;
 }
-#content>aside .categories > ul {
+.container>aside .categories > ul {
     border: 1px solid #ccc;
     border-bottom-width: 4px;
     border-radius: 0 0 8px 8px;
 }
-#content>aside .categories > ul > li {
+.container>aside .categories > ul > li {
     line-height: 36px;
     padding: 0 8px;
     border-bottom: 1px solid rgb(204, 204, 204);
@@ -230,7 +230,7 @@ body>header>a.cart .plus {
     position: relative;
     height: 36px;
 }
-#content>aside .categories > ul > li>span {
+.container>aside .categories > ul > li>span {
     display: inline-block;
     width: 100%;
     padding-left: 32px;
@@ -241,20 +241,20 @@ body>header>a.cart .plus {
     background-size: 26px;
     background-position-y: 50%;
 }
-#content>aside .categories > ul > li:hover {
+.container>aside .categories > ul > li:hover {
     background:rgb(243, 251, 231);
 }
-#content>aside .categories > ul >li:hover > div {
+.container>aside .categories > ul >li:hover > div {
     display: block;
 }
-#content>aside .categories > ul >li > div>ul {
+.container>aside .categories > ul >li > div>ul {
     padding: 16px;
     border: 1px solid #ccc;
     border-bottom-width: 5px;
     margin-left: 10px;
     border-radius: 8px;
 }
-#content>aside .categories > ul >li > div a {
+.container>aside .categories > ul >li > div a {
     display: inline-block;
     white-space: nowrap;
     width: 180px;
@@ -263,23 +263,23 @@ body>header>a.cart .plus {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-#content>aside .categories li li {
+.container>aside .categories li li {
     line-height: 20px;
 }
-#content>aside .categories > ul >li > div>ul>li>a {
+.container>aside .categories > ul >li > div>ul>li>a {
     color: #000;
     font-weight: 700;
     line-height: 24px;
     font-size: 1.1em;
 }
-#content>aside .categories > ul >li > div>ul>li>ul a {
+.container>aside .categories > ul >li > div>ul>li>ul a {
     color: rgb(120,120,120);
     font-size: 0.9em;
 }
-#content>aside .help {
+.container>aside .help {
     margin-top: 12px;
 }
-#content>aside .help header {
+.container>aside .help header {
     background: rgb(50, 50, 50);
     color: #fff;
     line-height: 35px;
@@ -287,13 +287,13 @@ body>header>a.cart .plus {
     border-radius: 8px 8px 0 0;
     font-weight: 700;
 }
-#content>aside .help ul {
+.container>aside .help ul {
     padding: 0;
     border: 1px solid #ccc;
     border-radius: 0 0 8px 8px;
     border-bottom-width: 4px;
 }
-#content>aside .help ul li {
+.container>aside .help ul li {
     line-height: 36px;
     list-style: none;
     text-indent: 40px;
@@ -301,32 +301,32 @@ body>header>a.cart .plus {
     background-image: url("/static/imgs/icon_email.png");
     background-position: 16px 13px;
 }
-#content>aside .help ul li:last-child {
+.container>aside .help ul li:last-child {
     background-image: url("/static/imgs/icon_phone.png");
     border-top: 1px solid #ccc;
 }
-#content>.content {
+.container>.content {
     float: right;
     width: 780px;
     margin-top: 25px;
 }
-#content>.content .ad img {
+.container>.content .ad img {
     width: 780px;
     border-radius: 12px;
 }
-#content>.content .week-sale,#content>.content .popular,#content>.content .deal-sale {
+.container>.content .week-sale,.container>.content .popular,.container>.content .deal-sale {
     margin-top: 12px;
     border: 1px solid #ccc;
     border-radius: 12px;
     padding: 2px 12px 5px 12px;
     position: relative;
 }
-#content>.content .week-sale article, #content>.content .popular article, #content>.content .deal-sale article {
+.container>.content .week-sale article, .container>.content .popular article, .container>.content .deal-sale article {
     height: 220px;
     position: relative;
     margin-top: 35px;
 }
-#content>.content .week-sale header, #content>.content .popular header, #content>.content .deal-sale header {
+.container>.content .week-sale header, .container>.content .popular header, .container>.content .deal-sale header {
     position: absolute;
     height: 32px;
     background: #EE9F3B;
@@ -339,17 +339,17 @@ body>header>a.cart .plus {
     border: 1px solid #F56200;
     background-image: linear-gradient(to bottom, #EE9F3B 0%,#E77640 50%,#EE9F3B 100%);
 }
-#content>.content .popular header {
+.container>.content .popular header {
     background: rgb(124, 205, 86);
     border-color: rgb(78, 145, 23);
     background-image: linear-gradient(to bottom, rgb(124, 205, 86) 0%,rgb(114, 200, 77) 50%,rgb(114, 200, 77) 100%);
 }
-#content>.content .deal-sale header {
+.container>.content .deal-sale header {
     background: #D93EEE;
     border-color: #BE18C5;
     background-image: linear-gradient(to bottom, #BE18C5 0%,#A306AA 50%,#BE18C5 100%);
 }
-#content>.content>div>article .loading {
+.container>.content>div>article .loading {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -357,13 +357,13 @@ body>header>a.cart .plus {
     top: 0;
     left: 0;
 }
-#content>.content>div.popular>article .loading {
+.container>.content>div.popular>article .loading {
     background-image: url("/static/imgs/popular-ajax-loader.gif");
 }
-#content>.content>div.search-items>article .loading{
+.container>.content>div.search-items>article .loading{
     background-image: url("/static/imgs/popular-ajax-loader.gif");
 }
-#content>.content div article li {
+.container>.content div article li {
     float: left;
     list-style: none;
     width: 150px;
@@ -372,7 +372,7 @@ body>header>a.cart .plus {
     overflow: hidden;
     cursor: pointer;
 }
-#content>.content div article li img {
+.container>.content div article li img {
     height: 150px;
     text-align: center;
     position: absolute;
@@ -380,32 +380,32 @@ body>header>a.cart .plus {
     top: -20px;
     display: none;
 }
-#content>.content div article ul {
+.container>.content div article ul {
     padding: 0;
     margin: 0;
 }
-#content>.content div article li:last-child {
+.container>.content div article li:last-child {
     border-right: none;
 }
-#content>.content div article li .name {
+.container>.content div article li .name {
     font-size: 12px;
     padding: 8px;
     height: 40px;
     overflow: hidden;
 }
-#content>.content div article li .price {
+.container>.content div article li .price {
     text-align: right;
     padding-right: 16px;
     font-weight: 700;
 }
-#content>.content .week-sale article li .price.weekly .original {
+.container>.content .week-sale article li .price.weekly .original {
     text-decoration: line-through;
 }
-#content>.content .week-sale article li .price.weekly .now,#content>.content .deal-sale article li .price.weekly .now {
+.container>.content .week-sale article li .price.weekly .now,.container>.content .deal-sale article li .price.weekly .now {
     color: rgb(229,68,57);
     margin-right: 4px;
 }
-#content>.content div article li .add {
+.container>.content div article li .add {
     position: absolute;
     width: 100%;
     height: 40px;
@@ -414,10 +414,10 @@ body>header>a.cart .plus {
     bottom: -40px;
     -webkit-transition: bottom .3s;
 }
-#content>.content div article li:hover .add {
+.container>.content div article li:hover .add {
     bottom: 0;
 }
-#content>.content div article li .add i {
+.container>.content div article li .add i {
     position: absolute;
     text-transform: uppercase;
     background: rgb(60, 204, 32);
@@ -438,13 +438,13 @@ body>header>a.cart .plus {
     box-shadow: 1px 1px 1px rgb(70, 156, 13);
     margin-left: -50px;
 }
-#content>.content .popular article {
+.container>.content .popular article {
     height: 430px;
 }
-#content>.content article li {
+.container>.content article li {
     margin-top: 20px;
 }
-#content>.content article li:nth-child(5n) {
+.container>.content article li:nth-child(5n) {
     border-right: none;
 }
 body>footer{
@@ -456,12 +456,12 @@ body>footer{
     border-top: 1px solid #d3d3d3;
     color: grey;
 }
-#content>.content div article li .image {
+.container>.content div article li .image {
     height: 100px;
     position: relative;
     overflow: hidden;
 }
-#content>.content div article li .image span {
+.container>.content div article li .image span {
     position: absolute;
     width: 100%;
     height: 100px;
@@ -471,17 +471,17 @@ body>footer{
     text-transform: uppercase;
     font-style: italic;
 }
-#content>.content div.search-items article li .image span{
+.container>.content div.search-items article li .image span{
     line-height: 150px;
     height: 150px;
 }
-#content>aside>div {
+.container>aside>div {
     background: #fff;
 }
-#content>.content>div {
+.container>.content>div {
     background: #fff;
 }
-#content>.content div.search-items article li {
+.container>.content div.search-items article li {
     width: 179px;
     border: 1px solid #ccc;
     margin: 8px;
@@ -489,26 +489,26 @@ body>footer{
     border-bottom-width: 3px;
     background: #fff;
 }
-#content>.content div.search-items article li .image {
+.container>.content div.search-items article li .image {
     height: 150px;
 }
-#content>.content div.search-items article li .image img {
+.container>.content div.search-items article li .image img {
     top: 5px;
     left: 15px;
 }
-#content>.content>div.search-items {
+.container>.content>div.search-items {
     background: rgb(252,252,252);
 }
-#content>.content>div.search-items > article {
+.container>.content>div.search-items > article {
     height: 790px;
     position: relative;
 }
-#content>.content div.search-items article li .price {
+.container>.content div.search-items article li .price {
     text-align: left;
     padding-left: 16px;
     position: relative;
 }
-#content>.content div.search-items article li .price:after {
+.container>.content div.search-items article li .price:after {
     position: absolute;
     content: 'cad';
     background: rgb(70,192,0);
@@ -522,11 +522,11 @@ body>footer{
     top: 4px;
     -webkit-transform: scale(.8);
 }
-#content>.content>div.search-items > footer {
+.container>.content>div.search-items > footer {
     position: relative;
     height: 40px;
 }
-#content>.content>div.search-items > footer >span {
+.container>.content>div.search-items > footer >span {
     width: 72px;
     height: 40px;
     display: inline-block;
@@ -537,16 +537,16 @@ body>footer{
     cursor: pointer;
     box-shadow: -1px 1px 1px #ccc;
 }
-#content>.content>div.search-items > footer >span.prev {
+.container>.content>div.search-items > footer >span.prev {
     left: 300px;
     background: rgb(255, 255, 255) url('/static/imgs/arrow_left.png') no-repeat 44px 50%;
     display:none;
 }
-#content>.content>div.search-items > footer >span.next {
+.container>.content>div.search-items > footer >span.next {
     left: 390px;
     background: rgb(255, 255, 255) url('/static/imgs/arrow_right.png') no-repeat 12px 50%;
 }
-#content>.content div.search-items article ul {
+.container>.content div.search-items article ul {
     margin-top: -8px;
 }
 .md-overlay {
