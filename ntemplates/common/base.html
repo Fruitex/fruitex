@@ -23,13 +23,5 @@
     </div>
     {% include "common/footer.html" %}
     {% block page_script %}{% endblock %}
-    <script type="text/javascript">
-    $(document).keydown(function(e) {
-        if (e.keyCode == 27) {
-            $('.md-show').removeClass('md-show');
-            $('.md-content .header a').show();
-        }
-    });
-    </script>
   </body>
 </html>

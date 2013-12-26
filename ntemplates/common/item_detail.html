@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="md-modal" id="md_modal">
+<div class="md-modal" id="md-modal">
   <div class="md-content">
     {% block md_content %}{% endblock %}
   </div>
@@ -23,29 +23,23 @@
   </div>
 </script>
 <script type="text/javascript">
-  var search = function(){
-    var keyword = $('body>header .search-content').val().trim();
-    if (!keyword) {
-      return false
-    }
-    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
-    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
-  }
-  $('body>header .search-btn').click(function(){
-    search();
-  });
-  $("body>header .search-content").keyup(function (evt) {
-    if (evt.which == 13) {
-      search();
+  $(document).keydown(function(e) {
+    if (e.keyCode == 27) {
+      $('.md-show').removeClass('md-show');
+      $('.md-content .header a').show();
     }
   });
-  $('#md_modal').delegate('.add','click',function(){
+  $('#md-modal').delegate('.add','click',function(){
     addToCart($(this).data('id'));
-    $('#md_modal').removeClass('md-show');
+    $('#md-modal').removeClass('md-show');
   });
-  $('#md_modal').delegate('.close','click',function(){
-    $('#md_modal').removeClass('md-show');
+  $('#md-modal').delegate('.close','click',function(){
+    $('#md-modal').removeClass('md-show');
   });
+  $('.md-overlay').click(function(){
+    $('#md-modal').removeClass('md-show');
+  });
+
   var item_detail_template = $.template(null,$('#item_detail_template').html());
   $('article > ul').delegate('li','click',function(e){
     if (e.target.tagName.toLowerCase() == 'i') {
@@ -60,7 +54,7 @@
         o.bookinfo = json_decoded;
       }
     }
-    $.tmpl(item_detail_template,{'item':o}).appendTo($('#md_modal .md-content').empty());
-    $('#md_modal').addClass('md-show');
+    $.tmpl(item_detail_template,{'item':o}).appendTo($('#md-modal .md-content').empty());
+    $('#md-modal').addClass('md-show');
   });
 </script>

@@ -25,8 +25,25 @@
 {% include "common/item_detail.html" %}
 {% include "common/item.html" %}
 <script type="text/javascript">
-$('body>header .cate i').click(function(){
-  location.href = '{% url "shop:store_home" store.slug %}';
-});
+  $('body>header .cate i').click(function(){
+    location.href = '{% url "shop:store_home" store.slug %}';
+  });
+
+  var search = function(){
+    var keyword = $('body>header .search-content').val().trim();
+    if (!keyword) {
+      return false
+    }
+    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
+    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
+  }
+  $('header .search-btn').click(function(){
+    search();
+  });
+  $('header .search-content').keyup(function (evt) {
+    if (evt.which == 13) {
+      search();
+    }
+  });
 </script>
 {% endblock %}
