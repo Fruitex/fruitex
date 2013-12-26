@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Accounts
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login',name="my_login"),
+    url(r'^accounts/', include('auth.urls')),
 
     # Pages
     url(r'^error', 'fruitex.views.error'),

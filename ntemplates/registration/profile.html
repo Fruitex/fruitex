@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Your profile" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "Your profile" %}</h1>
+    <p>
+        {% blocktrans %}
+        Welcome back, {{ user }}!
+        Firstname: {{firstname}}
+        Lastname: {{lastname}}
+        email: {{email}}
+        phone number: {{phonenum}}
+        address: {{address}}
+        {% endblocktrans %}
+    </p>
+{% endblock %}

@@ -176,3 +176,6 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+#enable User.get_profile()
+AUTH_PROFILE_MODULE = 'auth.UserProfile'
