@@ -65,4 +65,3 @@ urlpatterns = patterns('',
                            profile_change,
                            name='profile_change'),
                        )
- 
