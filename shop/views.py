@@ -85,6 +85,12 @@ def store_search(request, store_slug, keyword=None):
 
 # APIs
 
+def all_featured_items(request, featured_as, page=1):
+  items = Item.objects.filter(featured=featured_as).order_by('name')
+  items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
+
+  return json_response(items)
+
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = items_for_store(store_slug).order_by('name')
   if category_id is not None and len(category_id) > 0:
@@ -107,8 +113,8 @@ def store_onsale_items(request, store_slug, page=1):
 
   return json_response(items)
 
-def store_featured_items(request, store_slug, featured_in, page=1):
-  items = items_for_store(store_slug).filter(featured=featured_in).order_by('name')
+def store_featured_items(request, store_slug, featured_as, page=1):
+  items = items_for_store(store_slug).filter(featured=featured_as).order_by('name')
   items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
 
   return json_response(items)
