@@ -21,7 +21,9 @@
   <ul>
     {% for store in stores %}
     <li>
-      <img src="{% static 'imgs/logos/' %}{{ store.slug }}.png">
+      <a href="{% url 'shop:store_home' store.slug %}">
+        <img src="{% static 'imgs/logos/' %}{{ store.slug }}.png">
+      </a>
     </li>
     {% endfor %}
   </ul>
