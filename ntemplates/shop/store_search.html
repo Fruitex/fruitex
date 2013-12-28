@@ -1,5 +1,7 @@
 {% extends "shop/base.html" %}
-{% block content%}
+
+{% block content %}
+<div class="content">
 <div class="search-items">
   {% if search_keyword %}
   <article data-source="{% url 'shop:store_search_items' store.slug search_keyword '' %}">
@@ -14,27 +16,30 @@
     <span title="next page" class="next"></span>
   </footer>
 </div>
-{% endblock %}
-{% block page_script%}
+</div>
 
-{% include "shop/item_detail.html" %}
-{% include "shop/item.html" %}
+{{ block.super }}
+{% endblock %}
+
+{% block page_script %}
+{{ block.super }}
 
 <script type="text/javascript">
   var page = 1;
-  var article = $('#content .content .search-items article');
+  var article = $('.content .search-items article');
   load_items(article, page, null);
 
-  $('#content .content .search-items footer .prev').click(function(){
+  $('.content .search-items footer .prev').click(function(){
     page = page - 1 || 1;
     if (page == 1) { $(this).hide(); }
 
     load_items(article, page, null);
   });
-  $('#content .content .search-items footer .next').click(function(){
+
+  $('.content .search-items footer .next').click(function(){
     page += 1;
     load_items(article, page, function(){
-      $('#content .content .search-items footer .prev').show();
+      $('.content .search-items footer .prev').show();
     });
   });
 </script>

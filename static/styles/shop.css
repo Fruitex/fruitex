@@ -1,0 +1,370 @@
+body>header .search {
+    width: 700px;
+    margin: auto;
+    display: table;
+    margin-top: 12px;
+}
+body>header .search > * {
+    display: table-cell;
+    width: 1%;
+    white-space: nowrap;
+    height: 30px;
+    line-height: 30px;
+}
+body>header .search > .search-content {
+    width: 100%;
+    border:1px solid rgb(190, 190, 190);
+    border-left: none;
+    height: 34px;
+    line-height: 30px;
+    vertical-align: middle;
+    outline: none;
+}
+body>header .search > .store {
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(190,190,190);
+    border-radius:  6px 0 0 6px;
+    padding: 0 12px;
+    text-transform: uppercase;
+}
+body>header .search > .cate {
+    border: 1px solid rgb(190,190,190);
+    border-left: none;
+    border-right: none;
+    background:#fff;
+}
+body>header .search > .cate >span {
+    background: rgb(212, 255, 143);
+    border: 1px solid rgb(178, 217, 113);
+    position: relative;
+    display: block;
+    height: 24px;
+    margin:0 3px;
+    top: 2px;
+    line-height: 24px;
+    padding: 0 4px;
+}
+body>header .search > .cate >span > i {
+    margin: 0 4px;
+    cursor: pointer;
+}
+body>header .search > .search-btn > i {
+    display: block;
+    margin-left: 10px;
+    font-style: normal;
+    text-transform: uppercase;
+    padding: 0 12px;
+    background: rgb(209, 239, 139);
+    color: rgb(66,107,29);
+    border: 1px solid rgb(120, 156, 59);
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 700;
+    border-bottom-width: 2px;
+    opacity: .8;
+}
+body>header .search > .search-btn > i:hover{
+    opacity: 1;
+}
+.container>aside {
+    width: 200px;
+    float: left;
+    margin-top: 25px;
+}
+.container>aside .stores ul{
+    border: 1px solid #ccc;
+    border-bottom-width: 3px;
+    border-radius: 0 0 8px 8px;
+    border-top:none;
+    padding: 0;
+}
+.container>aside .stores header{
+    text-indent:16px;
+    background: rgb(50, 50, 50);
+    color:#fff;
+    line-height:35px;
+    border-radius:8px 8px 0 0;
+}
+.container>aside .stores ul li {
+    line-height: 36px;
+    list-style: none;
+    padding-left: 16px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+.container>aside .stores ul li a {
+    display: inline-block;
+    width: 100%;
+    color: #000;
+}
+.container>aside .stores ul li a:hover {
+    text-decoration: none;
+}
+.container>aside .stores ul li:hover{
+    background: rgb(243, 251, 231);
+}
+.container>aside .stores ul li:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+.container>aside .stores ul li.current:after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgb(118,176,35);
+    border-radius: 6px;
+    right: 12px;
+    top: 16px;
+}
+.container>aside .categories {
+    margin-top: 12px;
+}
+.container>aside .categories > ul >li > div {
+    display: none;
+    position: absolute;
+    left: 199px;
+    background: #fff;
+    top: -42px;
+    border-radius: 8px;
+}
+.container>aside .categories li {
+    list-style: none;
+}
+.container>aside .categories ul {
+    padding: 0;
+    margin: 0;
+}
+.container>aside .categories >header {
+    line-height: 35px;
+    background: rgb(192,232,100);
+    padding-left: 16px;
+    border-radius: 8px 8px 0 0;
+}
+.container>aside .categories > ul {
+    border: 1px solid #ccc;
+    border-bottom-width: 4px;
+    border-radius: 0 0 8px 8px;
+}
+.container>aside .categories > ul > li {
+    line-height: 36px;
+    padding: 0 8px;
+    border-bottom: 1px solid rgb(204, 204, 204);
+    cursor: pointer;
+    position: relative;
+    height: 36px;
+}
+.container>aside .categories > ul > li>span {
+    display: inline-block;
+    width: 100%;
+    padding-left: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-repeat: no-repeat;
+    background-size: 26px;
+    background-position-y: 50%;
+}
+.container>aside .categories > ul > li:hover {
+    background:rgb(243, 251, 231);
+}
+.container>aside .categories > ul >li:hover > div {
+    display: block;
+}
+.container>aside .categories > ul >li > div>ul {
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-bottom-width: 5px;
+    margin-left: 10px;
+    border-radius: 8px;
+}
+.container>aside .categories > ul >li > div a {
+    display: inline-block;
+    white-space: nowrap;
+    width: 180px;
+    padding: 0 8px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.container>aside .categories li li {
+    line-height: 20px;
+}
+.container>aside .categories > ul >li > div>ul>li>a {
+    color: #000;
+    font-weight: 700;
+    line-height: 24px;
+    font-size: 1.1em;
+}
+.container>aside .categories > ul >li > div>ul>li>ul a {
+    color: rgb(120,120,120);
+    font-size: 0.9em;
+}
+.container>aside .help {
+    margin-top: 12px;
+}
+.container>aside .help header {
+    background: rgb(50, 50, 50);
+    color: #fff;
+    line-height: 35px;
+    text-indent: 16px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 700;
+}
+.container>aside .help ul {
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 4px;
+}
+.container>aside .help ul li {
+    line-height: 36px;
+    list-style: none;
+    text-indent: 40px;
+    background-repeat: no-repeat;
+    background-image: url("/static/imgs/icon_email.png");
+    background-position: 16px 13px;
+}
+.container>aside .help ul li:last-child {
+    background-image: url("/static/imgs/icon_phone.png");
+    border-top: 1px solid #ccc;
+}
+.container>.content {
+    float: right;
+    width: 780px;
+    margin-top: 25px;
+}
+.container>.content .ad img {
+    width: 780px;
+    border-radius: 12px;
+}
+.container>.content .week-sale,.container>.content .popular,.container>.content .deal-sale {
+    margin-top: 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 2px 12px 5px 12px;
+    position: relative;
+}
+.container>.content .week-sale article, .container>.content .popular article, .container>.content .deal-sale article {
+    height: 220px;
+    position: relative;
+    margin-top: 35px;
+}
+.container>.content .week-sale header, .container>.content .popular header, .container>.content .deal-sale header {
+    position: absolute;
+    height: 32px;
+    background: #EE9F3B;
+    color: #fff;
+    line-height: 30px;
+    padding: 0 20px;
+    border-radius: 12px 0 12px 0;
+    left: -1px;
+    top: -1px;
+    border: 1px solid #F56200;
+    background-image: linear-gradient(to bottom, #EE9F3B 0%,#E77640 50%,#EE9F3B 100%);
+}
+.container>.content .popular header {
+    background: rgb(124, 205, 86);
+    border-color: rgb(78, 145, 23);
+    background-image: linear-gradient(to bottom, rgb(124, 205, 86) 0%,rgb(114, 200, 77) 50%,rgb(114, 200, 77) 100%);
+}
+.container>.content .deal-sale header {
+    background: #D93EEE;
+    border-color: #BE18C5;
+    background-image: linear-gradient(to bottom, #BE18C5 0%,#A306AA 50%,#BE18C5 100%);
+}
+
+.container>.content>div.popular>article .loading {
+    background-image: url("/static/imgs/popular-ajax-loader.gif");
+}
+.container>.content>div.search-items>article .loading{
+    background-image: url("/static/imgs/popular-ajax-loader.gif");
+}
+.container>.content .week-sale article li .price.weekly .original {
+    text-decoration: line-through;
+}
+.container>.content .week-sale article li .price.weekly .now,.container>.content .deal-sale article li .price.weekly .now {
+    color: rgb(229,68,57);
+    margin-right: 4px;
+}
+.container>.content .popular article {
+    height: 430px;
+}
+.container>.content div.search-items article li .image span{
+    line-height: 150px;
+    height: 150px;
+}
+.container>aside>div {
+    background: #fff;
+}
+.container>.content>div {
+    background: #fff;
+}
+.container>.content div.search-items article li {
+    width: 179px;
+    border: 1px solid #ccc;
+    margin: 8px;
+    border-radius: 8px;
+    border-bottom-width: 3px;
+    background: #fff;
+}
+.container>.content div.search-items article li .image {
+    height: 150px;
+}
+.container>.content div.search-items article li .image img {
+    top: 5px;
+    left: 15px;
+}
+.container>.content>div.search-items {
+    background: rgb(252,252,252);
+}
+.container>.content>div.search-items > article {
+    height: 790px;
+    position: relative;
+}
+.container>.content div.search-items article li .price {
+    text-align: left;
+    padding-left: 16px;
+    position: relative;
+}
+.container>.content div.search-items article li .price:after {
+    position: absolute;
+    content: 'cad';
+    background: rgb(70,192,0);
+    color: #fff;
+    font-size: 12px;
+    padding: 0 3px;
+    margin-left: 3px;
+    border: 1px solid rgb(27, 106, 16);
+    text-transform: uppercase;
+    line-height: 12px;
+    top: 4px;
+    -webkit-transform: scale(.8);
+}
+.container>.content>div.search-items > footer {
+    position: relative;
+    height: 40px;
+}
+.container>.content>div.search-items > footer >span {
+    width: 72px;
+    height: 40px;
+    display: inline-block;
+    position: absolute;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: -1px 1px 1px #ccc;
+}
+.container>.content>div.search-items > footer >span.prev {
+    left: 300px;
+    background: rgb(255, 255, 255) url('/static/imgs/arrow_left.png') no-repeat 44px 50%;
+    display:none;
+}
+.container>.content>div.search-items > footer >span.next {
+    left: 390px;
+    background: rgb(255, 255, 255) url('/static/imgs/arrow_right.png') no-repeat 12px 50%;
+}
+.container>.content div.search-items article ul {
+    margin-top: -8px;
+}

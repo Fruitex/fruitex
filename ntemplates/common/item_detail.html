@@ -1,7 +1,14 @@
 {% load static %}
+
+<div class="md-modal" id="md-modal">
+  <div class="md-content">
+    {% block md_content %}{% endblock %}
+  </div>
+</div>
+<div class="md-overlay"></div>
 <script type="text/template" id="item_detail_template">
   <div class="image">
-    <img src="{% static "" %}{{store.slug}}_imgs/${item.fields.sku}.JPG" />
+    <img src="{% static 'store_imgs/' %}${item.fields.sku}.JPG" />
   </div>
   <div class="detail">
     <div class="common">
@@ -16,31 +23,25 @@
   </div>
 </script>
 <script type="text/javascript">
-  var search = function(){
-    var keyword = $('body>header .search-content').val().trim();
-    if (!keyword) {
-      return false
-    }
-    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
-    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
-  }
-  $('body>header .search-btn').click(function(){
-    search();
-  });
-  $("body>header .search-content").keyup(function (evt) {
-    if (evt.which == 13) {
-      search();
+  $(document).keydown(function(e) {
+    if (e.keyCode == 27) {
+      $('.md-show').removeClass('md-show');
+      $('.md-content .header a').show();
     }
   });
-  $('#md_modal').delegate('.add','click',function(){
+  $('#md-modal').delegate('.add','click',function(){
     addToCart($(this).data('id'));
-    $('#md_modal').removeClass('md-show');
+    $('#md-modal').removeClass('md-show');
   });
-  $('#md_modal').delegate('.close','click',function(){
-    $('#md_modal').removeClass('md-show');
+  $('#md-modal').delegate('.close','click',function(){
+    $('#md-modal').removeClass('md-show');
   });
+  $('.md-overlay').click(function(){
+    $('#md-modal').removeClass('md-show');
+  });
+
   var item_detail_template = $.template(null,$('#item_detail_template').html());
-  $('#content>.content>div>article>ul').delegate('li','click',function(e){
+  $('article > ul').delegate('li','click',function(e){
     if (e.target.tagName.toLowerCase() == 'i') {
       addToCart($(e.target).data('id'));
       return false;
@@ -53,7 +54,7 @@
         o.bookinfo = json_decoded;
       }
     }
-    $.tmpl(item_detail_template,{'item':o}).appendTo($('#md_modal .md-content').empty());
-    $('#md_modal').addClass('md-show');
+    $.tmpl(item_detail_template,{'item':o}).appendTo($('#md-modal .md-content').empty());
+    $('#md-modal').addClass('md-show');
   });
 </script>

@@ -1,14 +1,25 @@
-{% extends "base.html" %}
+{% extends "common/base.html" %}
 {% load static %}
 {% load tz %}
 
 {% localtime on %}
 
-{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/confirm.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/itemlist.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/input_validator.css' %}"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+{% endblock %}
 
-<link rel="stylesheet" type="text/css" href="{% static "styles/confirm.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "styles/itemlist.css" %}"/>
-<script src={% static "javascript/itemlist.js" %}></script>
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'javascript/lib/underscore.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/lib/jquery.tmpl.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+{% endblock %}
+
+{% block content %}
 <div id='order-confirm-wrapper'>
   <p id="order-confirm-header">You Order Confirmation</p>
   <p id="order-confirm-invoice">Your Invoice#: {{ invoice.invoice_num }}</p>
@@ -16,22 +27,24 @@
     {% for order in invoice.orders.all %}
       {% for order_item in order.order_items.all %}
       <div class="item-in-cart">
-        <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
-        <div class="item-info-wrapper">
-          <div class="item-info-left">
-            <span class="item-in-cart-name">{{ order_item.item.name }}</span>
-            <span class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</span>
+        <div>
+          <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+        </div>
+        <div class="item-info-left">
+          <div class="item-in-cart-name">{{ order_item.item.name }}</div>
+          <div class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</div>
+          <div>
             <label>
               <input type="checkbox" {% if order_item.allow_sub %} checked="" {% endif %} disabled="disabled">
               Allow substitution
             </label>
           </div>
-          <span class="item-in-cart-count">Quatity: {{ order_item.quantity }}</span>
-          <span class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</span>
         </div>
+        <div class="item-in-cart-count">Quatity: {{ order_item.quantity }}</div>
+        <div class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</div>
       </div>
       {% endfor %}
-      <div class="item-list-order-summary">
+      <div class="order-confirm-store-summary">
         Delivery: {{ order.delivery_window }}
       </div>
     {% endfor %}

@@ -1,0 +1,28 @@
+<!doctype html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}Fruitex{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "styles/base.css" %}"/>
+    {% block extra_css %}{% endblock %}
+    {% block page_css %}{% endblock %}
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "javascript/lib/jquery.cookie.js" %}"></script>
+    {% block extra_script %}{% endblock %}
+  </head>
+  <body>
+    <header>
+      <a href="{% url 'shop:to_default' %}" title="Fruitex" class="home"></a>
+      {% block header_content %}{% endblock %}
+    </header>
+    <div class="container clearfix">
+      {% block content %} {% endblock %}
+    </div>
+    {% include "common/footer.html" %}
+    {% block page_script %}{% endblock %}
+  </body>
+</html>

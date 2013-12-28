@@ -1,7 +1,7 @@
 {% load static %}
 <script type="text/template" id="item_template">
   <li title="${item.fields.name}" data-o="${JSON.stringify(item)}">
-  <p class="image"><img onload="image_loaded(this);" src="{% static ""%}{{store.slug}}_imgs/${item.fields.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
+  <p class="image"><img onload="image_loaded(this);" src="{% static 'store_imgs/' %}${item.fields.sku}.JPG" alter="Item Picture"><span>Loading...</span></p>
   <p class="name">${truncate(item.fields.name,50)}</p>
   <p class="price">
     {% templatetag openvariable %}if item.fields.on_sale{% templatetag closevariable %}

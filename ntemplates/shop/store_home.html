@@ -1,12 +1,14 @@
 {% extends "shop/base.html" %}
 {% load static %}
-{% block content%}
+
+{% block content %}
+<div class="content">
 <div class="ad">
   <img src="{% static "imgs/"%}ad_{{ store.slug }}.png" alter="{{ store.name }} Advertisement" />
 </div>
 <div class="deal-sale">
-  <header>Deal OF THIS WEEK</header>
-  <article data-source="{% url 'shop:store_featured_items' store.slug 'deal_of_this_week' '' %}">
+  <header>Deal OF THE WEEK</header>
+  <article data-source="{% url 'shop:store_featured_items' store.slug 'deal_of_the_week' '' %}">
     <ul></ul>
     <div class="loading"></div>
   </article>
@@ -25,14 +27,16 @@
     <div class="loading"></div>
   </article>
 </div>
-{% endblock %}
-{% block page_script%}
+</div>
 
-{% include "shop/item_detail.html" %}
-{% include "shop/item.html" %}
+{{ block.super }}
+{% endblock %}
+
+{% block page_script %}
+{{ block.super }}
 
 <script type="text/javascript">
-  var articles = $('#content .content article');
+  var articles = $('.content article');
   articles.each(function(i, element) {
     load_items($(element), '', null);
   });

@@ -1,43 +1,52 @@
-<!doctype html>
+{% extends "common/base.html" %}
 {% load static %}
-<html>
-  <head>
-    <meta charset="utf-8"/>
-    <title>{% block title %} {% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
-    {% block extra_css %}{% endblock %}
-    {% block page_css %}{% endblock %}
-    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "javascript/lib/jquery.cookie.js" %}"></script>
-    {% block extra_script %}{% endblock %}
-  </head>
-  <body>
-    {% include "shop/header.html" %}
-    <div id="content" class="clearfix">
-    <div class="content">{% block content %} {% endblock %}</div>
-    {% include "shop/aside.html" %}
-    </div>
-    {% include "shop/footer.html" %}
-    <div class="md-modal" id="md_modal">
-      <div class="md-content">
-        {% block md_content %}{% endblock %}
-      </div>
-    </div>
-    <div class="md-overlay"></div>
-    {% block page_script %}{% endblock %}
-    <script type="text/javascript">
-    $(document).keydown(function(e) {
-        if (e.keyCode == 27) {
-            $('.md-show').removeClass('md-show');
-            $('.md-content .header a').show();
-        }
-    });
-    $('.md-overlay').click(function(){
-      $('#md_modal').removeClass('md-show');
-    });
-    </script>
-  </body>
-</html>
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/shop.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/cart_button.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/item_article.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "styles/item_detail.css" %}"/>
+{% endblock %}
+
+{% block header_content %}
+<div class="search">
+  <span class="store">{{ store.name }}</span>
+  {% if category %}
+  <span class="cate"><span>{{ category }}<i>×</i></span></span>
+  {% endif %}
+  <input class="search-content"{% if search_keyword %} value="{{search_keyword}}"{% endif %}/>
+  <span class="search-btn"><i>Search</i></span>
+</div>
+{% include 'common/cart_button.html' %}
+{% endblock %}
+
+{% block content %}
+{% include "shop/aside.html" %}
+{% endblock %}
+
+{% block page_script %}
+{% include "common/item_detail.html" %}
+{% include "common/item.html" %}
+<script type="text/javascript">
+  $('body>header .cate i').click(function(){
+    location.href = '{% url "shop:store_home" store.slug %}';
+  });
+
+  var search = function(){
+    var keyword = $('body>header .search-content').val().trim();
+    if (!keyword) {
+      return false
+    }
+    var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
+    location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
+  }
+  $('header .search-btn').click(function(){
+    search();
+  });
+  $('header .search-content').keyup(function (evt) {
+    if (evt.which == 13) {
+      search();
+    }
+  });
+</script>
+{% endblock %}
