@@ -49,7 +49,7 @@ class Category(models.Model):
     slug = models.SlugField()
     icon = models.CharField(max_length=100, blank=True)
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='categories')
-    parent = models.ForeignKey('Category', blank=True, null=True)
+    parent = models.ForeignKey('Category', blank=True, null=True, related_name='sub_categories')
 
 class CategoryItemMetaKey(models.Model):
     def __unicode__(self):
