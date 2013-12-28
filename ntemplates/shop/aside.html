@@ -63,9 +63,10 @@
     </ul>
   </div>
 </aside>
+{% if raw_item_metas %}
 <script type="text/javascript">
   $(document).ready(function() {
-    var selected_item_metas = {{ selected_item_metas | safe }};
+    var selected_item_metas = {% if selected_item_metas %}{{ selected_item_metas | safe }}{% else %}{}{% endif %};
     var pathname = window.location.pathname;
     var get_option_array = function(key) {
       var option_array = selected_item_metas[key];
@@ -104,3 +105,4 @@
     });
   });
 </script>
+{% endif %}
