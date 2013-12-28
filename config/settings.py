@@ -131,7 +131,7 @@ INSTALLED_APPS = (
     # Paypal
     'paypal.standard.ipn',
     # Vendor
-    # 'gunicorn',
+    'gunicorn',
     'compressor',
     # Apps
     'shop',

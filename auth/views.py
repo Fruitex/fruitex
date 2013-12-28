@@ -115,9 +115,9 @@ def register(request, success_url='/account/register/complete/',
         if form.is_valid():
             new_user = form.save(profile_callback=profile_callback)
             if ACCOUNT_SETTING.NEED_ACTIVATION:
-                return HttpResponseRedirect(reverse('accounts:register_complete'))
+                return HttpResponseRedirect(reverse('register_complete'))
             else:
-                return HttpResponseRedirect(reverse('accounts:login'))
+                return HttpResponseRedirect(reverse('login'))
     else:
         form = form_class()
     
@@ -179,6 +179,6 @@ class ProfileChangeView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, _(u'Profile changed'))
-        return redirect(reverse('accounts:profile'))
+        return redirect(reverse('profile'))
 
 profile_change = ProfileChangeView.as_view()
