@@ -4,6 +4,8 @@ from django.template import Context, loader
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
+import json
+
 from shop.models import Store, Category, Item
 
 ITEM_PER_PAGE = 12
@@ -69,6 +71,7 @@ def store_category(request, store_slug, category_id=None):
       category = Category.objects.get(id=category_id)
       context['category'] = category
       context['raw_item_metas'] = category.raw_item_metas()
+      context['selected_item_metas'] = json.dumps(dict(request.GET.iterlists()))
     except ObjectDoesNotExist:
       return store_home(request, store_slug)
 
