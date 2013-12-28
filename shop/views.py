@@ -72,7 +72,7 @@ def store_category(request, store_slug, category_id=None):
       context['category'] = category
       context['raw_item_metas'] = category.raw_item_metas()
       context['query'] = request.GET.urlencode()
-      context['selected_item_metas'] = json.dumps(dict(request.GET.iterlists()))
+      context['query_dict'] = json.dumps(dict(request.GET.iterlists()))
     except ObjectDoesNotExist:
       return store_home(request, store_slug)
 
@@ -98,9 +98,11 @@ def all_featured_items(request, featured_as, page=1):
 
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = items_for_store(store_slug).order_by('name')
-  if len(request.GET.lists()) > 0:
+  filter = json.loads(request.GET.get('filter', '{}'))
+
+  if len(filter) > 0:
     item_metas = ItemMeta.objects.none()
-    for key, options in request.GET.lists():
+    for key, options in filter.items():
       item_metas |= ItemMeta.objects.filter(key=key, value__in=options)
     item_ids = map(lambda item_meta: item_meta.item.id, item_metas)
     items = items.filter(id__in=item_ids)
