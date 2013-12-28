@@ -6,7 +6,7 @@
   {% if search_keyword %}
   <article data-source="{% url 'shop:store_search_items' store.slug search_keyword '' %}">
   {% else %}
-  <article data-source="{% url 'shop:store_category_items' store.slug category.id '' %}">
+  <article data-source="{% url 'shop:store_category_items' store.slug category.id '' %}" data-query="{{ query }}">
   {% endif %}
     <ul></ul>
     <div class="loading"></div>

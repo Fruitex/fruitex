@@ -14,14 +14,14 @@
     <ul>
       {% for cate1 in categories %}
       <li>
-        <span title="{{ cate1.name }}" style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')">{{ cate1.name }}</span>
+        <span title="{{ cate1.name }}" {% if cate1.icon %}style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')"{% endif %}>{{ cate1.name }}</span>
         <div>
           <ul>
-            {% for cate2 in cate1.category_set.all %}
+            {% for cate2 in cate1.sub_categories.all %}
             <li>
               <a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
               <ul>
-                {% for cate3 in cate2.category_set.all %}
+                {% for cate3 in cate2.sub_categories.all %}
                 <li>
                   <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
                 </li>
@@ -36,6 +36,25 @@
     </ul>
   </div>
   {% endif %}
+  {% if raw_item_metas %}
+  <div class="filters">
+    <header>Filters</header>
+    <ul>
+      {% for key, values in raw_item_metas.items %}
+      <li>
+        {{ key }}
+        <ul>
+          {% for value in values %}
+          <li class="filter-option" data-option="{&quot;key&quot;:&quot;{{ key }}&quot;,&quot;value&quot;:&quot;{{ value }}&quot;}">
+            <input type="checkbox">{{ value }}
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
   <div class="help">
     <header>Need Help?</header>
     <ul>
@@ -44,3 +63,53 @@
     </ul>
   </div>
 </aside>
+{% if raw_item_metas %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    var pathname = window.location.pathname;
+    var query_dict = {% if query_dict %}{{ query_dict | safe }}{% else %}{}{% endif %};
+    var selected_item_metas = JSON.parse(query_dict['filter'] || '{}');
+
+    var get_option_array = function(key) {
+      var option_array = selected_item_metas[key];
+      if (option_array == undefined) {
+        return selected_item_metas[key] = [];
+      }
+      if (typeof option_array === 'string') {
+        return selected_item_metas[key] = [selected_item_metas[key]]
+      }
+      return option_array;
+    };
+
+    var is_option_selected = function(el) {
+      var option = $(el).data('option');
+      var option_array = get_option_array(option.key);
+      return option_array.indexOf(option.value) >= 0;
+    };
+
+    $('.filter-option').each(function() {
+      if (is_option_selected(this)) {
+        $(this).find('input').attr('checked', '');
+      }
+    });
+
+    $('.filter-option').click(function(e) {
+      var option = $(this).data('option');
+      var option_array = get_option_array(option.key);
+      var index = option_array.indexOf(option.value);
+      if (index < 0) {
+        option_array.push(option.value);
+      } else {
+        option_array.splice(index, 1);
+        if (option_array.length == 0) {
+          delete selected_item_metas[option.key];
+        }
+      }
+
+      query_dict['filter'] = JSON.stringify(selected_item_metas)
+      var param = $.param(query_dict, traditional=true)
+      window.location.href = pathname + '?' + param;
+    });
+  });
+</script>
+{% endif %}

@@ -2,6 +2,7 @@ from django.contrib import admin
 from shop.models import Store
 from shop.models import DeliveryOption
 from shop.models import Category
+from shop.models import CategoryItemMetaKey
 from shop.models import Item
 from shop.models import ItemMeta
 
@@ -25,9 +26,19 @@ class CategoryAdmin(admin.ModelAdmin):
   ordering = ['store', 'parent']
   search_fields = ['__unicode__']
   list_filter = ['store']
+  raw_id_fields = ['parent']
   prepopulated_fields = { 'slug': ['name'] }
 
 admin.site.register(Category, CategoryAdmin)
+
+class CategoryItemMetaKeyAdmin(admin.ModelAdmin):
+  list_display = ['category', 'key', 'display_order', 'filterable']
+  ordering = ['category', 'display_order']
+  search_fields = ['category__name', 'key']
+  list_filter = ['filterable']
+  raw_id_fields = ['category']
+
+admin.site.register(CategoryItemMetaKey, CategoryItemMetaKeyAdmin)
 
 class ItemAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_added'
@@ -36,6 +47,7 @@ class ItemAdmin(admin.ModelAdmin):
     'sold_number', 'out_of_stock', 'on_sale'
   ]
   list_filter = [ 'out_of_stock', 'on_sale', 'tax_class', 'featured' ]
+  raw_id_fields = ['category']
   ordering = [ '-id' ]
   search_fields = ['id', 'name', 'sku', 'category__name', 'featured']
   actions = ['remove_sales']
@@ -54,7 +66,7 @@ admin.site.register(Item, ItemAdmin)
 class ItemMetaAdmin(admin.ModelAdmin):
   list_display = ['id', 'key', 'value', 'item']
   ordering = [ 'item' ]
-  search_fields = ['item', 'key']
+  search_fields = ['item__name', 'key', 'value']
   raw_id_fields = ['item']
 
 admin.site.register(ItemMeta, ItemMetaAdmin)
