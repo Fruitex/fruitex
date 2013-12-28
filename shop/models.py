@@ -1,6 +1,8 @@
 from django.db import models
 from decimal import Decimal
 from datetime import datetime, timedelta
+from operator import attrgetter
+from itertools import chain
 
 class Store(models.Model):
     def __unicode__(self):
@@ -45,20 +47,23 @@ class Category(models.Model):
             return self.name
         return self.parent.__unicode__() + '->' + self.name
 
+    def item_meta_keys(self, include_parent=True):
+        keys = self.categoryitemmetakey_set.order_by('display_order')
+        if include_parent and self.parent is not None:
+            parent_keys = self.parent.item_meta_keys()
+            keys = sorted(chain(parent_keys, keys), key=attrgetter('display_order'))
+        return keys
+
+    def raw_item_metas(self):
+        keys = self.item_meta_keys()
+        values = map(lambda key: key.item_meta_values(category=self), keys)
+        return {k: v for k, v in zip(keys, values)}
+
     name = models.CharField(max_length=100)
     slug = models.SlugField()
     icon = models.CharField(max_length=100, blank=True)
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='categories')
     parent = models.ForeignKey('Category', blank=True, null=True, related_name='sub_categories')
-
-class CategoryItemMetaKey(models.Model):
-    def __unicode__(self):
-        return self.key
-
-    category = models.ForeignKey(Category, related_name='item_meta_keys')
-    key = models.CharField(max_length=256)
-    filterable = models.BooleanField(default=False)
-    display_order = models.IntegerField(default=0)
 
 
 class Item(models.Model):
@@ -79,7 +84,7 @@ class Item(models.Model):
     )
 
     name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='items')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='items')
     description = models.TextField(blank=True)
     sku = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=16, decimal_places=2)
@@ -92,9 +97,32 @@ class Item(models.Model):
     when_added = models.DateTimeField(auto_now_add=True)
     when_updated = models.DateTimeField(auto_now=True)
 
+
 class ItemMeta(models.Model):
     def __unicode__(self):
         return self.key + ': ' + self.value
     item = models.ForeignKey(Item, related_name="metas")
     key = models.CharField(max_length=256)
     value = models.CharField(max_length=256)
+
+
+class CategoryItemMetaKey(models.Model):
+    def __unicode__(self):
+        return self.key
+
+    def item_meta_values(self, include_children=False, category=None):
+        if category is None:
+            category = self.category
+        values = ItemMeta.objects.filter(
+            key__iexact=self.key, item__category=category
+        ).values_list('value', flat=True).distinct()
+        if include_children:
+            for child in self.category.sub_categories.all():
+                values += child.item_meta_keys.item_meta_values(include_children)
+            values = list(set(values))
+        return values
+
+    category = models.ForeignKey('Category')
+    key = models.CharField(max_length=256)
+    filterable = models.BooleanField(default=False)
+    display_order = models.IntegerField(default=0)

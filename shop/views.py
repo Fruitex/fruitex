@@ -68,6 +68,7 @@ def store_category(request, store_slug, category_id=None):
     try:
       category = Category.objects.get(id=category_id)
       context['category'] = category
+      context['raw_item_metas'] = category.raw_item_metas()
     except ObjectDoesNotExist:
       return store_home(request, store_slug)
 
