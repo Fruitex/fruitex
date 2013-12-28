@@ -198,7 +198,4 @@ class ProfileForm(forms.ModelForm):
         profile.save()
         user.save()
 
-        # if hasattr(self, 'save_profile'):
-            # self.save_profile(obj, *args, **kwargs)
-
         return obj

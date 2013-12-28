@@ -10,5 +10,5 @@ class Settings(object):
 ACCOUNT_SETTING = Settings(
     ACCOUNT_ACTIVATION_DAYS = 30,
     ALLOW_TO_CHANGE_EMAIL = True,
-    NEED_ACTIVATION = False,
+    NEED_ACTIVATION = True,
 )

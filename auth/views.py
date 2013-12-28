@@ -4,20 +4,20 @@ Views which allow users to create and activate accounts.
 """
 
 
-from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView, FormView
-from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from auth.form import RegistrationForm, ProfileForm
 from auth.models import RegistrationProfile, UserProfile
 from auth.auth_settings import ACCOUNT_SETTING
+from django.core.urlresolvers import reverse
 
 
 
@@ -62,11 +62,11 @@ def activate(request, activation_key,
         context[key] = callable(value) and value() or value
     return render_to_response(template_name,
                               { 'account': account,
-                                'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS },
+                                'expiration_days': ACCOUNT_SETTING.ACCOUNT_ACTIVATION_DAYS },
                               context_instance=context)
 
 
-def register(request, success_url='/accounts/register/complete/',
+def register(request, success_url='/account/register/complete/',
              form_class=RegistrationForm, profile_callback=None,
              template_name='registration/registration_form.html',
              extra_context=None):
@@ -115,9 +115,9 @@ def register(request, success_url='/accounts/register/complete/',
         if form.is_valid():
             new_user = form.save(profile_callback=profile_callback)
             if ACCOUNT_SETTING.NEED_ACTIVATION:
-                return HttpResponseRedirect('/accounts/register/complete/')
+                return HttpResponseRedirect(reverse('accounts:register_complete'))
             else:
-                return HttpResponseRedirect('/accounts/login')
+                return HttpResponseRedirect(reverse('accounts:login'))
     else:
         form = form_class()
     
@@ -179,6 +179,6 @@ class ProfileChangeView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, _(u'Profile changed'))
-        return redirect('/accounts/profile')
+        return redirect(reverse('accounts:profile'))
 
 profile_change = ProfileChangeView.as_view()

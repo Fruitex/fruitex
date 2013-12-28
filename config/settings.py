@@ -131,11 +131,13 @@ INSTALLED_APPS = (
     # Paypal
     'paypal.standard.ipn',
     # Vendor
-    'gunicorn',
+    # 'gunicorn',
     'compressor',
     # Apps
     'shop',
     'order',
+    'auth',
+    'django.contrib.humanize'
 )
 
 # A sample logging configuration. The only tangible logging
