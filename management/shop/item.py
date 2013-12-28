@@ -61,7 +61,7 @@ def import_from_csv(filename, store_name):
           for value, attribute in enumerate(row):
             # Add Item attributes according to column index
             if value == name_index:
-              item.name = unicode(row[name_index])
+              item.name = unicode(row[name_index]).strip()
             elif value == category_index:
               category = None
               names = re.split('->', row[category_index])
@@ -80,8 +80,8 @@ def import_from_csv(filename, store_name):
                   # If no such Category exists, create one
                   slug = name.lower().replace(" ", "_")
                   category = Category.objects.create(
-                    name = name,
-                    slug = slug,
+                    name = name.strip(),
+                    slug = slug.strip(),
                     store = store,
                     parent = category,
                   )
@@ -93,7 +93,7 @@ def import_from_csv(filename, store_name):
             elif value == description_index:
               item.description = unicode(row[description_index].decode('utf-8'))
             elif value == sku_index:
-              item.sku = unicode(row[sku_index])
+              item.sku = unicode(row[sku_index]).strip()
             elif value == price_index:
               item.price = Decimal(row[price_index])
             elif value == tax_class_index:
@@ -102,8 +102,8 @@ def import_from_csv(filename, store_name):
               # Any other column index belong to metaData
               meta = ItemMeta()
               # Retrieve column name from metaList
-              meta.key = unicode(metaList[value])
-              meta.value = unicode(attribute)
+              meta.key = unicode(metaList[value]).strip()
+              meta.value = unicode(attribute).strip()
               # We can't save itemMeta until the Item is saved
               itemMeta.append(meta)
           item.save()
