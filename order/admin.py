@@ -21,7 +21,7 @@ class OrderAdmin(admin.ModelAdmin):
   list_filter = [ 'status' ]
   raw_id_fields = ['delivery_window', 'invoice']
   ordering = [ '-when_created' ]
-  search_fields = ['id', 'invoice']
+  search_fields = ['id', 'invoice__invoice_num']
 
 admin.site.register(Order, OrderAdmin)
 
@@ -32,7 +32,7 @@ class OrderItemAdmin(admin.ModelAdmin):
   ]
   list_filter = [ 'allow_sub' ]
   ordering = [ '-id' ]
-  search_fields = ['id', 'item', 'order']
+  search_fields = ['id', 'item__name', 'order__id']
   raw_id_fields = ['order', 'item']
 
 admin.site.register(OrderItem, OrderItemAdmin)

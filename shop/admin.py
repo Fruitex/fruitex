@@ -34,7 +34,7 @@ admin.site.register(Category, CategoryAdmin)
 class CategoryItemMetaKeyAdmin(admin.ModelAdmin):
   list_display = ['category', 'key', 'display_order', 'filterable']
   ordering = ['category', 'display_order']
-  search_fields = ['category', 'key']
+  search_fields = ['category__name', 'key']
   list_filter = ['filterable']
   raw_id_fields = ['category']
 
@@ -66,7 +66,7 @@ admin.site.register(Item, ItemAdmin)
 class ItemMetaAdmin(admin.ModelAdmin):
   list_display = ['id', 'key', 'value', 'item']
   ordering = [ 'item' ]
-  search_fields = ['item', 'key']
+  search_fields = ['item__name', 'key', 'value']
   raw_id_fields = ['item']
 
 admin.site.register(ItemMeta, ItemMetaAdmin)
