@@ -30,10 +30,12 @@
   var load_items = function(article, page, callback){
     var item_template = $.template(null,$('#item_template').html());
     var loading = article.find('.loading');
-    var source = article.data('source');
+    var query = article.data('query');
+    var url = article.data('source') + page + '?';
+    url += query || '';
     loading.fadeIn();
 
-    $.get(source + page, function(data){
+    $.get(url, function(data){
       var ul = article.find('ul').empty();
       data.forEach(function(item) {
         $.tmpl(item_template,{'item':item}).appendTo(ul);
