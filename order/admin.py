@@ -7,6 +7,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     'invoice_num', 'customer_name', 'email', 'status', 'total', 'when_created'
   ]
   list_filter = [ 'status' ]
+  raw_id_fields = ['coupon']
   ordering = [ '-when_created' ]
   search_fields = ['invoice', 'payer', 'customer_name', 'email', 'phone', 'address', 'postcode']
 
@@ -18,6 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
     'id', 'invoice', 'status', 'delivery_window', 'when_created',
   ]
   list_filter = [ 'status' ]
+  raw_id_fields = ['delivery_window', 'invoice']
   ordering = [ '-when_created' ]
   search_fields = ['id', 'invoice']
 

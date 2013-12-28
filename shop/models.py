@@ -44,11 +44,22 @@ class Category(models.Model):
         if self.parent is None:
             return self.name
         return self.parent.__unicode__() + '->' + self.name
+
     name = models.CharField(max_length=100)
     slug = models.SlugField()
     icon = models.CharField(max_length=100, blank=True)
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='categories')
     parent = models.ForeignKey('Category', blank=True, null=True)
+
+class CategoryItemMetaKey(models.Model):
+    def __unicode__(self):
+        return self.key
+
+    category = models.ForeignKey(Category, related_name='item_meta_keys')
+    key = models.CharField(max_length=256)
+    filterable = models.BooleanField(default=False)
+    display_order = models.IntegerField(default=0)
+
 
 class Item(models.Model):
     def __unicode__(self):
