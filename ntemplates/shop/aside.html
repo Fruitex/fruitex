@@ -14,7 +14,7 @@
     <ul>
       {% for cate1 in categories %}
       <li>
-        <span title="{{ cate1.name }}" style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')">{{ cate1.name }}</span>
+        <span title="{{ cate1.name }}" {% if cate1.icon %}style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')"{% endif %}>{{ cate1.name }}</span>
         <div>
           <ul>
             {% for cate2 in cate1.sub_categories.all %}
