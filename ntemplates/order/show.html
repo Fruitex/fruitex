@@ -28,7 +28,7 @@
       {% for order_item in order.order_items.all %}
       <div class="item-in-cart">
         <div>
-          <img class="item-in-cart-img" src="{% static ''%}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+          <img class="item-in-cart-img" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
         </div>
         <div class="item-info-left">
           <div class="item-in-cart-name">{{ order_item.item.name }}</div>

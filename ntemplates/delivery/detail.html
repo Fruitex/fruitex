@@ -65,7 +65,7 @@
     <ul>
       {% for order_item in order.order_items %}
       <li>
-        <img src="{% static '' %}{{ order_item.item.category.store.slug }}_imgs/{{ order_item.item.sku }}.JPG">
+        <img src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
         <span>
           <span>{{ order_item.item.name }}</span>
           <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Allow substitution</label>
@@ -82,7 +82,7 @@
 <ul>
   {% for item, quantity in combined_items.items %}
   <li>
-    <img src="{% static '' %}{{ item.category.store.slug }}_imgs/{{ item.sku }}.JPG">
+    <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
     <span>
       <span>{{ item.name }}</span>
     </span>
