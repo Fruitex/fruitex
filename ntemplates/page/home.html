@@ -17,6 +17,7 @@
   <img src="{% static 'imgs/' %}" alter="Banner" />
 </div>
 <div class="stores">
+  <header>Select a store</header>
   <ul>
     {% for store in stores %}
     <li>
@@ -25,17 +26,37 @@
     {% endfor %}
   </ul>
 </div>
+<div class="benefits">
+  <div class="benefit">
+    <img class="benefit-img" src="" />
+    <div class="benefit-title">Shop locally</div>
+    <div class="benefit-description">Use Fruitex to see best items at stores in your neighborhood. </div>
+  </div>
+  <div class="benefit">
+    <img class="benefit-img" src="" />
+    <div class="benefit-title">Over 2000 items</div>
+    <div class="benefit-description">We have everything on your daily shopping list. </div>
+  </div>
+  <div class="benefit">
+    <img class="benefit-img" src="" />
+    <div class="benefit-title">Fast same day delivery</div>
+    <div class="benefit-description">Everything you order will be delivery to your home in 2 hours</div>
+  </div>
+  <div class="benefit">
+    <img class="benefit-img" src="" />
+    <div class="benefit-title">Only $3.99 per order</div>
+    <div class="benefit-description">Nothing complex. We charge only 3.99 per order. </div>
+  </div>
+</div>
 <div class="deals">
-  {% for store in stores %}
+  <header>Deals of the week</header>
   <div class="deal-sale">
-    <header>Deal OF THE WEEK</header>
     <article data-source="{% url 'shop:all_featured_items' 'deal_of_the_week' '' %}">
       <ul></ul>
       <div class="loading"></div>
     </article>
   </div>
-  {% endfor %}
-</div>x
+</div>
 {% endblock %}
 
 {% block page_script %}
