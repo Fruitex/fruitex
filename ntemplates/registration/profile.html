@@ -1,18 +1,15 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% extends "registration/base.html" %}
 
-{% block title %}{% trans "Your profile" %}{% endblock %}
-{% csrf_token %}
+{% block title %}{{ block.super }} | Your profile{% endblock %}
+
 {% block content %}
-    <h1>{% trans "Your profile" %}</h1>
+    <h1>Your profile</h1>
     <p>
-        {% blocktrans %}
         Welcome back, {{ user }}!
         Firstname: {{firstname}}
         Lastname: {{lastname}}
         email: {{email}}
         phone number: {{phonenum}}
         address: {{address}}
-        {% endblocktrans %}
     </p>
 {% endblock %}
