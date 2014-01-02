@@ -181,3 +181,4 @@ except ImportError:
 
 #enable User.get_profile()
 AUTH_PROFILE_MODULE = 'auth.UserProfile'
+LOGIN_URL = '/account/login'
