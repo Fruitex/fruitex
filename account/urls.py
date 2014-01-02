@@ -29,7 +29,7 @@ urlpatterns = patterns('account.views',
     url(r'^profile/$',
        'profile',
        name='profile'),
-    url(r'^change/$',
+    url(r'^profile/change/$',
        'profile_change',
        name='profile_change'),
 )
