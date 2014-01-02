@@ -13,10 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from auth.form import RegistrationForm, ProfileForm
-from auth.models import RegistrationProfile, UserProfile
-from auth.auth_settings import ACCOUNT_SETTING
+from account.forms import RegistrationForm, ProfileForm
+from account.models import RegistrationProfile, UserProfile
+from account.auth_settings import ACCOUNT_SETTING
 from django.core.urlresolvers import reverse
 
 
@@ -27,31 +26,31 @@ def activate(request, activation_key,
     """
     Activate a ``User``'s account, if their key is valid and hasn't
     expired.
-    
+
     By default, uses the template ``registration/activate.html``; to
     change this, pass the name of a template as the keyword argument
     ``template_name``.
-    
+
     **Context:**
-    
+
     account
         The ``User`` object corresponding to the account, if the
         activation was successful. ``False`` if the activation was not
         successful.
-    
+
     expiration_days
         The number of days for which activation keys stay valid after
         registration.
-    
+
     Any values passed in the keyword argument ``extra_context`` (which
     must be a dictionary) will be added to the context as well; any
     values in ``extra_context`` which are callable will be called
     prior to being added to the context.
 
     **Template:**
-    
+
     registration/activate.html or ``template_name`` keyword argument.
-    
+
     """
     activation_key = activation_key.lower() # Normalize before trying anything with it.
     account = RegistrationProfile.objects.activate_user(activation_key)
@@ -72,43 +71,43 @@ def register(request, success_url='/account/register/complete/',
              extra_context=None):
     """
     Allow a new user to register an account.
-    
+
     Following successful registration, redirects to either
     ``/accounts/register/complete/`` or, if supplied, the URL
     specified in the keyword argument ``success_url``.
-    
+
     By default, ``registration.forms.RegistrationForm`` will be used
     as the registration form; to change this, pass a different form
     class as the ``form_class`` keyword argument. The form class you
     specify must have a method ``save`` which will create and return
     the new ``User``, and that method must accept the keyword argument
     ``profile_callback`` (see below).
-    
+
     To enable creation of a site-specific user profile object for the
     new user, pass a function which will create the profile object as
     the keyword argument ``profile_callback``. See
     ``RegistrationManager.create_inactive_user`` in the file
     ``models.py`` for details on how to write this function.
-    
+
     By default, uses the template
     ``registration/registration_form.html``; to change this, pass the
     name of a template as the keyword argument ``template_name``.
-    
+
     **Context:**
-    
+
     form
         The registration form.
-    
+
     Any values passed in the keyword argument ``extra_context`` (which
     must be a dictionary) will be added to the context as well; any
     values in ``extra_context`` which are callable will be called
     prior to being added to the context.
 
     **Template:**
-    
+
     registration/registration_form.html or ``template_name`` keyword
     argument.
-    
+
     """
     if request.method == 'POST':
         form = form_class(data=request.POST, files=request.FILES)
@@ -120,7 +119,7 @@ def register(request, success_url='/account/register/complete/',
                 return HttpResponseRedirect(reverse('login'))
     else:
         form = form_class()
-    
+
     if extra_context is None:
         extra_context = {}
     context = RequestContext(request)

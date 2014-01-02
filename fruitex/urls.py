@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Accounts
-    url(r'^account/', include('auth.urls')),
+    url(r'^account/', include('account.urls')),
 
     # Pages
     url(r'^error', 'fruitex.views.error'),
