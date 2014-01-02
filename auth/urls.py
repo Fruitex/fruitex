@@ -7,15 +7,9 @@ URLConf to include this URLConf for any URL beginning with
 
 """
 
-
-from django.conf.urls.defaults import *
 from django.views.generic import TemplateView
-from django.contrib.auth import views as auth_views
 from django.contrib.auth import urls as auth_urls
-from django.conf.urls import patterns, url, include
-
-
-from auth.views import activate, register, profile, profile_change
+from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns('',
@@ -24,19 +18,19 @@ urlpatterns = patterns('',
                        # that way it can return a sensible "invalid key" message instead of a
                        # confusing 404.
                        url(r'^activate/(?P<activation_key>\w+)/$',
-                           activate,
+                           'auth.views.activate',
                            name='activate'),
                        url(r'^register/$',
-                           register,
+                           'auth.views.register',
                            name='registration_register'),
                        url(r'^register/complete/$',
                            TemplateView.as_view(template_name='registration/registration_complete.html'),
                            name="register_complete"),
                        url(r'^profile/$',
-                           profile,
+                           'auth.views.profile',
                            name='profile'),
                        url(r'^change/$',
-                           profile_change,
+                           'auth.views.profile_change',
                            name='profile_change'),
                        )
 
