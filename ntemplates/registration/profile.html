@@ -1,0 +1,20 @@
+{% extends "registration/base.html" %}
+
+{% block title %}{{ block.super }} | Your profile{% endblock %}
+
+{% block content %}
+  <h1>Your profile</h1>
+  <div class="account-greating">Welcome back, {{ user }}!</div>
+  <div class="account-profile">
+    <div>Firstname: {{firstname}}</div>
+    <div>Lastname: {{lastname}}</div>
+    <div>email: {{email}}</div>
+    <div>phone number: {{phonenum}}</div>
+    <div>address: {{address}}</div>
+  </div>
+  <div class="account-actions">
+    <div><a href="{% url 'profile_change' %}">Update profile</a></div>
+    <div><a href="{% url 'password_change' %}">Change password</a></div>
+    <div><a href="{% url 'logout' %}">Logout</a></div>
+  </div>
+{% endblock %}

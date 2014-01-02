@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     # Django admin
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -136,6 +137,7 @@ INSTALLED_APPS = (
     # Apps
     'shop',
     'order',
+    'account',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -171,6 +173,10 @@ COMPRESS_ENABLED = not DEBUG
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
+
+# Account setup
+AUTH_PROFILE_MODULE = 'account.UserProfile'    # enable User.get_profile()
+LOGIN_URL = '/account/login'
 
 try:
     from local_settings import *
