@@ -21,7 +21,7 @@ from django.core.urlresolvers import reverse
 
 
 def activate(request, activation_key,
-             template_name='registration/activate.html',
+             template_name='registration/activation.html',
              extra_context=None):
     """
     Activate a ``User``'s account, if their key is valid and hasn't

@@ -13,25 +13,25 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns('account.views',
-                       # Activation keys get matched by \w+ instead of the more specific
-                       # [a-fA-F0-9]{40} because a bad activation key should still get to the view;
-                       # that way it can return a sensible "invalid key" message instead of a
-                       # confusing 404.
-                       url(r'^activate/(?P<activation_key>\w+)/$',
-                           'activate',
-                           name='activate'),
-                       url(r'^register/$',
-                           'register',
-                           name='registration_register'),
-                       url(r'^register/complete/$',
-                           TemplateView.as_view(template_name='registration/registration_complete.html'),
-                           name="register_complete"),
-                       url(r'^profile/$',
-                           'profile',
-                           name='profile'),
-                       url(r'^change/$',
-                           'profile_change',
-                           name='profile_change'),
-                       )
+    # Activation keys get matched by \w+ instead of the more specific
+    # [a-fA-F0-9]{40} because a bad activation key should still get to the view;
+    # that way it can return a sensible "invalid key" message instead of a
+    # confusing 404.
+    url(r'^activate/(?P<activation_key>\w+)/$',
+       'activate',
+       name='activate'),
+    url(r'^register/$',
+       'register',
+       name='registration_register'),
+    url(r'^register/complete/$',
+       TemplateView.as_view(template_name='registration/registration_complete.html'),
+       name="register_complete"),
+    url(r'^profile/$',
+       'profile',
+       name='profile'),
+    url(r'^change/$',
+       'profile_change',
+       name='profile_change'),
+)
 
 urlpatterns += auth_urls.urlpatterns
