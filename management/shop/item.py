@@ -69,6 +69,7 @@ def import_from_csv(filename, store_name):
 
               # Split up Category content, iterate from top layer
               for name in names:
+                name = name.strip();
                 categories = allCategories.filter(name=name)
                 if category is None:
                   # If is top layer, try to find a category without parent
@@ -80,8 +81,8 @@ def import_from_csv(filename, store_name):
                   # If no such Category exists, create one
                   slug = name.lower().replace(" ", "_")
                   category = Category.objects.create(
-                    name = name.strip(),
-                    slug = slug.strip(),
+                    name = name,
+                    slug = slug,
                     store = store,
                     parent = category,
                   )
