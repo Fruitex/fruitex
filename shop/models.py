@@ -57,7 +57,7 @@ class Category(models.Model):
     def raw_item_metas(self):
         keys = self.item_meta_keys()
         values = map(lambda key: key.item_meta_values(category=self), keys)
-        return {k: v for k, v in zip(keys, values)}
+        return dict(zip(keys, values))
 
     name = models.CharField(max_length=100)
     slug = models.SlugField()
