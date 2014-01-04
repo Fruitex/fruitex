@@ -1,0 +1,59 @@
+.container {
+  width: 800px;
+}
+
+.container > div {
+  margin-bottom: 20px;
+}
+
+.container > div header {
+  text-align: center;
+  color: #656565;
+  font-size: 24px;
+  padding: 5px 0;
+  background-color: inherit;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.banner {
+  border: 1px solid #d3d3d3;
+}
+
+.stores ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: auto;
+}
+
+.stores li {
+  display: inline-block;
+}
+
+.benefits {
+  vertical-align: top;
+}
+
+.benefit {
+  display: inline-block;
+  vertical-align:top;
+  width: 192px;
+}
+
+.benefit-img {
+  width: 190px;
+}
+
+.benefit-title {
+  text-align: center;
+  color: #656565;
+  font-size: 18px;
+}
+
+.benefit-description {
+  color: #6A6A6A;
+}
+
+article li {
+  width: 160px;
+}
