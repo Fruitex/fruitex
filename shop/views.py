@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import json
 
-from shop.models import Store, Category, Item, ItemMeta
+from shop.models import Store, Category, Item, ItemMeta, ItemMetaFilter
 
 ITEM_PER_PAGE = 12
 POPULAR_ITEM_PER_PAGE = 10
@@ -70,7 +70,7 @@ def store_category(request, store_slug, category_id=None):
     try:
       category = Category.objects.get(id=category_id)
       context['category'] = category
-      context['raw_item_metas'] = category.raw_item_metas()
+      context['item_metas_filters'] = ItemMetaFilter.objects.meta_filters_for_items(category.items)
       context['query'] = request.GET.urlencode()
       context['query_dict'] = json.dumps(dict(request.GET.iterlists()))
     except ObjectDoesNotExist:
@@ -98,22 +98,20 @@ def all_featured_items(request, featured_as, page=1):
 
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = items_for_store(store_slug).order_by('name')
-  filter = json.loads(request.GET.get('filter', '{}'))
-
-  if len(filter) > 0:
-    item_metas = ItemMeta.objects.none()
-    for key, options in filter.items():
-      item_metas |= ItemMeta.objects.filter(key=key, value__in=options)
-    item_ids = map(lambda item_meta: item_meta.item.id, item_metas)
-    items = items.filter(id__in=item_ids)
-  else:
-    items = items_for_store(store_slug).order_by('name')
 
   if category_id is not None and len(category_id) > 0:
     items = items.filter(category__id=category_id)
 
   if keyword is not None and len(keyword) > 0:
     items = items.filter(name__contains=keyword)
+
+  filter = json.loads(request.GET.get('filter', '{}'))
+  if len(filter) > 0:
+    for key, options in filter.items():
+      if len(options) > 0:
+        item_ids = ItemMeta.objects.filter(key=key, value__in=options).values('item__id')
+        items = items.filter(id__in=item_ids)
+
   items = limit_to_page(items, page, ITEM_PER_PAGE)
 
   return json_response(items)

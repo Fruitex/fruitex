@@ -36,11 +36,11 @@
     </ul>
   </div>
   {% endif %}
-  {% if raw_item_metas %}
+  {% if item_metas_filters %}
   <div class="filters">
     <header>Filters</header>
     <ul>
-      {% for key, values in raw_item_metas.items %}
+      {% for key, values in item_metas_filters.items %}
       <li>
         {{ key }}
         <ul>
@@ -63,7 +63,7 @@
     </ul>
   </div>
 </aside>
-{% if raw_item_metas %}
+{% if item_metas_filters %}
 <script type="text/javascript">
   $(document).ready(function() {
     var pathname = window.location.pathname;
@@ -76,7 +76,7 @@
         return selected_item_metas[key] = [];
       }
       if (typeof option_array === 'string') {
-        return selected_item_metas[key] = [selected_item_metas[key]]
+        return selected_item_metas[key] = [option_array]
       }
       return option_array;
     };
@@ -85,6 +85,12 @@
       var option = $(el).data('option');
       var option_array = get_option_array(option.key);
       return option_array.indexOf(option.value) >= 0;
+    };
+
+    var apply_filter = function() {
+      query_dict['filter'] = JSON.stringify(selected_item_metas)
+      var param = $.param(query_dict, traditional=true)
+      window.location.href = pathname + '?' + param;
     };
 
     $('.filter-option').each(function() {
@@ -101,14 +107,8 @@
         option_array.push(option.value);
       } else {
         option_array.splice(index, 1);
-        if (option_array.length == 0) {
-          delete selected_item_metas[option.key];
-        }
       }
-
-      query_dict['filter'] = JSON.stringify(selected_item_metas)
-      var param = $.param(query_dict, traditional=true)
-      window.location.href = pathname + '?' + param;
+      apply_filter();
     });
   });
 </script>

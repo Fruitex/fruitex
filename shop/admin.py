@@ -2,7 +2,7 @@ from django.contrib import admin
 from shop.models import Store
 from shop.models import DeliveryOption
 from shop.models import Category
-from shop.models import CategoryItemMetaKey
+from shop.models import ItemMetaFilter
 from shop.models import Item
 from shop.models import ItemMeta
 
@@ -30,15 +30,6 @@ class CategoryAdmin(admin.ModelAdmin):
   prepopulated_fields = { 'slug': ['name'] }
 
 admin.site.register(Category, CategoryAdmin)
-
-class CategoryItemMetaKeyAdmin(admin.ModelAdmin):
-  list_display = ['category', 'key', 'display_order', 'filterable']
-  ordering = ['category', 'display_order']
-  search_fields = ['category__name', 'key']
-  list_filter = ['filterable']
-  raw_id_fields = ['category']
-
-admin.site.register(CategoryItemMetaKey, CategoryItemMetaKeyAdmin)
 
 class ItemAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_added'
@@ -70,3 +61,11 @@ class ItemMetaAdmin(admin.ModelAdmin):
   raw_id_fields = ['item']
 
 admin.site.register(ItemMeta, ItemMetaAdmin)
+
+class ItemMetaFilterAdmin(admin.ModelAdmin):
+  list_display = ['key', 'display_order', 'filterable']
+  ordering = ['display_order']
+  search_fields = ['key']
+  list_filter = ['filterable']
+
+admin.site.register(ItemMetaFilter, ItemMetaFilterAdmin)
