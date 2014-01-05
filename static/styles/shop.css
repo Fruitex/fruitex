@@ -216,6 +216,9 @@ body>header .search > .search-btn > i:hover{
     color: #000;
     font-weight: 500;
 }
+.container>aside .categories > ul div a:hover {
+    text-decoration: underline;
+}
 .container>aside .categories > ul > li > div > ul > li ul > li > a {
     color: rgb(120,120,120);
     font-size: 0.9em;
