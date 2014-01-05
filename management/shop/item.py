@@ -104,7 +104,7 @@ def import_from_csv(filename, store_name):
               meta = ItemMeta()
               # Retrieve column name from metaList
               meta.key = unicode(metaList[value]).strip()
-              meta.value = unicode(attribute).strip()
+              meta.value = unicode(attribute.decode('utf-8')).strip()
               # We can't save itemMeta until the Item is saved
               if len(meta.value) > 0:
                 itemMeta.append(meta)
