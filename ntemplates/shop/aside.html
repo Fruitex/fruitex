@@ -14,7 +14,8 @@
     <ul>
       {% for cate1 in categories %}
       <li>
-        <span title="{{ cate1.name }}" {% if cate1.icon %}style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')"{% endif %}>{{ cate1.name }}</span>
+        {% if cate1.sub_categories.all.count %}
+        <a title="{{ cate1.name }}" {% if cate1.icon %}style="background-image:url('{% static "imgs/" %}{{cate1.icon}}')"{% endif %}>{{ cate1.name }}</a>
         <div>
           <ul>
             {% for cate2 in cate1.sub_categories.all %}
@@ -37,6 +38,9 @@
             {% endfor %}
           </ul>
         </div>
+        {% else %}
+        <a title="{{ cate1.name }}" href="{% url 'shop:store_category' store.slug cate1.id %}">{{cate1.name}}</a>
+        {% endif %}
       </li>
       {% endfor %}
     </ul>

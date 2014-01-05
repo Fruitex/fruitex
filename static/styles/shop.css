@@ -146,7 +146,8 @@ body>header .search > .search-btn > i:hover{
     position: relative;
     height: 36px;
 }
-.container>aside .categories > ul > li > span {
+.container>aside .categories > ul > li > span, .container>aside .categories > ul > li > a {
+    color: #000;
     display: inline-block;
     width: 100%;
     padding-left: 32px;
