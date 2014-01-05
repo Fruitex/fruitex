@@ -61,7 +61,7 @@ def import_from_csv(filename, store_name):
           for value, attribute in enumerate(row):
             # Add Item attributes according to column index
             if value == name_index:
-              item.name = unicode(row[name_index]).strip()
+              item.name = unicode(row[name_index].decode('utf-8')).strip()
             elif value == category_index:
               category = None
               names = re.split('->', row[category_index])
