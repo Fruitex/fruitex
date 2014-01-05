@@ -26,7 +26,7 @@ def common_context(store_slug):
   try:
     stores = Store.objects.all();
     store = stores.get(slug=store_slug);
-    categories = store.categories.filter(parent__isnull=True)
+    categories = store.categories.filter(parent__isnull=True).order_by('name')
   except ObjectDoesNotExist as e:
     return HttpResponse(e)
 
