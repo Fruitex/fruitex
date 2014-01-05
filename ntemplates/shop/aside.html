@@ -42,14 +42,16 @@
     <ul>
       {% for key, values in item_metas_filters.items %}
       <li>
-        {{ key }}
-        <ul>
-          {% for value in values %}
-          <li class="filter-option" data-option="{&quot;key&quot;:&quot;{{ key }}&quot;,&quot;value&quot;:&quot;{{ value }}&quot;}">
-            <input type="checkbox">{{ value }}
-          </li>
-          {% endfor %}
-        </ul>
+        <span>{{ key }}</span>
+        <div>
+          <ul>
+            {% for value in values %}
+            <li class="filter-option" data-option="{&quot;key&quot;:&quot;{{ key }}&quot;,&quot;value&quot;:&quot;{{ value }}&quot;}">
+              <input type="checkbox">{{ value }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </li>
       {% endfor %}
     </ul>
@@ -81,12 +83,6 @@
       return option_array;
     };
 
-    var is_option_selected = function(el) {
-      var option = $(el).data('option');
-      var option_array = get_option_array(option.key);
-      return option_array.indexOf(option.value) >= 0;
-    };
-
     var apply_filter = function() {
       query_dict['filter'] = JSON.stringify(selected_item_metas)
       var param = $.param(query_dict, traditional=true)
@@ -94,8 +90,11 @@
     };
 
     $('.filter-option').each(function() {
-      if (is_option_selected(this)) {
+      var option = $(this).data('option');
+      var option_array = get_option_array(option.key);
+      if (option_array.indexOf(option.value) >= 0) {
         $(this).find('input').attr('checked', '');
+        $('.search .filters').append('<span>' + option.key + ': ' + option.value + '</span>');
       }
     });
 

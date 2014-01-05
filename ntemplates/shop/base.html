@@ -11,9 +11,11 @@
 {% block header_content %}
 <div class="search">
   <span class="store">{{ store.name }}</span>
-  {% if category %}
-  <span class="cate"><span>{{ category }}<i>×</i></span></span>
-  {% endif %}
+  <span class="filters">
+    {% if category %}
+    <span>{{ category }}<i>×</i></span>
+    {% endif %}
+  </span>
   <input class="search-content"{% if search_keyword %} value="{{search_keyword}}"{% endif %}/>
   <span class="search-btn"><i>Search</i></span>
 </div>
