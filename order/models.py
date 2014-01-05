@@ -44,6 +44,7 @@ class Invoice(models.Model):
   postcode = models.CharField(max_length=16)
   phone = models.CharField(max_length=16)
   email = models.EmailField(max_length=256)
+  user = models.ForeignKey('auth.User', blank=True, null=True, related_name='invoices', on_delete=models.SET_NULL)
 
 
 class DeliveryWindow(models.Model):
