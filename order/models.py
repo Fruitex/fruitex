@@ -12,6 +12,14 @@ class Invoice(models.Model):
   def _get_total(self):
     return self.subtotal + self.tax + self.delivery - self.discount;
 
+  # Payment methods
+  PAYMENT_METHODS_PAYPAL = 'PP'
+  PAYMENT_METHODS_SQUARE = 'SQ'
+  PAYMENT_METHODS = (
+    (PAYMENT_METHODS_PAYPAL, 'Paypal'),
+    (PAYMENT_METHODS_SQUARE, 'On delivery (Square)'),
+  )
+
   # Status
   STATUS_PENDING = 'PEND'
   STATUS_PAID = 'PAID'
@@ -25,8 +33,9 @@ class Invoice(models.Model):
   )
 
   invoice_num = models.CharField(max_length=32, unique=True)
+  payment_method = models.CharField(max_length=2, choices=PAYMENT_METHODS, default=PAYMENT_METHODS_PAYPAL)
   status = models.CharField(max_length=4, choices=STATUSES)
-  payer = models.EmailField(max_length=256, blank=True)
+  payer = models.CharField(max_length=256, blank=True)
   when_created = models.DateTimeField(auto_now_add=True)
   when_updated = models.DateTimeField(auto_now=True)
   coupon = models.ForeignKey('Coupon', blank=True, null=True)
