@@ -120,14 +120,6 @@ body>header .search > .search-btn > i:hover{
 .container>aside .categories {
     margin-top: 12px;
 }
-.container>aside .categories > ul >li > div {
-    display: none;
-    position: absolute;
-    left: 199px;
-    background: #fff;
-    top: -42px;
-    border-radius: 8px;
-}
 .container>aside .categories li {
     list-style: none;
 }
@@ -154,7 +146,7 @@ body>header .search > .search-btn > i:hover{
     position: relative;
     height: 36px;
 }
-.container>aside .categories > ul > li>span {
+.container>aside .categories > ul > li > span {
     display: inline-block;
     width: 100%;
     padding-left: 32px;
@@ -168,17 +160,25 @@ body>header .search > .search-btn > i:hover{
 .container>aside .categories > ul > li:hover {
     background:rgb(243, 251, 231);
 }
-.container>aside .categories > ul >li:hover > div {
+.container>aside .categories > ul > li:hover > div {
     display: block;
 }
-.container>aside .categories > ul >li > div>ul {
+.container>aside .categories > ul > li > div {
+    display: none;
+    position: absolute;
+    left: 199px;
+    background: #fff;
+    top: -42px;
+    border-radius: 8px;
+}
+.container>aside .categories > ul ul {
     padding: 16px;
     border: 1px solid #ccc;
     border-bottom-width: 5px;
     margin-left: 10px;
     border-radius: 8px;
 }
-.container>aside .categories > ul >li > div a {
+.container>aside .categories > ul > li > div a, .container>aside .categories > ul > li > div span {
     display: inline-block;
     white-space: nowrap;
     width: 180px;
@@ -190,13 +190,33 @@ body>header .search > .search-btn > i:hover{
 .container>aside .categories li li {
     line-height: 20px;
 }
-.container>aside .categories > ul >li > div>ul>li>a {
-    color: #000;
-    font-weight: 700;
-    line-height: 24px;
-    font-size: 1.1em;
+.container>aside .categories > ul ul > li > div {
+    display: none;
+    position: absolute;
+    left: 199px;
+    background: #fff;
+    margin-top: -42px;
 }
-.container>aside .categories > ul >li > div>ul>li>ul a {
+.container>aside .categories > ul ul > li:hover > div {
+    display: block;
+}
+.container>aside .categories > ul ul > li > div>ul {
+    padding: 16px;
+}
+.container>aside .categories > ul ul > li > div a {
+    display: inline-block;
+    white-space: nowrap;
+    width: 180px;
+    padding: 0 8px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.container>aside .categories > ul div a, .container>aside .categories > ul div span {
+    color: #000;
+    font-weight: 500;
+}
+.container>aside .categories > ul > li > div > ul > li ul > li > a {
     color: rgb(120,120,120);
     font-size: 0.9em;
 }

@@ -19,14 +19,20 @@
           <ul>
             {% for cate2 in cate1.sub_categories.all %}
             <li>
+              {% if cate2.sub_categories.all.count %}
+              <span title="{{cate2.name}}">{{cate2.name}}</span>
+              <div>
+                <ul>
+                  {% for cate3 in cate2.sub_categories.all %}
+                  <li>
+                    <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% else %}
               <a title="{{cate2.name}}" href="{% url 'shop:store_category' store.slug cate2.id %}">{{cate2.name}}</a>
-              <ul>
-                {% for cate3 in cate2.sub_categories.all %}
-                <li>
-                  <a title="{{cate3.name}}" href="{% url 'shop:store_category' store.slug cate3.id %}">{{cate3.name}}</a>
-                </li>
-                {% endfor %}
-              </ul>
+              {% endif %}
             </li>
             {% endfor %}
           </ul>

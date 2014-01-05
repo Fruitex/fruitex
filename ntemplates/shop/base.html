@@ -30,7 +30,7 @@
 {% include "common/item_detail.html" %}
 {% include "common/item.html" %}
 <script type="text/javascript">
-  $('body>header .cate i').click(function(){
+  $('body>header .filters i').click(function(){
     location.href = '{% url "shop:store_home" store.slug %}';
   });
 
