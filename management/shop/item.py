@@ -106,7 +106,8 @@ def import_from_csv(filename, store_name):
               meta.key = unicode(metaList[value]).strip()
               meta.value = unicode(attribute).strip()
               # We can't save itemMeta until the Item is saved
-              itemMeta.append(meta)
+              if len(meta.value) > 0:
+                itemMeta.append(meta)
           item.save()
         except Exception as e:
           print row[name_index]
