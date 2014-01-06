@@ -42,6 +42,13 @@ article li .price {
     padding-right: 16px;
     font-weight: 700;
 }
+article li .price .line-through {
+    text-decoration: line-through;
+}
+article li .price .now {
+    color: rgb(229,68,57);
+    margin-right: 4px;
+}
 article li .add {
     position: absolute;
     width: 100%;

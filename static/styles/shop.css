@@ -383,13 +383,6 @@ body>header .search > .search-btn > i:hover{
 .container>.content>div.search-items>article .loading{
     background-image: url("/static/imgs/popular-ajax-loader.gif");
 }
-.container>.content .week-sale article li .price .line-through {
-    text-decoration: line-through;
-}
-.container>.content .week-sale article li .price .now {
-    color: rgb(229,68,57);
-    margin-right: 4px;
-}
 .container>.content .popular article {
     height: 430px;
 }
