@@ -16,7 +16,11 @@
 }
 
 .banner {
-  border: 1px solid #d3d3d3;
+  margin: 20px 0;
+}
+
+.banner img {
+  width: 800px;
 }
 
 .stores ul {
