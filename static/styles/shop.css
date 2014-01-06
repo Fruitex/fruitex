@@ -383,10 +383,10 @@ body>header .search > .search-btn > i:hover{
 .container>.content>div.search-items>article .loading{
     background-image: url("/static/imgs/popular-ajax-loader.gif");
 }
-.container>.content .week-sale article li .price.weekly .original {
+.container>.content .week-sale article li .price .line-through {
     text-decoration: line-through;
 }
-.container>.content .week-sale article li .price.weekly .now,.container>.content .deal-sale article li .price.weekly .now {
+.container>.content .week-sale article li .price .now {
     color: rgb(229,68,57);
     margin-right: 4px;
 }
