@@ -18,6 +18,21 @@ class Store(models.Model):
     slug = models.SlugField(unique=True)
     address = models.TextField()
 
+class StoreCustomization(models.Model):
+    def __unicode__(self):
+        return self.store.name
+
+    def _get_featured_display_name(self):
+        return self.featured.replace('_', ' ').replace('-', ' ').title()
+
+    store = models.OneToOneField(Store, related_name='customization')
+    featured = models.CharField(max_length=200, default='', blank=True)
+    show_banner = models.BooleanField(default=False)
+    show_on_sale = models.BooleanField(default=False)
+    show_best_selling = models.BooleanField(default=True)
+
+    featured_display_name = property(_get_featured_display_name)
+
 
 class DeliveryOption(models.Model):
     def __unicode__(self):

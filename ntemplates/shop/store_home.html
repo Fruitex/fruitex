@@ -3,16 +3,21 @@
 
 {% block content %}
 <div class="content">
+{% if store.customization and store.customization.show_banner %}
 <div class="ad">
   <img src="{% static "imgs/"%}ad_{{ store.slug }}.png" alter="{{ store.name }} Advertisement" />
 </div>
+{% endif %}
+{% if store.customization and store.customization.featured|length > 0 %}
 <div class="deal-sale">
-  <header>Deal OF THE WEEK</header>
-  <article data-source="{% url 'shop:store_featured_items' store.slug 'deal_of_the_week' '' %}">
+  <header>{{ store.customization.featured_display_name }}</header>
+  <article data-source="{% url 'shop:store_featured_items' store.slug store.customization.featured '' %}">
     <ul></ul>
     <div class="loading"></div>
   </article>
 </div>
+{% endif %}
+{% if store.customization and store.customization.show_on_sale %}
 <div class="week-sale">
   <header>POPULAR ONSALES</header>
   <article data-source="{% url 'shop:store_onsale_items' store.slug '' %}">
@@ -20,6 +25,8 @@
     <div class="loading"></div>
   </article>
 </div>
+{% endif %}
+{% if store.customization.show_best_selling or not store.customization %}
 <div class="popular">
   <header>BEST SELLINGS</header>
   <article data-source="{% url 'shop:store_popular_items' store.slug '' %}">
@@ -27,6 +34,7 @@
     <div class="loading"></div>
   </article>
 </div>
+{% endif %}
 </div>
 
 {{ block.super }}

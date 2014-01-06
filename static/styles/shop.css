@@ -334,12 +334,15 @@ body>header .search > .search-btn > i:hover{
     width: 780px;
     margin-top: 25px;
 }
+.container>.content .ad {
+    margin-bottom: 12px;
+}
 .container>.content .ad img {
     width: 780px;
     border-radius: 12px;
 }
 .container>.content .week-sale,.container>.content .popular,.container>.content .deal-sale {
-    margin-top: 12px;
+    margin-bottom: 12px;
     border: 1px solid #ccc;
     border-radius: 12px;
     padding: 2px 12px 5px 12px;

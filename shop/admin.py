@@ -1,5 +1,6 @@
 from django.contrib import admin
 from shop.models import Store
+from shop.models import StoreCustomization
 from shop.models import DeliveryOption
 from shop.models import Category
 from shop.models import ItemMetaFilter
@@ -14,6 +15,13 @@ class StoreAdmin(admin.ModelAdmin):
 
 admin.site.register(Store, StoreAdmin)
 
+class StoreCustomizationAdmin(admin.ModelAdmin):
+  list_display = ['store', 'featured', 'show_banner', 'show_on_sale', 'show_best_selling']
+  search_fields = ['store__name']
+  list_filter = ['show_banner', 'show_on_sale', 'show_best_selling']
+
+admin.site.register(StoreCustomization, StoreCustomizationAdmin)
+
 class DeliveryOptionAdmin(admin.ModelAdmin):
   list_display = ['id', 'store', 'name', 'start_time', 'time_interval']
   ordering = ['store', 'start_time']
@@ -24,7 +32,7 @@ admin.site.register(DeliveryOption, DeliveryOptionAdmin)
 class CategoryAdmin(admin.ModelAdmin):
   list_display = ['__unicode__', 'id', 'store', 'icon']
   ordering = ['store', 'parent']
-  search_fields = ['__unicode__']
+  search_fields = ['name']
   list_filter = ['store']
   raw_id_fields = ['parent']
   prepopulated_fields = { 'slug': ['name'] }
