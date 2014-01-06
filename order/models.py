@@ -32,7 +32,7 @@ class Invoice(models.Model):
     (STATUS_CANCELLED, 'Cancelled'),
   )
 
-  invoice_num = models.CharField(max_length=32, unique=True)
+  invoice_num = models.CharField(max_length=64, unique=True)
   payment_method = models.CharField(max_length=2, choices=PAYMENT_METHODS, default=PAYMENT_METHODS_PAYPAL)
   status = models.CharField(max_length=4, choices=STATUSES)
   payer = models.CharField(max_length=256, blank=True)
