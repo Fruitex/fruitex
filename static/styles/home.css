@@ -3,7 +3,9 @@
 }
 
 .container > div {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  clear: both;
+  text-align: center;
 }
 
 .container > div header {
@@ -26,12 +28,13 @@
 .stores ul {
   list-style: none;
   padding: 0;
-  margin: 0 auto;
+  margin: 10px auto;
   width: auto;
 }
 
 .stores li {
   display: inline-block;
+  margin: 5px;
 }
 
 .benefits {
