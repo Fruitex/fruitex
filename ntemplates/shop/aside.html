@@ -110,6 +110,9 @@
 
     $('.filter-option').click(function(e) {
       var option = $(this).data('option');
+      selected_item_metas[option.key] = [option.value];
+      return apply_filter();
+
       var option_array = get_option_array(option.key);
       var index = option_array.indexOf(option.value);
       if (index < 0) {
