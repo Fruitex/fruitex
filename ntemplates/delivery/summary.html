@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "delivery/base.html" %}
 {% load static %}
 {% load tz %}
 
@@ -20,7 +20,7 @@
       <li>
         <div>
           <a href="{% url 'order:show' order.invoice.id %}">
-            Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)
+            Invoice #{{ order.invoice.id }} Order #{{ order.id }}: {{ order.get_status_display }} ({{ order.items.count }} items)
           </a>
         </div>
       </li>

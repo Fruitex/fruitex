@@ -4,11 +4,11 @@ from django.utils.timezone import make_aware, get_default_timezone
 
 from datetime import datetime, timedelta
 
-from order.models import DeliveryWindow
+from order.models import DeliveryWindow, Order
 
 def summary(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=30), get_default_timezone())
-  delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold)
+  delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
 
   context = Context({
     'delivery_windows': delivery_windows,
@@ -21,6 +21,8 @@ def detail(request, id):
   def combine_items(orders):
     items = {}
     for order in orders:
+      # if order.status == Order.STATUS_PENDING:
+      #   continue
       for order_item in order.order_items:
         if order_item.item in items:
           items[order_item.item] += order_item.quantity

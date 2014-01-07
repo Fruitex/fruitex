@@ -252,7 +252,8 @@ $(document).ready(function() {
   });
 
   if (isCartEmpty()) {
-    $('.item-in-cart').remove()
+    $('.item-in-cart').remove();
+    $('.cart-store-summary').remove();
     $('#items-in-cart-summary-container').remove();
     $('#cart-footer').remove();
     $('#coupon-container').remove();

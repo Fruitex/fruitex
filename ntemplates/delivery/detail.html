@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "delivery/base.html" %}
 {% load static %}
 {% load tz %}
 
@@ -62,15 +62,15 @@
       </tbody>
       </table>
     </div>
-    <ul>
+    <ul class="delivery-item-list">
       {% for order_item in order.order_items %}
-      <li>
+      <li class="delivery-item">
         <img src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+        <span>{{ order_item.quantity }} x</span>
         <span>
           <span>{{ order_item.item.name }}</span>
-          <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Allow substitution</label>
+          <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
         </span>
-        <span>Quantity: {{ order_item.quantity }}</span>
       </li>
       {% endfor %}
     </ul>
@@ -78,18 +78,18 @@
   {% endfor %}
 </ul>
 
-<h1>Shopping List</h1>
-<ul>
+<h1>Shopping List (Excluding pending orders)</h1>
+<ol>
   {% for item, quantity in combined_items.items %}
   <li>
     <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <span>{{ quantity }} x </span>
     <span>
       <span>{{ item.name }}</span>
     </span>
-    <span>Quantity: {{ quantity }}</span>
   </li>
   {% endfor %}
-</ul>
+</ol>
 
 <a href="{% url 'delivery:summary' %}">Go back to summary</a>
 
