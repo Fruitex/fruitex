@@ -1,4 +1,8 @@
-.delivery-item img {
+.item {
+  margin: 2px auto;
+}
+
+.item img {
   width: 50px;
 }
 

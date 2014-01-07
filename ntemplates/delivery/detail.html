@@ -64,7 +64,7 @@
     </div>
     <ul class="delivery-item-list">
       {% for order_item in order.order_items %}
-      <li class="delivery-item">
+      <li class="item">
         <img src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
         <span>{{ order_item.quantity }} x</span>
         <span>
@@ -79,9 +79,9 @@
 </ul>
 
 <h1>Shopping List (Excluding pending orders)</h1>
-<ol>
+<ol class="shopping-item-list">
   {% for item, quantity in combined_items.items %}
-  <li>
+  <li class="item">
     <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
     <span>{{ quantity }} x </span>
     <span>
