@@ -21,8 +21,8 @@ def detail(request, id):
   def combine_items(orders):
     items = {}
     for order in orders:
-      # if order.status == Order.STATUS_PENDING:
-      #   continue
+      if order.status == Order.STATUS_PENDING:
+        continue
       for order_item in order.order_items:
         if order_item.item in items:
           items[order_item.item] += order_item.quantity
