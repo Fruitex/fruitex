@@ -13,10 +13,10 @@
   <div class="detail">
     <div class="common">
       <p>${item.fields.name}</p>
+      <p>Price: $${item.fields.price}</p>
       {% templatetag openvariable %}each(key, val) item.fields.metas{% templatetag closevariable %}
       <p>${key}: ${val}</p>
       {% templatetag openvariable %}/each{% templatetag closevariable %}
-      <p>Price: $${item.fields.price}</p>
       <p>Description: ${item.fields.description}</p>
     </div>
   </div>
