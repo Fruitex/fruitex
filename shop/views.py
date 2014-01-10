@@ -18,8 +18,18 @@ FEATURED_ITEM_PER_PAGE = 5
 def empty_response():
   return HttpResponse('[]', mimetype='application/json')
 
-def json_response(queryset):
-  return HttpResponse(serializers.serialize('json', queryset), mimetype='application/json')
+def items_response(items):
+  encoded = serializers.serialize('json', items)
+  decoded = json.loads(encoded)
+
+  for i, item in enumerate(items.all()):
+    item_metas = {}
+    for meta in item.metas.all():
+      item_metas[meta.key] = meta.value
+    decoded[i]['fields']['metas'] = item_metas
+  encoded = json.dumps(decoded)
+
+  return HttpResponse(encoded, mimetype='application/json')
 
 def common_context(store_slug):
   # Fetch all stores, current store and base categories of current store
@@ -94,7 +104,7 @@ def all_featured_items(request, featured_as, page=1):
   items = Item.objects.filter(featured=featured_as).order_by('name')
   items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
 
-  return json_response(items)
+  return items_response(items)
 
 def store_items(request, store_slug, category_id=None, keyword=None, page=1):
   items = items_for_store(store_slug).order_by('name')
@@ -114,22 +124,22 @@ def store_items(request, store_slug, category_id=None, keyword=None, page=1):
 
   items = limit_to_page(items, page, ITEM_PER_PAGE)
 
-  return json_response(items)
+  return items_response(items)
 
 def store_popular_items(request, store_slug, page=1):
   items = items_for_store(store_slug).order_by('-sold_number')
   items = limit_to_page(items, page, POPULAR_ITEM_PER_PAGE)
 
-  return json_response(items)
+  return items_response(items)
 
 def store_onsale_items(request, store_slug, page=1):
   items = items_for_store(store_slug).filter(on_sale=True).order_by('-sold_number')
   items = limit_to_page(items, page, ON_SALE_ITEM_PER_PAGE)
 
-  return json_response(items)
+  return items_response(items)
 
 def store_featured_items(request, store_slug, featured_as, page=1):
   items = items_for_store(store_slug).filter(featured=featured_as).order_by('name')
   items = limit_to_page(items, page, FEATURED_ITEM_PER_PAGE)
 
-  return json_response(items)
+  return items_response(items)
