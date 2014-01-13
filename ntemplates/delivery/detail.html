@@ -84,9 +84,12 @@
   <li class="item">
     <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
     <span>{{ quantity }} x </span>
-    <span>
-      <span>{{ item.name }}</span>
-    </span>
+    <span>{{ item.name }}</span>
+    {% if item.on_sale %}
+    <span> Sales Price: {{ item.sales_price }}</span>
+    {% else %}
+    <span> Price: {{ item.price }}</span>
+    {% endif %}
   </li>
   {% endfor %}
 </ol>
