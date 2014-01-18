@@ -44,7 +44,7 @@
           <select name="delivery_choices[{{ store.slug }}]">
           {% for option in store.delivery_options.all %}
           {% if option.in_effect %}
-          <option value="{{ option.id }}">{{ option.name }}</option>
+          <option value="{{ option.id }}">{{ option.display_name }}</option>
           {% endif %}
           {% endfor %}
           </select>
