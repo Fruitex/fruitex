@@ -38,6 +38,16 @@ class DeliveryOption(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_display_name(self, now=None):
+        now = now if now is not None else datetime.now()
+        start = datetime(now.year, now.month, now.day) + timedelta(minutes=self.start_time)
+        end = start + timedelta(minutes=self.time_interval)
+        return self.display_format\
+                    .replace('{start_date}', start.strftime(self.DATE_FORMAT))\
+                    .replace('{start_time}', start.strftime(self.TIME_FORMAT))\
+                    .replace('{end_date}', end.strftime(self.DATE_FORMAT))\
+                    .replace('{end_time}', end.strftime(self.TIME_FORMAT))
+
     def is_in_effect(self, now=None):
         now = now if now is not None else datetime.now()
         start = datetime(now.year, now.month, now.day) + timedelta(minutes=self.start_time)
@@ -58,9 +68,14 @@ class DeliveryOption(models.Model):
 
     # Delivery option lost effect one hour before the start time
     EFFECTIVE_THRESHOLD = 60
+    DATE_FORMAT = '%a %b %d'
+    TIME_FORMAT = '%H:%M'
 
     store = models.ForeignKey('Store', related_name='delivery_options')
     name = models.CharField(max_length=100)
+    display_format = models.CharField(max_length=256, default='{start_date} {start_time} ~ {end_time}')
+    display_name = property(get_display_name)
+
     # Start time: Number of minutes since the beginning of the day
     start_time = models.IntegerField()
     time_interval = models.IntegerField()
