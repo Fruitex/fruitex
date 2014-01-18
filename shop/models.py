@@ -38,11 +38,23 @@ class DeliveryOption(models.Model):
     def __unicode__(self):
         return self.name
 
-    def _is_in_effect(self):
-        now = datetime.now()
+    def is_in_effect(self, now=None):
+        now = now if now is not None else datetime.now()
         start = datetime(now.year, now.month, now.day) + timedelta(minutes=self.start_time)
         diff = start - now
-        return (((diff.days * 86400) + diff.seconds) / 60) > DeliveryOption.EFFECTIVE_THRESHOLD
+        return self.valid_for_weekday(now.weekday()) and (diff.days * 1440 + (diff.seconds / 60)) > DeliveryOption.EFFECTIVE_THRESHOLD
+
+    def valid_for_weekday(self, weekday):
+        switch = {
+            0: self.monday,
+            1: self.tuesday,
+            2: self.wednesday,
+            3: self.thursday,
+            4: self.friday,
+            5: self.saturday,
+            6: self.sunday,
+        }
+        return switch.get(weekday)
 
     # Delivery option lost effect one hour before the start time
     EFFECTIVE_THRESHOLD = 60
@@ -52,8 +64,17 @@ class DeliveryOption(models.Model):
     # Start time: Number of minutes since the beginning of the day
     start_time = models.IntegerField()
     time_interval = models.IntegerField()
+
+    monday = models.BooleanField(default=True)
+    tuesday = models.BooleanField(default=True)
+    wednesday = models.BooleanField(default=True)
+    thursday = models.BooleanField(default=True)
+    friday = models.BooleanField(default=True)
+    saturday = models.BooleanField(default=True)
+    sunday = models.BooleanField(default=True)
+
     cost = models.DecimalField(max_digits=16, decimal_places=2)
-    in_effect = property(_is_in_effect)
+    in_effect = property(is_in_effect)
 
 
 class Category(models.Model):

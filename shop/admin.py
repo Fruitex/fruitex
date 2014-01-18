@@ -23,9 +23,9 @@ class StoreCustomizationAdmin(admin.ModelAdmin):
 admin.site.register(StoreCustomization, StoreCustomizationAdmin)
 
 class DeliveryOptionAdmin(admin.ModelAdmin):
-  list_display = ['id', 'store', 'name', 'start_time', 'time_interval']
+  list_display = ['id', 'store', 'name', 'start_time', 'time_interval', 'cost']
   ordering = ['store', 'start_time']
-  list_filter = ['store']
+  list_filter = ['store', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 admin.site.register(DeliveryOption, DeliveryOptionAdmin)
 
