@@ -251,6 +251,19 @@ $(document).ready(function() {
     }, 'json');
   });
 
+  // Item quantity
+  $('.item-in-cart-quantity').on('input change', function() {
+    var quantity = parseInt($(this).val());
+    var max = $(this).data('max');
+    if (isNaN(quantity)) {
+      quantity = 0;
+    }
+    if (max > 0 && quantity > max) {
+      quantity = max;
+    }
+    $(this).val(quantity);
+  });
+
   if (isCartEmpty()) {
     $('.item-in-cart').remove();
     $('.cart-store-summary').remove();
