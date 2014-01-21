@@ -254,11 +254,12 @@ $(document).ready(function() {
   // Item quantity
   $('.item-in-cart-quantity').on('input change', function() {
     var quantity = parseInt($(this).val());
-    var max = $(this).data('max');
+    var max = $(this).spinner( "option", "max" );
     if (isNaN(quantity)) {
       quantity = 0;
     }
     if (max > 0 && quantity > max) {
+      alert('I\'m Sorry, but we can not carry more than ' + max + ' of this item per order. ');
       quantity = max;
     }
     $(this).val(quantity);
