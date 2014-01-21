@@ -243,7 +243,9 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
     for wrap in items:
       item = wrap['obj']
       quantity = wrap['quantity']
-      quantity = quantity if quantity < item.max_quantity_per_order else item.max_quantity_per_order
+      quantity = item.max_quantity_per_order if item.max_quantity_per_order > 0 and quantity > item.max_quantity_per_order else quantity
+      if quantity <= 0:
+        continue
 
       allow_sub = allow_sub_detail.get(item.id) == "on"
       unit_price = item.sales_price if item.on_sale else item.price
