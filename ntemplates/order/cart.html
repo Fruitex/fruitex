@@ -33,7 +33,7 @@
           <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label></div>
         </div>
         <div>
-          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" autocomplete="off">
+          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" data-max="{{ item.obj.max_quantity_per_order }}" autocomplete="off">
         </div>
         <div class="item-in-cart-price">$ </div>
       </div>
@@ -268,10 +268,14 @@ $(document).ready(function() {
     // Setup spinner actions and update quantity prices
     $('.item-in-cart-quantity').spinner({
       min: 0,
-      max: 100,
+      max: 20,
       step: 1,
     }).each(function(i, spinner) {
       spinner = $(spinner);
+      var max = spinner.data('max');
+      if (max > 0) {
+        spinner.spinner("option", "max", max);
+      }
       updateItemPriceTag(spinner.data('id'), spinner.val());
     }).on('spinstop', function (e) {
       updateQuantity($(this).data('id'), $(this).val());
