@@ -95,6 +95,7 @@ class Item(models.Model):
     tax_class = models.DecimalField(max_digits=3, decimal_places=2, choices=TAX_CLASSES, default=Decimal('0.0'))
     out_of_stock = models.BooleanField(default=False)
     on_sale = models.BooleanField(default=False)
+    max_quantity_per_order = models.IntegerField(default=0)
     featured = models.CharField(max_length=200, default='', blank=True)
     sold_number = models.IntegerField(editable=False, default=0)
     when_added = models.DateTimeField(auto_now_add=True)
