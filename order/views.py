@@ -242,16 +242,18 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
     order = get_order_for_store(store)
     for wrap in items:
       item = wrap['obj']
+      quantity = wrap['quantity']
+      quantity = quantity if quantity < item.max_quantity_per_order else item.max_quantity_per_order
 
       allow_sub = allow_sub_detail.get(item.id) == "on"
       unit_price = item.sales_price if item.on_sale else item.price
-      item_cost = unit_price * wrap['quantity']
+      item_cost = unit_price * quantity
       item_tax = item_cost * item.tax_class
 
       OrderItem.objects.create(
         order = order,
         item = item,
-        quantity = wrap['quantity'],
+        quantity = quantity,
         allow_sub = allow_sub,
         item_cost = item_cost,
         item_tax = item_tax,
