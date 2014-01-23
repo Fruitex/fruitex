@@ -62,7 +62,7 @@ class DeliveryWindow(models.Model):
     end = localtime(self.end)
     return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
 
-  DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+  DATETIME_FORMAT = '%a %b %d  %H:%M'
 
   store = models.ForeignKey('shop.Store', related_name='delivery_windows')
   start = models.DateTimeField()
