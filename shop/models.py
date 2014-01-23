@@ -38,6 +38,9 @@ class DeliveryOption(models.Model):
     def __unicode__(self):
         return self.name
 
+    def _get_weekday_availability(self):
+        return reduce(lambda a, d: a + (str(d + 1) if self.valid_for_weekday(d) else '-'), xrange(7), '')
+
     def get_display_name(self, now=None):
         now = now if now is not None else datetime.now()
         start = datetime(now.year, now.month, now.day) + timedelta(minutes=self.start_time)
@@ -87,6 +90,7 @@ class DeliveryOption(models.Model):
     friday = models.BooleanField(default=True)
     saturday = models.BooleanField(default=True)
     sunday = models.BooleanField(default=True)
+    weekday_availability = property(_get_weekday_availability)
 
     cost = models.DecimalField(max_digits=16, decimal_places=2)
     in_effect = property(is_in_effect)
