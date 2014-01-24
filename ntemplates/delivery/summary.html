@@ -7,6 +7,8 @@
 {% block content %}
 
 <h1>Delivery Windows</h1>
+{% for date, delivery_windows in delivery_windows_divided_by_days %}
+<h3>{{ date }}</h3>
 <ul>
   {% for delivery_window in delivery_windows %}
   <li>
@@ -29,6 +31,7 @@
   </li>
   {% endfor %}
 </ul>
+{% endfor %}
 
 {% endblock %}
 
