@@ -34,7 +34,7 @@ def items_response(items):
 def common_context(store_slug):
   # Fetch all stores, current store and base categories of current store
   try:
-    stores = Store.objects.all();
+    stores = Store.objects.order_by('display_order');
     store = stores.get(slug=store_slug);
     categories = store.categories.filter(parent__isnull=True).order_by('name')
   except ObjectDoesNotExist as e:

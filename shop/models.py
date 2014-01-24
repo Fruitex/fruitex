@@ -17,6 +17,7 @@ class Store(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
     address = models.TextField()
+    display_order = models.IntegerField(default=0)
 
 class StoreCustomization(models.Model):
     def __unicode__(self):

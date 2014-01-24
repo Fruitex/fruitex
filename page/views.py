@@ -4,7 +4,7 @@ from django.template import Context, loader
 from shop.models import Store
 
 def home(request):
-  stores = Store.objects.order_by('id')[:5]
+  stores = Store.objects.order_by('display_order')[:5]
 
   context = Context({
     'stores': stores,
