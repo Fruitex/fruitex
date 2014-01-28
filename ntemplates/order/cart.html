@@ -51,9 +51,12 @@
         </div>
       </div>
     {% endfor %}
+    <div class="cart-store-summary">
+      <label>Order Comment: {{ checkout_form.comment }}</label>{{ checkout_form.comment.errors }}
+    </div>
   </div>
   <div id="coupon-container">
-    <label>Coupon: </label>{{ checkout_form.coupon_code }}{{ checkout_form.coupon_code.errors }}
+    <label>Coupon: {{ checkout_form.coupon_code }}</label>{{ checkout_form.coupon_code.errors }}
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
