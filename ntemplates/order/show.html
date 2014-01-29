@@ -47,9 +47,6 @@
       <div class="order-confirm-store-summary">
         Delivery: {{ order.delivery_window }}
       </div>
-      <div class="order-confirm-store-summary">
-        Order Comment: {{ order.comment }}
-      </div>
     {% endfor %}
   </div>
   <table id='order-confirm-table'>
@@ -108,6 +105,14 @@
       </td>
       <td>
         {{ invoice.email }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Comment:
+      </td>
+      <td>
+        {{ invoice.orders.all.0.comment }}
       </td>
     </tr>
   </tbody>

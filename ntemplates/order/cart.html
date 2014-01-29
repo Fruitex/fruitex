@@ -51,9 +51,6 @@
         </div>
       </div>
     {% endfor %}
-    <div class="cart-store-summary">
-      <label>Order Comment: {{ checkout_form.comment }}</label>{{ checkout_form.comment.errors }}
-    </div>
   </div>
   <div id="coupon-container">
     <label>Coupon: {{ checkout_form.coupon_code }}</label>{{ checkout_form.coupon_code.errors }}
@@ -95,6 +92,12 @@
         <td>Post Code</td>
         <td>
           {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td>
+          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
         </td>
       </tr>
     </table>
