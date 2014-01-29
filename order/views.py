@@ -39,6 +39,7 @@ class CheckoutForm(forms.Form):
   postcode = forms.CharField(max_length=8, validators=[
     RegexValidator(regex=r'^[a-zA-Z]\d[a-zA-Z] {0,1}\d[a-zA-Z]\d$'),
   ])
+  comment = forms.CharField(required=False, max_length=512)
   coupon_code = forms.CharField(required=False, validators=[_validate_coupon_code])
 
 # Common operations
@@ -179,6 +180,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
   postcode = checkout_form.cleaned_data['postcode']
   phone = checkout_form.cleaned_data['phone']
   email = checkout_form.cleaned_data['email']
+  comment = checkout_form.cleaned_data['comment']
 
   # Invoice infos
   invoice_num = str(uuid.uuid4())
@@ -229,6 +231,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
       subtotal = Decimal(0),
       tax = Decimal(0),
       delivery_window = DeliveryWindow.objects.get_window(option, page_datetime),
+      comment = comment,
 
       # Meta
       invoice = invoice,
