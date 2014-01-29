@@ -39,7 +39,7 @@ class CheckoutForm(forms.Form):
   postcode = forms.CharField(max_length=8, validators=[
     RegexValidator(regex=r'^[a-zA-Z]\d[a-zA-Z] {0,1}\d[a-zA-Z]\d$'),
   ])
-  comment = forms.CharField(required=False, max_length=512)
+  comment = forms.CharField(required=False, widget=forms.Textarea)
   coupon_code = forms.CharField(required=False, validators=[_validate_coupon_code])
 
 # Common operations
