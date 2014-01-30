@@ -53,7 +53,7 @@
     {% endfor %}
   </div>
   <div id="coupon-container">
-    <label>Coupon: </label>{{ checkout_form.coupon_code }}{{ checkout_form.coupon_code.errors }}
+    <label>Coupon: {{ checkout_form.coupon_code }}</label>{{ checkout_form.coupon_code.errors }}
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
@@ -92,6 +92,12 @@
         <td>Post Code</td>
         <td>
           {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td>
+          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
         </td>
       </tr>
     </table>
