@@ -8,10 +8,9 @@ from django.conf import settings
 from django import forms
 from django.core.exceptions import ValidationError
 
-from paypal.standard.forms import PayPalPaymentsForm
 from querystring_parser import parser
 
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 import urllib
 import json
@@ -78,10 +77,7 @@ def cart_to_store_items(cart):
 
   return store_items
 
-# Views
-
-def view_cart(request):
-  def _validate_delivery_choices(delivery_choices):
+def validate_delivery_choices(delivery_choices):
     options = {}
     for (store_slug, option_id) in delivery_choices.items():
       option = DeliveryOption.objects.get(id=option_id)
@@ -90,37 +86,56 @@ def view_cart(request):
       options[option.store] = option
     return options
 
-  # Get store_items
+# Views
+
+def view_cart(request):
+
+  # Get cart
   cart = cart_from_request(request)
-  store_items = cart_to_store_items(cart)
+  error = None
 
   # If is a submit, pre validate the data
   if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
-    checkout_form = CheckoutForm(request.POST)
 
-    # Validate form
-    if checkout_form.is_valid():
-      post = parser.parse(request.POST.urlencode())
+    # Get cart options
+    post = parser.parse(request.POST.urlencode())
 
-      # Validate delivery choices
-      delivery_choices = post.get('delivery_choices')
-      page_datetime = datetime.fromtimestamp(post.get('datetime'))
-      delivery_options = _validate_delivery_choices(delivery_choices)
+    coupon_code = post.get('coupon_code')
+    page_datetime = datetime.fromtimestamp(post.get('datetime'))
+    allow_sub_detail = post.get('allow_sub_detail')
+    allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
 
-      allow_sub_detail = post.get('allow_sub_detail')
-      allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
+    # Validate delivery choices
+    delivery_choices = post.get('delivery_choices')
+    delivery_options = validate_delivery_choices(delivery_choices)
 
-      if delivery_options != False:
-        return place_order(store_items, checkout_form, delivery_options,
-                           allow_sub_detail, page_datetime)
-  else:
-    checkout_form = CheckoutForm()
+    if delivery_options != False:
+      request.session['checkout_cart'] = cart
+      request.session['checkout_delivery_choices'] = delivery_choices
+      request.session['checkout_allow_sub_detail'] = allow_sub_detail
+      request.session['checkout_coupon_code'] = coupon_code
+      request.session['checkout_page_datetime'] = page_datetime
+      return HttpResponseRedirect(reverse('order:checkout'))
+    else:
+      error = 'The delivery option you select is no longer valid'
 
+  store_items = cart_to_store_items(cart)
   template = loader.get_template('order/cart.html')
   context = RequestContext(request, {
     'store_items': store_items,
     'datetime': datetime.now(),
-    'checkout_form': checkout_form,
+    'error': error,
+  })
+  return HttpResponse(template.render(context))
+
+def checkout(request):
+  cart = request.session['checkout_cart']
+  store_items = cart_to_store_items(cart)
+
+  template = loader.get_template('order/checkout.html')
+  context = RequestContext(request, {
+    'store_items': store_items,
+    'datetime': datetime.now(),
   })
   return HttpResponse(template.render(context))
 
@@ -135,7 +150,7 @@ def show_invoice(request, id):
 
     # Setup paypal dict
     paypal_dict = {
-      "business": settings.PAYPAL_RECEIVER_EMAIL,
+      # "business": settings.PAYPAL_RECEIVER_EMAIL,
       "currency_code": "CAD",
       "amount": "%.2f" % invoice.total,
       "item_name": "Fruitex order #%d" % invoice.id,
@@ -147,7 +162,8 @@ def show_invoice(request, id):
     }
 
     # Create the Paypal form
-    form = PayPalPaymentsForm(initial=paypal_dict)
+    # form = PayPalPaymentsForm(initial=paypal_dict)
+    form = None
   else:
     form = None
 

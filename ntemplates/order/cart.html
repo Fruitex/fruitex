@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-<form id='checkout-form' action="{% url 'order:cart' %}" method="POST">
+<form id='cart-form' action="{% url 'order:cart' %}" method="POST">
 <div id='cart-wrapper'>
   <p id="cart-header">Your cart</p>
   <div id='cart-container'>
@@ -53,61 +53,17 @@
     {% endfor %}
   </div>
   <div id="coupon-container">
-    <label>Coupon: {{ checkout_form.coupon_code }}</label>{{ checkout_form.coupon_code.errors }}
+    <label>Coupon: <input id="cart-coupon-code" name="coupon_code" type="text"></label>
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
-  </div>
-</div>
-<div id='delivery-wrapper'>
-  <p id="delivery-header">Delivery Info</p>
-  <div id='delivery-container'>
-    {{ form.non_field_errors }}
-    <table id="delivery-container-table">
-      <tr>
-        <td>Name</td>
-        <td>
-          {{ checkout_form.name }}{{ checkout_form.name.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Phone</td>
-        <td>
-          {{ checkout_form.phone }}{{ checkout_form.phone.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Email</td>
-        <td>
-          {{ checkout_form.email }}{{ checkout_form.email.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Address</td>
-        <td>
-          {{ checkout_form.address }}{{ checkout_form.address.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Post Code</td>
-        <td>
-          {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Comment</td>
-        <td>
-          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
-        </td>
-      </tr>
-    </table>
   </div>
 </div>
 <input type="hidden" name="datetime" id="datetime"/>
 {% csrf_token %}
 </form>
 <div id='cart-footer'>
- <button id="checkout-button">CHECK OUT</button>
+ <button class="cart-button" id="cart-continue-button">CONTINUE</button>
 </div>
 {% endblock %}
 
@@ -218,24 +174,13 @@ $(document).ready(function() {
     return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
   };
 
-  var isValidUserInput = function() {
-    var v = InputValidator;
-    v.init();
-    return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
-        && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
-        && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"))
-        && v.email($("input[name=email]"));
-  };
-
   // Checkout button
-  $("#checkout-button").click(function() {
+  $("#cart-continue-button").click(function() {
     if (coupon == null) {
       $('#id_coupon_code').val('');
     }
-    if (isValidUserInput()) {
-      $('#datetime').val(datetime);
-      $("#checkout-form").submit();
-    }
+    $('#datetime').val(datetime);
+    $("#cart-form").submit();
   });
 
   // Coupon input

@@ -165,7 +165,7 @@
   margin-left: 5px;
 }
 
-#checkout-button {
+.cart-button {
     background: rgb(153,235,65);
     width: 110px;
     height: 34px;
@@ -178,6 +178,6 @@
     font-weight: 700;
     outline: none;
 }
-#checkout-button:hover {
+.cart-button:hover {
     opacity: 1;
 }
