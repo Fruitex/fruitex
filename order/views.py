@@ -3,22 +3,18 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.core.validators import RegexValidator
 from django.conf import settings
-from django import forms
-from django.core.exceptions import ValidationError
 
 from querystring_parser import parser
 
-from datetime import datetime
 from decimal import Decimal
+from datetime import datetime
 import urllib
 import json
 import uuid
 
 from shop.models import Item, DeliveryOption
-from order.models import Order, OrderItem, Invoice, Coupon, DeliveryWindow
-
+from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow
 from order.forms import CheckoutForm
 
 # Common operations
@@ -81,6 +77,8 @@ def view_cart(request):
     post = parser.parse(request.POST.urlencode())
 
     coupon_code = post.get('coupon_code')
+    coupon = Coupon.objects.get_valid_coupon(coupon_code)
+
     page_datetime = datetime.fromtimestamp(post.get('datetime'))
     allow_sub_detail = post.get('allow_sub_detail')
     allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
@@ -89,15 +87,21 @@ def view_cart(request):
     delivery_choices = post.get('delivery_choices')
     delivery_options = validate_delivery_choices(delivery_choices)
 
-    if delivery_options != False:
-      request.session['checkout_cart'] = cart
-      request.session['checkout_delivery_choices'] = delivery_choices
-      request.session['checkout_allow_sub_detail'] = allow_sub_detail
-      request.session['checkout_coupon_code'] = coupon_code
-      request.session['checkout_page_datetime'] = page_datetime
-      return HttpResponseRedirect(reverse('order:checkout'))
-    else:
+    if delivery_options == False:
       error = 'The delivery option you select is no longer valid'
+    elif len(coupon_code) > 0 and coupon == False:
+      error = 'The coupon you have entered is no longer valid'
+    else:
+      request.session['checkout_package'] = {
+        'cart': cart,
+        'delivery_choices': delivery_choices,
+        'allow_sub_detail': allow_sub_detail,
+        'coupon_code': coupon_code,
+        'page_datetime': page_datetime,
+      }
+      response = HttpResponseRedirect(reverse('order:checkout'))
+      response.set_cookie('cart', '')
+      return response
 
   store_items = cart_to_store_items(cart)
   template = loader.get_template('order/cart.html')
@@ -109,13 +113,50 @@ def view_cart(request):
   return HttpResponse(template.render(context))
 
 def checkout(request):
-  cart = request.session['checkout_cart']
+  checkout_package = request.session['checkout_package']
+  cart = checkout_package['cart'];
+  delivery_choices = checkout_package['delivery_choices'];
+  allow_sub_detail = checkout_package['allow_sub_detail'];
+  coupon_code = checkout_package['coupon_code'];
+  page_datetime = checkout_package['page_datetime'];
+
   store_items = cart_to_store_items(cart)
+  coupon = Coupon.objects.get_valid_coupon(coupon_code)
+  delivery_options = validate_delivery_choices(delivery_choices)
+
+  if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
+    checkout_form = CheckoutForm(request.POST)
+
+    if not checkout_form.is_valid():
+      pass
+    elif delivery_options == False:
+      error = 'The delivery option you select is no longer valid'
+      return HttpResponseRedirect(reverse('shop:to_default'))
+    elif len(coupon_code) > 0 and coupon == False:
+      error = 'The coupon you have entered is no longer valid'
+      return HttpResponseRedirect(reverse('shop:to_default'))
+    else:
+      invoice = create_invoice(
+        store_items,
+        checkout_form,
+        delivery_options,
+        allow_sub_detail,
+        page_datetime,
+        coupon,
+      )
+      return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+
+  else:
+    checkout_form = CheckoutForm();
 
   template = loader.get_template('order/checkout.html')
   context = RequestContext(request, {
     'store_items': store_items,
+    'delivery_options': delivery_options,
+    'allow_sub_detail': allow_sub_detail,
     'datetime': datetime.now(),
+    'coupon_code': coupon_code,
+    'checkout_form': checkout_form,
   })
   return HttpResponse(template.render(context))
 
@@ -126,23 +167,7 @@ def show_invoice(request, id):
   invoice = Invoice.objects.get(id=id)
 
   if invoice.status == invoice.STATUS_PENDING:
-    custom = None if invoice.coupon is None else {'coupon': invoice.coupon.code}
-
-    # Setup paypal dict
-    paypal_dict = {
-      # "business": settings.PAYPAL_RECEIVER_EMAIL,
-      "currency_code": "CAD",
-      "amount": "%.2f" % invoice.total,
-      "item_name": "Fruitex order #%d" % invoice.id,
-      "invoice": invoice.invoice_num,
-      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
-      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
-      "custom": json.dumps(custom)
-    }
-
     # Create the Paypal form
-    # form = PayPalPaymentsForm(initial=paypal_dict)
     form = None
   else:
     form = None
@@ -165,10 +190,9 @@ def coupon(request, code):
     return empty_response()
   return json_response([coupon])
 
-
 # Invoice and Order process
 
-def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime):
+def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime, coupon):
   # Gether info from POST to setup the order
   # Customer infos
   customer_name = checkout_form.cleaned_data['name']
@@ -182,14 +206,14 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
   invoice_num = str(uuid.uuid4())
   delivery = Decimal('0.99')
   discount = Decimal(0)
-  coupon_code = checkout_form.cleaned_data['coupon_code']
 
-  # Get coupon
-  coupon = None
-  if coupon_code is not None and len(coupon_code) > 0:
-    coupon = Coupon.objects.get_valid_coupon(coupon_code)
+  # Apply coupon
+  if isinstance(coupon, Coupon):
     discount = coupon.value
+    coupon.used = True;
     # TODO: handle percentage coupon
+  else:
+    coupon = None
 
   # Create invoice
   invoice = Invoice.objects.create(
@@ -271,7 +295,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
     order.save()
   invoice.save()
 
-  response = HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
-  response.set_cookie('cart', '')
+  if coupon is not None:
+    coupon.save()
 
-  return response
+  return invoice

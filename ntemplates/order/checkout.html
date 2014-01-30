@@ -1,0 +1,268 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load collection_extra %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/itemlist.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/input_validator.css' %}"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'javascript/lib/underscore.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/lib/jquery.tmpl.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id='cart-wrapper'>
+  <p id="cart-header">Your Order</p>
+  <div id='cart-container'>
+    {% for store, items in store_items.items %}
+      {% for item in items %}
+      <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
+        <div>
+          <img class="item-in-cart-img" src="{% static 'store_imgs/' %}{{ item.obj.sku }}.JPG">
+        </div>
+        <div class="item-info-left">
+          <div class="item-in-cart-name">{{ item.obj.name }}</div>
+          <div class="item-in-cart-store">From: {{ item.obj.category.store.name }}</div>
+          <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" disabled {% if allow_sub_detail|dict_val:item.obj.id %} checked="" {% endif %}>Allow substitution</label></div>
+        </div>
+        <div>
+          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" data-max="{{ item.obj.max_quantity_per_order }}" autocomplete="off" disabled>
+        </div>
+        <div class="item-in-cart-price">$ </div>
+      </div>
+      {% endfor %}
+      <div class="cart-store-summary">
+        <div>Store: {{ store.name }}</div>
+        <div>Delivery: {{ delivery_options|dict_val:store }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <div id="coupon-container">
+    <label>Coupon: <input id="id_coupon_code" name="coupon_code" type="text" value="{{ coupon_code }}" disabled></label>
+    <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
+  </div>
+  <div id='items-in-cart-summary-container'>
+  </div>
+</div>
+<form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
+<div id='delivery-wrapper'>
+  <p id="delivery-header">Delivery Info</p>
+  <div id='delivery-container'>
+    {{ form.non_field_errors }}
+    <table id="delivery-container-table">
+      <tr>
+        <td>Name</td>
+        <td>
+          {{ checkout_form.name }}{{ checkout_form.name.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Phone</td>
+        <td>
+          {{ checkout_form.phone }}{{ checkout_form.phone.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>
+          {{ checkout_form.email }}{{ checkout_form.email.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+          {{ checkout_form.address }}{{ checkout_form.address.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Post Code</td>
+        <td>
+          {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td>
+          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<input type="hidden" name="datetime" id="datetime"/>
+{% csrf_token %}
+</form>
+<div id='cart-footer'>
+ <button class="cart-button" id="checkout-button">CHECKOUT</button>
+</div>
+{% endblock %}
+
+{% block page_script %}
+<script type="text/template" id="summary_template">
+  <table id="items-in-cart-summary-table">
+    <tbody>
+      <tr id="summary-sum">
+        <td class="summary-label">Subtotal : </td>
+        <td class="summary-value">$ ${subtotal.toFixed(2)}</td>
+      </tr>
+      <tr id="summary-tax">
+        <td class="summary-label">HST : </td>
+        <td class="summary-value">$ ${hst.toFixed(2)}</td>
+      </tr>
+      <tr id="summary-delivery">
+        <td class="summary-label">Delivery : </td>
+        <td class="summary-value">$ ${delivery.toFixed(2)}</td>
+      </tr>
+      {% templatetag openvariable %}if discount > 0.0 {% templatetag closevariable %}
+      <tr id="summary-discount">
+        <td class="summary-label">Discount : </td>
+        <td class="summary-value">$ ${discount.toFixed(2)}</td>
+      </tr>
+      {% templatetag openvariable %}/if{% templatetag closevariable %}
+      <tr id="summary-total">
+        <td class="summary-label">Total : </td>
+        <td class="summary-value">$ ${total.toFixed(2)}</td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+  // Gather items data
+  var items = _.object(_.map($('.item-in-cart'), function(el) {
+    return [$(el).data('id'), $(el).data('json')];
+  }));
+  var datetime = {{ datetime|date:"U" }};
+
+  // Defualt no coupon
+  var coupon = null;
+
+  var checkCoupon = function () {
+    var tick = $('#coupon-container .tick');
+    var code = $('#id_coupon_code').val();
+    var url_template = '{% url "order:coupon" "coupon_code" %}';
+
+    $.get(url_template.replace('coupon_code', code), function(data) {
+      if (data.length > 0) {
+        coupon = data[0].fields;
+        updateSummary();
+        tick.removeClass('hidden');
+      } else {
+        coupon = null;
+        updateSummary();
+        tick.addClass('hidden');
+      }
+    }, 'json');
+  };
+
+  var updateSummary = function() {
+    var summary_template = $.template(null,$('#summary_template').html());
+    var subtotal = 0.0;
+    var hst_total = 0.0;
+    var delivery = 0.99;
+    var discount = 0.0;
+
+    // Calculate subtotal for all items
+    $('.item-in-cart').each(function(i, el) {
+      var id = $(el).data('id');
+      var item = items[id];
+      var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
+      var quantity = $(el).find('.item-in-cart-quantity').val();
+      var tax_class = parseFloat(item.fields.tax_class)
+      var price = parseFloat(unit_price) * quantity;
+      var hst = price * tax_class;
+      subtotal += price;
+      hst_total += hst;
+    });
+
+    // Calculate coupon discount
+    // TODO: handle percentage coupon
+    if (coupon != null) {
+      discount = parseFloat(coupon.value);
+    }
+
+    var html = $.tmpl(summary_template,{
+      'subtotal':subtotal,
+      'hst':hst_total,
+      'delivery':delivery,
+      'discount':discount,
+      'total':subtotal + hst_total + delivery - discount
+    });
+
+    $('#items-in-cart-summary-container').html(html);
+  };
+
+  var updateCart = function() {
+    var item_ids = [];
+    $(".item-in-cart-quantity").each(function(i, spinner) {
+      spinner = $(spinner);
+      for (var i = 0; i < spinner.val(); i++) {
+        item_ids.push(parseInt(spinner.data('id')));
+      }
+    });
+    $.cookie('cart', JSON.stringify(item_ids), { path: '/' });
+  };
+
+  var updateItemPriceTag = function(id, quantity) {
+    var item = items[id];
+    var unit_price = item.fields.on_sale ? item.fields.sales_price : item.fields.price
+    var price = parseFloat(unit_price) * quantity;
+
+    var item_price_el = $('#item-' + id).find('.item-in-cart-price');
+    item_price_el.text('$ ' + price.toFixed(2));
+  };
+
+  var updateQuantity = function(id, quantity) {
+    updateItemPriceTag(id, quantity);
+    updateSummary();
+    updateCart();
+  };
+
+  var isValidUserInput = function() {
+    var v = InputValidator;
+    v.init();
+    return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
+        && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
+        && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"))
+        && v.email($("input[name=email]"));
+  };
+
+  // Checkout button
+  $("#checkout-button").click(function() {
+    if (isValidUserInput()) {
+      $('#datetime').val(datetime);
+      $("#checkout-form").submit();
+    }
+  });
+
+  // Item quantity
+  $('.item-in-cart-quantity').on('input change', function() {
+    var quantity = parseInt($(this).val());
+    var max = $(this).spinner( "option", "max" );
+    if (isNaN(quantity)) {
+      quantity = 0;
+    }
+    if (max > 0 && quantity > max) {
+      alert('I\'m Sorry, but we can not carry more than ' + max + ' of this item per order. ');
+      quantity = max;
+    }
+    $(this).val(quantity);
+  });
+
+  $('.item-in-cart-quantity').spinner().each(function(i, spinner) {
+    spinner = $(spinner);
+    updateItemPriceTag(spinner.data('id'), spinner.val());
+    spinner.spinner('disable');
+  });
+
+  checkCoupon();
+});
+</script>
+{% endblock %}
