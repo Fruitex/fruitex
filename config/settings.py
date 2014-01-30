@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'compressor',
     'south',
     # Apps
+    'fruitex',
     'shop',
     'order',
     'account',
