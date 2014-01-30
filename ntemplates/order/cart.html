@@ -177,16 +177,16 @@ $(document).ready(function() {
   // Checkout button
   $("#cart-continue-button").click(function() {
     if (coupon == null) {
-      $('#id_coupon_code').val('');
+      $('#cart-coupon-code').val('');
     }
     $('#datetime').val(datetime);
     $("#cart-form").submit();
   });
 
   // Coupon input
-  $('#id_coupon_code').keyup(function () {
+  $('#cart-coupon-code').keyup(function () {
     var tick = $('#coupon-container .tick');
-    var code = $('#id_coupon_code').val();
+    var code = $('#cart-coupon-code').val();
     var url_template = '{% url "order:coupon" "coupon_code" %}';
 
     $.get(url_template.replace('coupon_code', code), function(data) {
