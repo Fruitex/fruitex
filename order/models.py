@@ -17,7 +17,7 @@ class Invoice(models.Model):
   PAYMENT_METHODS_SQUARE = 'SQ'
   PAYMENT_METHODS = (
     (PAYMENT_METHODS_PAYPAL, 'Paypal'),
-    (PAYMENT_METHODS_SQUARE, 'On delivery (Square)'),
+    (PAYMENT_METHODS_SQUARE, 'Square (pay on delivery)'),
   )
 
   # Status
@@ -25,11 +25,13 @@ class Invoice(models.Model):
   STATUS_PAID = 'PAID'
   STATUS_FLAGGED = 'FLAG'
   STATUS_CANCELLED = 'CANC'
+  STATUS_PAY_ON_DELIVERY = 'POD'
   STATUSES = (
     (STATUS_PENDING, 'Pending'),
     (STATUS_PAID, 'Paid'),
     (STATUS_FLAGGED, 'Flagged'),
     (STATUS_CANCELLED, 'Cancelled'),
+    (STATUS_PAY_ON_DELIVERY, 'Pay on Delivery')
   )
 
   invoice_num = models.CharField(max_length=64, unique=True)
