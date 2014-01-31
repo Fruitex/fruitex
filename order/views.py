@@ -1,9 +1,7 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from querystring_parser import parser
 
@@ -175,20 +173,11 @@ def checkout(request):
 
 def show_invoice(request, id):
   template = loader.get_template('order/show.html')
-
   invoice = Invoice.objects.get(id=id)
-
-  if invoice.status == invoice.STATUS_PENDING:
-    # Create the Paypal form
-    form = None
-  else:
-    form = None
 
   # Setup context and render
   context = Context({
     'invoice': invoice,
-    'form': form,
-    'sandbox': settings.DEBUG,
   })
 
   return HttpResponse(template.render(context))

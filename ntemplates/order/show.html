@@ -53,12 +53,20 @@
     <tbody>
     <tr>
       <td>
+        Status:
+      </td>
+      <td>
+        {{ invoice.get_status_display }}
+      </td>
+    </tr>
+<!--     <tr>
+      <td>
         Delivery Fee:
       </td>
       <td>
         ${{ invoice.delivery|floatformat:2 }}
       </td>
-    </tr>
+    </tr> -->
     <tr>
       <td>
         Total Cost (Tax Inc.):
