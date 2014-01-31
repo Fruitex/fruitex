@@ -12,14 +12,6 @@ class Invoice(models.Model):
   def _get_total(self):
     return self.subtotal + self.tax + self.delivery - self.discount;
 
-  # Payment methods
-  PAYMENT_METHODS_PAYPAL = 'PP'
-  PAYMENT_METHODS_SQUARE = 'SQ'
-  PAYMENT_METHODS = (
-    (PAYMENT_METHODS_PAYPAL, 'Paypal'),
-    (PAYMENT_METHODS_SQUARE, 'Square (pay on delivery)'),
-  )
-
   # Status
   STATUS_PENDING = 'PEND'
   STATUS_PAID = 'PAID'
@@ -35,7 +27,6 @@ class Invoice(models.Model):
   )
 
   invoice_num = models.CharField(max_length=64, unique=True)
-  payment_method = models.CharField(max_length=2, choices=PAYMENT_METHODS, default=PAYMENT_METHODS_PAYPAL)
   status = models.CharField(max_length=4, choices=STATUSES)
   payer = models.CharField(max_length=256, blank=True)
   when_created = models.DateTimeField(auto_now_add=True)
@@ -56,6 +47,40 @@ class Invoice(models.Model):
   phone = models.CharField(max_length=16)
   email = models.EmailField(max_length=256)
   user = models.ForeignKey('auth.User', blank=True, null=True, related_name='invoices', on_delete=models.SET_NULL)
+
+class Payment(models.Model):
+  def __unicode__(self):
+    return str(self.id)
+
+  # Payment methods
+  METHODS_PAYPAL = 'PP'
+  METHODS_SQUARE = 'SQ'
+  METHODS = (
+    (METHODS_PAYPAL, 'Paypal'),
+    (METHODS_SQUARE, 'Square (pay on delivery)'),
+  )
+
+  # Payment status
+  STATUS_CREATED = 'CREA'
+  STATUS_PAID = 'PAID'
+  STATUS_COMPLETED = 'COMP'
+  STATUS_CANCELLED = 'CANC'
+  STATUSES = (
+    (STATUS_CREATED, 'Created'),
+    (STATUS_PAID, 'Paid'),
+    (STATUS_COMPLETED, 'Completed'),
+    (STATUS_CANCELLED, 'Cancelled'),
+  )
+
+  invoice = models.ForeignKey('Invoice', related_name='payments')
+  method = models.CharField(max_length=2, choices=METHODS)
+  status = models.CharField(max_length=4, choices=STATUSES, default=STATUS_CREATED)
+  amount = models.DecimalField(max_digits=16, decimal_places=2)
+  raw = models.TextField(blank=True)
+  when_created = models.DateTimeField(auto_now_add=True)
+  when_updated = models.DateTimeField(auto_now=True)
+
+  objects = managers.PaymentManager()
 
 
 class DeliveryWindow(models.Model):

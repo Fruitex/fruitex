@@ -2,8 +2,21 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import make_aware, get_default_timezone
 
+import json
 import datetime
 from datetime import date
+from decimal import Decimal
+
+class PaymentManager(models.Manager):
+  def create_paypal_payment(self, invoice, raw):
+    amount = reduce(lambda x, y: x + Decimal(y['amount']['total']), raw['transactions'], Decimal('0'))
+    payment = self.create(
+      invoice = invoice,
+      method = 'PP',
+      amount = amount,
+      raw = json.dumps(raw.to_dict()),
+    )
+    return payment
 
 class CouponManager(models.Manager):
   def get_valid_coupon(self, coupon_code):
