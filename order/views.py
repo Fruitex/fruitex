@@ -14,7 +14,7 @@ import json
 import uuid
 
 from shop.models import Item, DeliveryOption
-from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow
+from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow, Payment
 from order.forms import CheckoutForm
 from order.paypal import create_raw_payment_for_invoice
 
@@ -149,7 +149,11 @@ def checkout(request):
         'return_url': request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
         'cancel_url': request.build_absolute_uri(reverse('shop:to_default')),
       })
-      return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+      if raw_payment is None:
+        error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
+      else:
+        payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
+        return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
   else:
     checkout_form = CheckoutForm();
