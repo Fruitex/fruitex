@@ -45,7 +45,8 @@
       </div>
       {% endfor %}
       <div class="order-confirm-store-summary">
-        Delivery: {{ order.delivery_window }}
+        <div>Delivery: {{ order.delivery_window }}</div>
+        <div>Status: {{ order.get_status_display }}</div>
       </div>
     {% endfor %}
   </div>
@@ -53,7 +54,7 @@
     <tbody>
     <tr>
       <td>
-        Status:
+        Payment Status:
       </td>
       <td>
         {{ invoice.get_status_display }}
