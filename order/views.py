@@ -16,6 +16,7 @@ import uuid
 from shop.models import Item, DeliveryOption
 from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow
 from order.forms import CheckoutForm
+from order.paypal import create_payment_for_invoice
 
 # Common operations
 
@@ -144,6 +145,10 @@ def checkout(request):
         page_datetime,
         coupon,
       )
+      payment = create_payment_for_invoice(invoice, {
+        'return_url': request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
+        'cancel_url': request.build_absolute_uri(reverse('shop:to_default')),
+      })
       return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
   else:
