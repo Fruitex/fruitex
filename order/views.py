@@ -7,7 +7,7 @@ from django.conf import settings
 
 from querystring_parser import parser
 
-from decimal import Decimal
+from decimal import Decimal, getcontext
 from datetime import datetime
 import urllib
 import json
@@ -272,8 +272,8 @@ def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detai
 
       allow_sub = allow_sub_detail.get(item.id) == "on"
       unit_price = item.sales_price if item.on_sale else item.price
-      item_cost = unit_price * quantity
-      item_tax = item_cost * item.tax_class
+      item_cost = (unit_price * quantity).quantize(Decimal('.01'))
+      item_tax = (item_cost * item.tax_class).quantize(Decimal('.01'))
 
       OrderItem.objects.create(
         order = order,
