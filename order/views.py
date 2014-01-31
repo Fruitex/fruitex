@@ -191,10 +191,7 @@ def payment_paypal_execute(request, id):
   payments = invoice.payments.all()
   for payment in payments:
     if paypal.execute_payment(payment.raw, payer_id):
-      payment.status = Payment.STATUS_COMPLETED
-      payment.save()
-      invoice.status = Invoice.STATUS_PAID
-      invoice.save()
+      payment.set_status(Payment.STATUS_COMPLETED)
       return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
   return HttpResponse('Failed to execute your payment. Please contact us for help.')
 
@@ -203,10 +200,7 @@ def payment_paypal_cancel(request, id):
   invoice = Invoice.objects.get(id=id)
   payments = invoice.payments.all()
   for payment in payments:
-    payment.status = Payment.STATUS_CANCELLED
-    payment.save()
-    invoice.status = Invoice.STATUS_CANCELLED
-    invoice.save()
+    payment.set_status(Payment.STATUS_CANCELLED)
   return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
 # API

@@ -12,6 +12,14 @@ class Invoice(models.Model):
   def _get_total(self):
     return self.subtotal + self.tax + self.delivery - self.discount;
 
+  def set_status(self, status):
+    if status == self.STATUS_PAID or status == self.STATUS_FLAGGED or status == self.STATUS_PAY_ON_DELIVERY:
+      for order in self.orders.all():
+        order.status = Order.STATUS_WAITING
+        order.save()
+    self.status = status
+    self.save()
+
   # Status
   STATUS_PENDING = 'PEND'
   STATUS_PAID = 'PAID'
@@ -51,6 +59,14 @@ class Invoice(models.Model):
 class Payment(models.Model):
   def __unicode__(self):
     return str(self.id)
+
+  def set_status(self, status):
+    if status == self.STATUS_COMPLETED:
+      self.invoice.set_status(Invoice.STATUS_PAID)
+    if status == self.STATUS_CANCELLED:
+      self.invoice.set_status(Invoice.STATUS_CANCELLED)
+    self.status = status
+    self.save()
 
   # Payment methods
   METHODS_PAYPAL = 'PP'
