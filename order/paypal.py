@@ -16,7 +16,7 @@ def bootstrap():
     # Config with settings if no env var specified
     paypalrestsdk.configure(settings.PAYPAL_CONFIG)
 
-def create_payment_for_invoice(invoice, options):
+def create_raw_payment_for_invoice(invoice, options):
   return_url = options.get('return_url')
   cancel_url = options.get('cancel_url')
 
