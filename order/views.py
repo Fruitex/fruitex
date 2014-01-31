@@ -190,7 +190,11 @@ def payment_paypal_execute(request, id):
   payer_id = request.GET['PayerID']
   payments = invoice.payments.all()
   for payment in payments:
-    if paypal.execute_payment(payment.raw, payer_id):
+    if payment.status == Payment.STATUS_COMPLETED:
+      continue
+    raw_payment = paypal.execute_payment(payment.raw, payer_id)
+    if raw_payment is not None:
+      payment.raw = json.dumps(raw_payment.to_dict())
       payment.set_status(Payment.STATUS_COMPLETED)
       return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
   return HttpResponse('Failed to execute your payment. Please contact us for help.')

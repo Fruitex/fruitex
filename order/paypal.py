@@ -58,11 +58,12 @@ def execute_payment(raw_payment, payer_id):
   raw_payment = json.loads(raw_payment)
   payment_id = raw_payment.get('id')
   if payment_id is None or payer_id is None:
-    return False
+    return None
 
   payment = Payment.find(payment_id)
-  result = payment.execute({
+  if not payment.execute({
     'payer_id': payer_id,
-  })
-  return result
+  }):
+    return None
+  return payment
 
