@@ -114,6 +114,7 @@ def view_cart(request):
   return HttpResponse(template.render(context))
 
 def checkout(request):
+  error = None
   checkout_package = request.session['checkout_package']
   cart = checkout_package['cart'];
   delivery_choices = checkout_package['delivery_choices'];
@@ -146,14 +147,14 @@ def checkout(request):
         coupon,
       )
       raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
-        'return_url': request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
-        'cancel_url': request.build_absolute_uri(reverse('shop:to_default')),
+        'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
+        'cancel_url': request.build_absolute_uri(reverse('order:payment_paypal_cancel', kwargs={'id': invoice.id})),
       })
       if raw_payment is None:
         error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
       else:
-        Payment.objects.create_paypal_payment(invoice, raw_payment)
-        redirect_url = paypal.get_redirect_url(raw_payment, reverse('shop:to_default'))
+        payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
+        redirect_url = paypal.get_redirect_url(payment.raw, reverse('shop:to_default'))
 
         return HttpResponseRedirect(redirect_url)
 
@@ -172,7 +173,6 @@ def checkout(request):
   })
   return HttpResponse(template.render(context))
 
-@csrf_exempt
 def show_invoice(request, id):
   template = loader.get_template('order/show.html')
 
@@ -193,6 +193,24 @@ def show_invoice(request, id):
 
   return HttpResponse(template.render(context))
 
+# PayPal
+
+def payment_paypal_execute(request, id):
+  id = int(id)
+  invoice = Invoice.objects.get(id=id)
+  payer_id = request.GET['PayerID']
+  payments = invoice.payments.all()
+  for payment in payments:
+    if paypal.execute_payment(payment.raw, payer_id):
+      payment.status = Payment.STATUS_COMPLETED
+      payment.invoice.status = Invoice.STATUS_PAID
+      payment.save()
+      payment.invoice.save()
+      return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+  return HttpResponse('Payment failed')
+
+def payment_paypal_cancel(request, id):
+  return HttpResponse('Payment canceled')
 
 # API
 

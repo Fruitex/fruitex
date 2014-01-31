@@ -62,12 +62,10 @@ class Payment(models.Model):
 
   # Payment status
   STATUS_CREATED = 'CREA'
-  STATUS_PAID = 'PAID'
   STATUS_COMPLETED = 'COMP'
   STATUS_CANCELLED = 'CANC'
   STATUSES = (
     (STATUS_CREATED, 'Created'),
-    (STATUS_PAID, 'Paid'),
     (STATUS_COMPLETED, 'Completed'),
     (STATUS_CANCELLED, 'Cancelled'),
   )

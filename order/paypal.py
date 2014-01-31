@@ -1,8 +1,9 @@
 from django.conf import settings
 
-import paypalrestsdk
 import os
+import json
 
+import paypalrestsdk
 from paypalrestsdk import Payment
 
 def bootstrap():
@@ -50,5 +51,18 @@ def create_raw_payment_for_invoice(invoice, options):
   return payment
 
 def get_redirect_url(raw_payment, default=None):
-  print raw_payment['links']
+  raw_payment = json.loads(raw_payment)
   return reduce(lambda x, y: y['href'] if y['rel'] == 'approval_url' else x, raw_payment['links'], default)
+
+def execute_payment(raw_payment, payer_id):
+  raw_payment = json.loads(raw_payment)
+  payment_id = raw_payment.get('id')
+  if payment_id is None or payer_id is None:
+    return False
+
+  payment = Payment.find(payment_id)
+  result = payment.execute({
+    'payer_id': payer_id,
+  })
+  return result
+
