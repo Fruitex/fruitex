@@ -48,3 +48,7 @@ def create_raw_payment_for_invoice(invoice, options):
     return None
 
   return payment
+
+def get_redirect_url(raw_payment, default=None):
+  print raw_payment['links']
+  return reduce(lambda x, y: y['href'] if y['rel'] == 'approval_url' else x, raw_payment['links'], default)

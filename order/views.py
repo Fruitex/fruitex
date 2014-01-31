@@ -7,7 +7,7 @@ from django.conf import settings
 
 from querystring_parser import parser
 
-from decimal import Decimal, getcontext
+from decimal import Decimal
 from datetime import datetime
 import urllib
 import json
@@ -16,7 +16,7 @@ import uuid
 from shop.models import Item, DeliveryOption
 from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow, Payment
 from order.forms import CheckoutForm
-from order.paypal import create_raw_payment_for_invoice
+from order import paypal
 
 # Common operations
 
@@ -145,15 +145,17 @@ def checkout(request):
         page_datetime,
         coupon,
       )
-      raw_payment = create_raw_payment_for_invoice(invoice, {
+      raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
         'return_url': request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
         'cancel_url': request.build_absolute_uri(reverse('shop:to_default')),
       })
       if raw_payment is None:
         error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
       else:
-        payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
-        return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+        Payment.objects.create_paypal_payment(invoice, raw_payment)
+        redirect_url = paypal.get_redirect_url(raw_payment, reverse('shop:to_default'))
+
+        return HttpResponseRedirect(redirect_url)
 
   else:
     checkout_form = CheckoutForm();
@@ -166,6 +168,7 @@ def checkout(request):
     'datetime': datetime.now(),
     'coupon_code': coupon_code,
     'checkout_form': checkout_form,
+    'error': error,
   })
   return HttpResponse(template.render(context))
 
