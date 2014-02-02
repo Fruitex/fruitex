@@ -58,7 +58,6 @@ class Migration(SchemaMigration):
             ('subtotal', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
             ('tax', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
             ('delivery_window', self.gf('django.db.models.fields.related.ForeignKey')(related_name='orders', on_delete=models.PROTECT, to=orm['order.DeliveryWindow'])),
-            ('comment', self.gf('django.db.models.fields.TextField')()),
             ('invoice', self.gf('django.db.models.fields.related.ForeignKey')(related_name='orders', on_delete=models.PROTECT, to=orm['order.Invoice'])),
             ('status', self.gf('django.db.models.fields.CharField')(max_length=4)),
             ('when_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
@@ -171,7 +170,6 @@ class Migration(SchemaMigration):
         },
         u'order.order': {
             'Meta': {'object_name': 'Order'},
-            'comment': ('django.db.models.fields.TextField', [], {}),
             'delivery_window': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'orders'", 'on_delete': 'models.PROTECT', 'to': u"orm['order.DeliveryWindow']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'invoice': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'orders'", 'on_delete': 'models.PROTECT', 'to': u"orm['order.Invoice']"}),
