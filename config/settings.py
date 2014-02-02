@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     # Vendor
     'gunicorn',
     'compressor',
+    'south',
     # Apps
     'shop',
     'order',
