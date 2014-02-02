@@ -5,3 +5,4 @@ gunicorn==18.0
 querystring-parser==1.1
 six==1.4.1
 wsgiref==0.1.2
+South==0.8.4
