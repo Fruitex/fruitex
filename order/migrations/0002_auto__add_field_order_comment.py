@@ -8,90 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Invoice'
-        db.create_table(u'order_invoice', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('invoice_num', self.gf('django.db.models.fields.CharField')(unique=True, max_length=64)),
-            ('payment_method', self.gf('django.db.models.fields.CharField')(default='PP', max_length=2)),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=4)),
-            ('payer', self.gf('django.db.models.fields.CharField')(max_length=256, blank=True)),
-            ('when_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('when_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('coupon', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.Coupon'], null=True, blank=True)),
-            ('subtotal', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('tax', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('delivery', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('discount', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('customer_name', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('address', self.gf('django.db.models.fields.TextField')()),
-            ('postcode', self.gf('django.db.models.fields.CharField')(max_length=16)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=16)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=256)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='invoices', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
-        ))
-        db.send_create_signal(u'order', ['Invoice'])
-
-        # Adding model 'DeliveryWindow'
-        db.create_table(u'order_deliverywindow', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(related_name='delivery_windows', to=orm['shop.Store'])),
-            ('start', self.gf('django.db.models.fields.DateTimeField')()),
-            ('end', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal(u'order', ['DeliveryWindow'])
-
-        # Adding model 'OrderItem'
-        db.create_table(u'order_orderitem', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('order', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.Order'])),
-            ('item', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['shop.Item'])),
-            ('quantity', self.gf('django.db.models.fields.IntegerField')()),
-            ('allow_sub', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('item_cost', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('item_tax', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-        ))
-        db.send_create_signal(u'order', ['OrderItem'])
-
-        # Adding model 'Order'
-        db.create_table(u'order_order', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('subtotal', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('tax', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('delivery_window', self.gf('django.db.models.fields.related.ForeignKey')(related_name='orders', on_delete=models.PROTECT, to=orm['order.DeliveryWindow'])),
-            ('invoice', self.gf('django.db.models.fields.related.ForeignKey')(related_name='orders', on_delete=models.PROTECT, to=orm['order.Invoice'])),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=4)),
-            ('when_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('when_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-        ))
-        db.send_create_signal(u'order', ['Order'])
-
-        # Adding model 'Coupon'
-        db.create_table(u'order_coupon', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32)),
-            ('type', self.gf('django.db.models.fields.CharField')(max_length=4)),
-            ('value', self.gf('django.db.models.fields.DecimalField')(max_digits=16, decimal_places=2)),
-            ('used', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('expire', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(9999, 12, 31, 0, 0), blank=True)),
-        ))
-        db.send_create_signal(u'order', ['Coupon'])
+        # Adding field 'Order.comment'
+        db.add_column(u'order_order', 'comment',
+                      self.gf('django.db.models.fields.TextField')(default=''),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'Invoice'
-        db.delete_table(u'order_invoice')
-
-        # Deleting model 'DeliveryWindow'
-        db.delete_table(u'order_deliverywindow')
-
-        # Deleting model 'OrderItem'
-        db.delete_table(u'order_orderitem')
-
-        # Deleting model 'Order'
-        db.delete_table(u'order_order')
-
-        # Deleting model 'Coupon'
-        db.delete_table(u'order_coupon')
+        # Deleting field 'Order.comment'
+        db.delete_column(u'order_order', 'comment')
 
 
     models = {
@@ -170,6 +95,7 @@ class Migration(SchemaMigration):
         },
         u'order.order': {
             'Meta': {'object_name': 'Order'},
+            'comment': ('django.db.models.fields.TextField', [], {}),
             'delivery_window': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'orders'", 'on_delete': 'models.PROTECT', 'to': u"orm['order.DeliveryWindow']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'invoice': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'orders'", 'on_delete': 'models.PROTECT', 'to': u"orm['order.Invoice']"}),
