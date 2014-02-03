@@ -176,9 +176,9 @@ def checkout(request):
   })
   return HttpResponse(template.render(context))
 
-def show_invoice(request, id):
+def show_invoice(request, invoice_num):
   template = loader.get_template('order/show.html')
-  invoice = Invoice.objects.get(id=id)
+  invoice = Invoice.objects.get(invoice_num=invoice_num)
 
   # Setup context and render
   context = Context({
@@ -202,7 +202,7 @@ def payment_paypal_execute(request, id):
       payment.raw = json.dumps(raw_payment.to_dict())
       payment.set_status(Payment.STATUS_COMPLETED)
       emails.send_payment_received(invoice)
-      return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+      return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
   return HttpResponse('Failed to execute your payment. Please contact us for help.')
 
 def payment_paypal_cancel(request, id):
@@ -212,7 +212,7 @@ def payment_paypal_cancel(request, id):
     payments = invoice.payments.all()
     for payment in payments:
       payment.set_status(Payment.STATUS_CANCELLED)
-  return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+  return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
 
 # API
 
