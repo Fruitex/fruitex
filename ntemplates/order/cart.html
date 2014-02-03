@@ -19,7 +19,9 @@
 {% block content %}
 <form id='cart-form' action="{% url 'order:cart' %}" method="POST">
 <div id='cart-wrapper'>
-  <p id="cart-header">Your cart</p>
+  <div id="cart-header">
+    <h3>Your cart</h3>
+  </div>
   <div id='cart-container'>
     {% for store, items in store_items.items %}
       {% for item in items %}
