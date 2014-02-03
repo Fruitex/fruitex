@@ -14,7 +14,7 @@ import uuid
 from shop.models import Item, DeliveryOption
 from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow, Payment
 from order.forms import CheckoutForm
-from order import paypal
+from order import paypal, emails
 
 # Common operations
 
@@ -201,6 +201,7 @@ def payment_paypal_execute(request, id):
     if raw_payment is not None:
       payment.raw = json.dumps(raw_payment.to_dict())
       payment.set_status(Payment.STATUS_COMPLETED)
+      emails.send_payment_received(invoice)
       return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
   return HttpResponse('Failed to execute your payment. Please contact us for help.')
 
