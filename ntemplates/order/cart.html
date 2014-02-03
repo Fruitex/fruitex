@@ -18,11 +18,11 @@
 
 {% block content %}
 <form id='cart-form' action="{% url 'order:cart' %}" method="POST">
-<div id='cart-wrapper'>
-  <div id="cart-header">
+<div id='cart-wrapper' class="order-section-wrapper">
+  <div id="cart-header" class="order-section-header">
     <h3>Your cart</h3>
   </div>
-  <div id='cart-container'>
+  <div id='cart-container' class="order-section-container">
     {% for store, items in store_items.items %}
       {% for item in items %}
       <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">

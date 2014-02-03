@@ -18,12 +18,12 @@
 {% endblock %}
 
 {% block content %}
-<div id='cart-wrapper'>
-  <div id="cart-header">
+<div id='cart-wrapper' class="order-section-wrapper">
+  <div id="cart-header" class="order-section-header">
     <span class="cart-header-go-back"><a href="{% url 'order:cart' %}">&lt;&lt; Change your cart</a></span>
     <h3>Confirm Your Order Items</h3>
   </div>
-  <div id='cart-container'>
+  <div id='cart-container' class="order-section-container">
     {% for store, items in store_items.items %}
       {% for item in items %}
       <div class="item-in-cart" id="item-{{ item.obj.id }}" data-id="{{ item.obj.id }}" data-json="{{ item.json }}">
@@ -55,11 +55,13 @@
   </div>
 </div>
 <form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
-<div id='delivery-wrapper'>
-  <p id="delivery-header">Delivery Info</p>
-  <div id='delivery-container'>
+<div id='delivery-wrapper' class="order-section-wrapper">
+  <div id="delivery-header" class="order-section-header">
+    <h3>Delivery Info</h3>
+  </div>
+  <div id='delivery-container' class="order-section-container">
     {{ form.non_field_errors }}
-    <table id="delivery-container-table">
+    <table id="delivery-container-table" class="order-table">
       <tr>
         <td>Name</td>
         <td>
@@ -94,6 +96,21 @@
         <td>Comment</td>
         <td>
           {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="order-section-wrapper payment-wrapper">
+  <div  class="order-section-header payment-header">
+    <h3>Payment</h3>
+  </div>
+  <div class="order-section-container payment-container">
+    <table class="order-table payment-table">
+      <tr>
+        <td>Payment Method</td>
+        <td>
+          {{ checkout_form.payment_method }}{{ checkout_form.payment_method.errors }}
         </td>
       </tr>
     </table>
