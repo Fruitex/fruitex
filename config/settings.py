@@ -129,13 +129,12 @@ INSTALLED_APPS = (
     # Django admin
     'django.contrib.admin',
     'django.contrib.admindocs',
-    # Paypal
-    'paypal.standard.ipn',
     # Vendor
     'gunicorn',
     'compressor',
     'south',
     # Apps
+    'fruitex',
     'shop',
     'order',
     'account',

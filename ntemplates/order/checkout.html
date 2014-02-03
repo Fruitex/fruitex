@@ -1,5 +1,6 @@
 {% extends "common/base.html" %}
 {% load static %}
+{% load collection_extra %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}"/>
@@ -17,10 +18,10 @@
 {% endblock %}
 
 {% block content %}
-<form id='cart-form' action="{% url 'order:cart' %}" method="POST">
 <div id='cart-wrapper'>
   <div id="cart-header">
-    <h3>Your cart</h3>
+    <span class="cart-header-go-back"><a href="{% url 'order:cart' %}">&lt;&lt; Change your cart</a></span>
+    <h3>Confirm Your Order Items</h3>
   </div>
   <div id='cart-container'>
     {% for store, items in store_items.items %}
@@ -32,40 +33,77 @@
         <div class="item-info-left">
           <div class="item-in-cart-name">{{ item.obj.name }}</div>
           <div class="item-in-cart-store">From: {{ item.obj.category.store.name }}</div>
-          <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label></div>
+          <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" disabled {% if allow_sub_detail|dict_val:item.obj.id %} checked="" {% endif %}>Allow substitution</label></div>
         </div>
         <div>
-          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" data-max="{{ item.obj.max_quantity_per_order }}" autocomplete="off">
+          <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" data-max="{{ item.obj.max_quantity_per_order }}" autocomplete="off" disabled>
         </div>
         <div class="item-in-cart-price">$ </div>
       </div>
       {% endfor %}
       <div class="cart-store-summary">
         <div>Store: {{ store.name }}</div>
-        <div>Delivery Options:
-          <select name="delivery_choices[{{ store.slug }}]">
-          {% for option in store.delivery_options.all %}
-          {% if option.in_effect %}
-          <option value="{{ option.id }}">{{ option.display_name }}</option>
-          {% endif %}
-          {% endfor %}
-          </select>
-        </div>
+        <div>Delivery: {{ delivery_options|dict_val:store }}</div>
       </div>
     {% endfor %}
   </div>
   <div id="coupon-container">
-    <label>Coupon: <input id="cart-coupon-code" name="coupon_code" type="text"></label>
+    <label>Coupon: <input id="id_coupon_code" name="coupon_code" type="text" value="{{ coupon_code }}" disabled></label>
     <img class="tick hidden" src="{% static 'imgs/tick.png' %}"></img>
   </div>
   <div id='items-in-cart-summary-container'>
+  </div>
+</div>
+<form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
+<div id='delivery-wrapper'>
+  <p id="delivery-header">Delivery Info</p>
+  <div id='delivery-container'>
+    {{ form.non_field_errors }}
+    <table id="delivery-container-table">
+      <tr>
+        <td>Name</td>
+        <td>
+          {{ checkout_form.name }}{{ checkout_form.name.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Phone</td>
+        <td>
+          {{ checkout_form.phone }}{{ checkout_form.phone.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>
+          {{ checkout_form.email }}{{ checkout_form.email.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+          {{ checkout_form.address }}{{ checkout_form.address.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Post Code</td>
+        <td>
+          {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
+        </td>
+      </tr>
+      <tr>
+        <td>Comment</td>
+        <td>
+          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
 <input type="hidden" name="datetime" id="datetime"/>
 {% csrf_token %}
 </form>
 <div id='cart-footer'>
- <button class="cart-button" id="cart-continue-button">CONTINUE</button>
+ <button class="cart-button" id="checkout-button">CHECKOUT</button>
 </div>
 {% endblock %}
 
@@ -108,6 +146,24 @@ $(document).ready(function() {
 
   // Defualt no coupon
   var coupon = null;
+
+  var checkCoupon = function () {
+    var tick = $('#coupon-container .tick');
+    var code = $('#id_coupon_code').val();
+    var url_template = '{% url "order:coupon" "coupon_code" %}';
+
+    $.get(url_template.replace('coupon_code', code), function(data) {
+      if (data.length > 0) {
+        coupon = data[0].fields;
+        updateSummary();
+        tick.removeClass('hidden');
+      } else {
+        coupon = null;
+        updateSummary();
+        tick.addClass('hidden');
+      }
+    }, 'json');
+  };
 
   var updateSummary = function() {
     var summary_template = $.template(null,$('#summary_template').html());
@@ -172,36 +228,21 @@ $(document).ready(function() {
     updateCart();
   };
 
-  var isCartEmpty = function() {
-    return !$.cookie('cart') || JSON.parse($.cookie('cart')).length == 0;
+  var isValidUserInput = function() {
+    var v = InputValidator;
+    v.init();
+    return v.nonEmpty($("input[name=name]")) && v.nonEmpty($("input[name=phone]"))
+        && v.nonEmpty($("input[name=address]")) && v.nonEmpty($("input[name=postcode]"))
+        && v.phone($("input[name=phone]")) && v.zip($("input[name=postcode]"))
+        && v.email($("input[name=email]"));
   };
 
   // Checkout button
-  $("#cart-continue-button").click(function() {
-    if (coupon == null) {
-      $('#cart-coupon-code').val('');
+  $("#checkout-button").click(function() {
+    if (isValidUserInput()) {
+      $('#datetime').val(datetime);
+      $("#checkout-form").submit();
     }
-    $('#datetime').val(datetime);
-    $("#cart-form").submit();
-  });
-
-  // Coupon input
-  $('#cart-coupon-code').keyup(function () {
-    var tick = $('#coupon-container .tick');
-    var code = $('#cart-coupon-code').val();
-    var url_template = '{% url "order:coupon" "coupon_code" %}';
-
-    $.get(url_template.replace('coupon_code', code), function(data) {
-      if (data.length > 0) {
-        coupon = data[0].fields;
-        updateSummary();
-        tick.removeClass('hidden');
-      } else {
-        coupon = null;
-        updateSummary();
-        tick.addClass('hidden');
-      }
-    }, 'json');
   });
 
   // Item quantity
@@ -218,38 +259,13 @@ $(document).ready(function() {
     $(this).val(quantity);
   });
 
-  if (isCartEmpty()) {
-    $('.item-in-cart').remove();
-    $('.cart-store-summary').remove();
-    $('#items-in-cart-summary-container').remove();
-    $('#cart-footer').remove();
-    $('#coupon-container').remove();
-    $('#delivery-wrapper').remove();
-    $("#cart-container").append($('<p>').text('Seems like your cart is empty.').addClass('cart-empty-msg'));
-    $("#cart-container").append($('<p>').text('Return to shop')
-      .addClass('cart-btn-return')
-      .click(function () {
-        window.location = '{% url "shop:to_default" %}';
-      }));
-  } else {
-    // Setup spinner actions and update quantity prices
-    $('.item-in-cart-quantity').spinner({
-      min: 0,
-      max: 20,
-      step: 1,
-    }).each(function(i, spinner) {
-      spinner = $(spinner);
-      var max = spinner.data('max');
-      if (max > 0) {
-        spinner.spinner("option", "max", max);
-      }
-      updateItemPriceTag(spinner.data('id'), spinner.val());
-    }).on('spinstop', function (e) {
-      updateQuantity($(this).data('id'), $(this).val());
-    });
+  $('.item-in-cart-quantity').spinner().each(function(i, spinner) {
+    spinner = $(spinner);
+    updateItemPriceTag(spinner.data('id'), spinner.val());
+    spinner.spinner('disable');
+  });
 
-    updateSummary();
-  }
+  checkCoupon();
 });
 </script>
 {% endblock %}

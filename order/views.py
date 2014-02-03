@@ -1,46 +1,20 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.core.validators import RegexValidator
-from django.conf import settings
-from django import forms
-from django.core.exceptions import ValidationError
 
-from paypal.standard.forms import PayPalPaymentsForm
 from querystring_parser import parser
 
-from datetime import date, datetime
 from decimal import Decimal
+from datetime import datetime
 import urllib
 import json
 import uuid
 
 from shop.models import Item, DeliveryOption
-from order.models import Order, OrderItem, Invoice, Coupon, DeliveryWindow
-
-# Checkout form definition
-
-class CheckoutForm(forms.Form):
-  def _validate_coupon_code(coupon_code):
-    coupon = Coupon.objects.get_valid_coupon(coupon_code)
-    if coupon == False:
-      raise ValidationError(u'%s is not a valid coupon' % coupon_code)
-
-  name = forms.CharField(max_length=64, validators=[
-    RegexValidator(regex=r'^[a-zA-Z ]+$'),
-  ])
-  phone = forms.CharField(max_length=16, validators=[
-    RegexValidator(regex=r'^(\+1){0,1}\({0,1}\d{3}[ -\)]{0,1}\d{3}[ -]{0,1}\d{4}$'),
-  ])
-  email = forms.EmailField()
-  address = forms.CharField(min_length=8)
-  postcode = forms.CharField(max_length=8, validators=[
-    RegexValidator(regex=r'^[a-zA-Z]\d[a-zA-Z] {0,1}\d[a-zA-Z]\d$'),
-  ])
-  comment = forms.CharField(required=False, widget=forms.Textarea)
-  coupon_code = forms.CharField(required=False, validators=[_validate_coupon_code])
+from order.models import Invoice, Coupon, Order, OrderItem, DeliveryWindow, Payment
+from order.forms import CheckoutForm
+from order import paypal, emails
 
 # Common operations
 
@@ -78,10 +52,7 @@ def cart_to_store_items(cart):
 
   return store_items
 
-# Views
-
-def view_cart(request):
-  def _validate_delivery_choices(delivery_choices):
+def validate_delivery_choices(delivery_choices):
     options = {}
     for (store_slug, option_id) in delivery_choices.items():
       option = DeliveryOption.objects.get(id=option_id)
@@ -90,76 +61,158 @@ def view_cart(request):
       options[option.store] = option
     return options
 
-  # Get store_items
+# Views
+
+def view_cart(request):
+
+  # Get cart
   cart = cart_from_request(request)
-  store_items = cart_to_store_items(cart)
+  error = None
 
   # If is a submit, pre validate the data
   if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
-    checkout_form = CheckoutForm(request.POST)
 
-    # Validate form
-    if checkout_form.is_valid():
-      post = parser.parse(request.POST.urlencode())
+    # Get cart options
+    post = parser.parse(request.POST.urlencode())
 
-      # Validate delivery choices
-      delivery_choices = post.get('delivery_choices')
-      page_datetime = datetime.fromtimestamp(post.get('datetime'))
-      delivery_options = _validate_delivery_choices(delivery_choices)
+    coupon_code = post.get('coupon_code')
+    coupon = Coupon.objects.get_valid_coupon(coupon_code)
 
-      allow_sub_detail = post.get('allow_sub_detail')
-      allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
+    page_datetime = datetime.fromtimestamp(post.get('datetime'))
+    allow_sub_detail = post.get('allow_sub_detail')
+    allow_sub_detail = {} if allow_sub_detail is None else allow_sub_detail
 
-      if delivery_options != False:
-        return place_order(store_items, checkout_form, delivery_options,
-                           allow_sub_detail, page_datetime)
-  else:
-    checkout_form = CheckoutForm()
+    # Validate delivery choices
+    delivery_choices = post.get('delivery_choices')
+    delivery_options = validate_delivery_choices(delivery_choices)
 
+    if delivery_options == False:
+      error = 'The delivery option you select is no longer valid'
+    elif len(coupon_code) > 0 and coupon == False:
+      error = 'The coupon you have entered is no longer valid'
+    else:
+      request.session['checkout_package'] = {
+        'cart': cart,
+        'delivery_choices': delivery_choices,
+        'allow_sub_detail': allow_sub_detail,
+        'coupon_code': coupon_code,
+        'page_datetime': page_datetime,
+      }
+      response = HttpResponseRedirect(reverse('order:checkout'))
+      return response
+
+  store_items = cart_to_store_items(cart)
   template = loader.get_template('order/cart.html')
   context = RequestContext(request, {
     'store_items': store_items,
     'datetime': datetime.now(),
-    'checkout_form': checkout_form,
+    'error': error,
   })
   return HttpResponse(template.render(context))
 
-@csrf_exempt
+def checkout(request):
+  error = None
+  checkout_package = request.session['checkout_package']
+  if checkout_package is None or len(checkout_package) <= 0:
+    return HttpResponseRedirect(reverse('order:cart'))
+
+  cart = checkout_package['cart'];
+  delivery_choices = checkout_package['delivery_choices'];
+  allow_sub_detail = checkout_package['allow_sub_detail'];
+  coupon_code = checkout_package['coupon_code'];
+  page_datetime = checkout_package['page_datetime'];
+
+  store_items = cart_to_store_items(cart)
+  coupon = Coupon.objects.get_valid_coupon(coupon_code)
+  delivery_options = validate_delivery_choices(delivery_choices)
+
+  if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
+    checkout_form = CheckoutForm(request.POST)
+
+    if not checkout_form.is_valid():
+      pass
+    elif delivery_options == False:
+      error = 'The delivery option you select is no longer valid'
+      return HttpResponseRedirect(reverse('shop:to_default'))
+    elif len(coupon_code) > 0 and coupon == False:
+      error = 'The coupon you have entered is no longer valid'
+      return HttpResponseRedirect(reverse('shop:to_default'))
+    else:
+      invoice = create_invoice(
+        store_items,
+        checkout_form,
+        delivery_options,
+        allow_sub_detail,
+        page_datetime,
+        coupon,
+      )
+      raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
+        'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
+        'cancel_url': request.build_absolute_uri(reverse('order:payment_paypal_cancel', kwargs={'id': invoice.id})),
+      })
+      if raw_payment is None:
+        error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
+      else:
+        payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
+        redirect_url = paypal.get_redirect_url(payment.raw, reverse('shop:to_default'))
+
+        request.session['checkout_package'] = None
+        response = HttpResponseRedirect(redirect_url)
+        response.set_cookie('cart', '')
+        return response
+
+  else:
+    checkout_form = CheckoutForm();
+
+  template = loader.get_template('order/checkout.html')
+  context = RequestContext(request, {
+    'store_items': store_items,
+    'delivery_options': delivery_options,
+    'allow_sub_detail': allow_sub_detail,
+    'datetime': datetime.now(),
+    'coupon_code': coupon_code,
+    'checkout_form': checkout_form,
+    'error': error,
+  })
+  return HttpResponse(template.render(context))
+
 def show_invoice(request, id):
   template = loader.get_template('order/show.html')
-
   invoice = Invoice.objects.get(id=id)
-
-  if invoice.status == invoice.STATUS_PENDING:
-    custom = None if invoice.coupon is None else {'coupon': invoice.coupon.code}
-
-    # Setup paypal dict
-    paypal_dict = {
-      "business": settings.PAYPAL_RECEIVER_EMAIL,
-      "currency_code": "CAD",
-      "amount": "%.2f" % invoice.total,
-      "item_name": "Fruitex order #%d" % invoice.id,
-      "invoice": invoice.invoice_num,
-      "notify_url": request.build_absolute_uri(reverse('order:paypal-ipn')),
-      "return_url": request.build_absolute_uri(reverse('order:show', kwargs={'id': invoice.id})),
-      "cancel_return": request.build_absolute_uri(reverse('shop:to_default')),
-      "custom": json.dumps(custom)
-    }
-
-    # Create the Paypal form
-    form = PayPalPaymentsForm(initial=paypal_dict)
-  else:
-    form = None
 
   # Setup context and render
   context = Context({
     'invoice': invoice,
-    'form': form,
-    'sandbox': settings.DEBUG,
   })
 
   return HttpResponse(template.render(context))
 
+# PayPal
+
+def payment_paypal_execute(request, id):
+  id = int(id)
+  invoice = Invoice.objects.get(id=id)
+  payer_id = request.GET['PayerID']
+  payments = invoice.payments.all()
+  for payment in payments:
+    if payment.status == Payment.STATUS_COMPLETED:
+      continue
+    raw_payment = paypal.execute_payment(payment.raw, payer_id)
+    if raw_payment is not None:
+      payment.raw = json.dumps(raw_payment.to_dict())
+      payment.set_status(Payment.STATUS_COMPLETED)
+      emails.send_payment_received(invoice)
+      return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+  return HttpResponse('Failed to execute your payment. Please contact us for help.')
+
+def payment_paypal_cancel(request, id):
+  id = int(id)
+  invoice = Invoice.objects.get(id=id)
+  if invoice.status == Invoice.STATUS_PENDING:
+    payments = invoice.payments.all()
+    for payment in payments:
+      payment.set_status(Payment.STATUS_CANCELLED)
+  return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
 # API
 
@@ -169,10 +222,9 @@ def coupon(request, code):
     return empty_response()
   return json_response([coupon])
 
-
 # Invoice and Order process
 
-def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime):
+def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime, coupon):
   # Gether info from POST to setup the order
   # Customer infos
   customer_name = checkout_form.cleaned_data['name']
@@ -186,14 +238,14 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
   invoice_num = str(uuid.uuid4())
   delivery = Decimal('0.99')
   discount = Decimal(0)
-  coupon_code = checkout_form.cleaned_data['coupon_code']
 
-  # Get coupon
-  coupon = None
-  if coupon_code is not None and len(coupon_code) > 0:
-    coupon = Coupon.objects.get_valid_coupon(coupon_code)
+  # Apply coupon
+  if isinstance(coupon, Coupon):
     discount = coupon.value
+    coupon.used = True;
     # TODO: handle percentage coupon
+  else:
+    coupon = None
 
   # Create invoice
   invoice = Invoice.objects.create(
@@ -252,8 +304,8 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
 
       allow_sub = allow_sub_detail.get(item.id) == "on"
       unit_price = item.sales_price if item.on_sale else item.price
-      item_cost = unit_price * quantity
-      item_tax = item_cost * item.tax_class
+      item_cost = (unit_price * quantity).quantize(Decimal('.01'))
+      item_tax = (item_cost * item.tax_class).quantize(Decimal('.01'))
 
       OrderItem.objects.create(
         order = order,
@@ -275,7 +327,7 @@ def place_order(store_items, checkout_form, delivery_options, allow_sub_detail, 
     order.save()
   invoice.save()
 
-  response = HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
-  response.set_cookie('cart', '')
+  if coupon is not None:
+    coupon.save()
 
-  return response
+  return invoice

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from order.models import Invoice, Order, OrderItem, Coupon
+from order.models import Invoice, Payment, Order, OrderItem, Coupon
 
 class InvoiceAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_created'
@@ -12,6 +12,17 @@ class InvoiceAdmin(admin.ModelAdmin):
   search_fields = ['invoice', 'payer', 'customer_name', 'email', 'phone', 'address', 'postcode']
 
 admin.site.register(Invoice, InvoiceAdmin)
+
+class PaymentAdmin(admin.ModelAdmin):
+  date_hierarchy = 'when_created'
+  list_display = [
+    'id', 'invoice', 'method', 'status', 'amount', 'when_created', 'when_updated'
+  ]
+  list_filter = [ 'method', 'status' ]
+  ordering = [ '-when_created' ]
+  search_fields = ['invoice', 'amount']
+
+admin.site.register(Payment, PaymentAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_created'
