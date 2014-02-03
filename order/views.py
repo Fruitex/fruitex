@@ -129,15 +129,14 @@ def checkout(request):
   if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
     checkout_form = CheckoutForm(request.POST)
 
-    if not checkout_form.is_valid():
-      pass
-    elif delivery_options == False:
+    if delivery_options == False:
       error = 'The delivery option you select is no longer valid'
       return HttpResponseRedirect(reverse('shop:to_default'))
     elif len(coupon_code) > 0 and coupon == False:
       error = 'The coupon you have entered is no longer valid'
       return HttpResponseRedirect(reverse('shop:to_default'))
-    else:
+    elif checkout_form.is_valid():
+      payment_method = checkout_form.cleaned_data['payment_method'];
       invoice = create_invoice(
         store_items,
         checkout_form,
@@ -146,6 +145,13 @@ def checkout(request):
         page_datetime,
         coupon,
       )
+
+      # If is not paypal, create payment directly
+      if payment_method != Payment.METHODS_PAYPAL:
+        Payment.objects.create_payment(invoice, payment_method)
+        invoice.set_status(Invoice.STATUS_PAY_ON_DELIVERY)
+        return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
+
       raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
         'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
         'cancel_url': request.build_absolute_uri(reverse('order:payment_paypal_cancel', kwargs={'id': invoice.id})),

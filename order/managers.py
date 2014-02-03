@@ -8,6 +8,15 @@ from datetime import date
 from decimal import Decimal
 
 class PaymentManager(models.Manager):
+  def create_payment(self, invoice, method):
+    if method == 'PP':
+      return None
+    return self.create(
+      invoice = invoice,
+      method = method,
+      status = 'CREA',
+      amount = invoice.total,
+    )
   def create_paypal_payment(self, invoice, raw):
     amount = reduce(lambda x, y: x + Decimal(y['amount']['total']), raw['transactions'], Decimal('0'))
     payment = self.create(
