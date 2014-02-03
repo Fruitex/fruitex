@@ -99,7 +99,6 @@ def view_cart(request):
         'page_datetime': page_datetime,
       }
       response = HttpResponseRedirect(reverse('order:checkout'))
-      response.set_cookie('cart', '')
       return response
 
   store_items = cart_to_store_items(cart)
@@ -114,6 +113,9 @@ def view_cart(request):
 def checkout(request):
   error = None
   checkout_package = request.session['checkout_package']
+  if checkout_package is None or len(checkout_package) <= 0:
+    return HttpResponseRedirect(reverse('order:cart'))
+
   cart = checkout_package['cart'];
   delivery_choices = checkout_package['delivery_choices'];
   allow_sub_detail = checkout_package['allow_sub_detail'];
@@ -154,7 +156,10 @@ def checkout(request):
         payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
         redirect_url = paypal.get_redirect_url(payment.raw, reverse('shop:to_default'))
 
-        return HttpResponseRedirect(redirect_url)
+        request.session['checkout_package'] = None
+        response = HttpResponseRedirect(redirect_url)
+        response.set_cookie('cart', '')
+        return response
 
   else:
     checkout_form = CheckoutForm();
@@ -202,9 +207,10 @@ def payment_paypal_execute(request, id):
 def payment_paypal_cancel(request, id):
   id = int(id)
   invoice = Invoice.objects.get(id=id)
-  payments = invoice.payments.all()
-  for payment in payments:
-    payment.set_status(Payment.STATUS_CANCELLED)
+  if invoice.status == Invoice.STATUS_PENDING:
+    payments = invoice.payments.all()
+    for payment in payments:
+      payment.set_status(Payment.STATUS_CANCELLED)
   return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
 # API
