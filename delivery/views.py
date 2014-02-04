@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.utils.timezone import make_aware, get_default_timezone, localtime
+from django.utils.datastructures import SortedDict
 
 from datetime import datetime, timedelta
 
@@ -40,6 +41,7 @@ def detail(request, id):
           items[order_item.item] += order_item.quantity
         else:
           items[order_item.item] = order_item.quantity
+    items = SortedDict(map(lambda x: (x, items[x]), sorted(items.keys(), key=lambda item: item.category.shop_order)))
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)

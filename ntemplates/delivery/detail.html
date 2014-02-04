@@ -90,6 +90,10 @@
     {% else %}
     <span> Price: {{ item.price }}</span>
     {% endif %}
+    {% if item.category.shop_location_note %}
+    <br>
+    <span> Location: {{ item.category.shop_location_note }}</span>
+    {% endif %}
   </li>
   {% endfor %}
 </ol>
