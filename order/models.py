@@ -3,7 +3,7 @@ from django.utils.timezone import localtime
 
 from datetime import date
 
-from order import managers
+from order import managers, emails
 
 class Invoice(models.Model):
   def __unicode__(self):
@@ -19,6 +19,7 @@ class Invoice(models.Model):
         order.save()
     self.status = status
     self.save()
+    emails.send_order_received(self)
 
   # Status
   STATUS_PENDING = 'PEND'

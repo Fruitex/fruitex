@@ -5,14 +5,22 @@ from django.conf import settings
 
 from threading import Thread
 
-def send_payment_received(invoice):
-  Thread(target=lambda:send_payment_received_worker(invoice)).start()
-def send_payment_received_worker(invoice):
+def send_msg_async(msg):
+  Thread(target=lambda:msg.send()).start()
+
+def send_invoice_email(invoice, template, subject):
   current_site = Site.objects.get_current()
-  html_content = loader.render_to_string('order/payment_received_email.html',{
+  html_content = loader.render_to_string(template,{
     'site': current_site,
     'invoice': invoice,
   })
-  msg = EmailMessage('[Fruitex] Payment of your order received.', html_content, settings.DEFAULT_FROM_EMAIL, [invoice.email])
+  msg = EmailMessage(subject, html_content, settings.DEFAULT_FROM_EMAIL, [invoice.email])
   msg.content_subtype = "html"
-  msg.send()
+  send_msg_async(msg)
+
+def send_order_received(invoice):
+  send_invoice_email(
+    invoice,
+    'order/order_received_email.html',
+    '[Fruitex] Your order is being processed (#%s)' % invoice.invoice_num
+  )
