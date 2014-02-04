@@ -37,7 +37,7 @@ class StoreCustomization(models.Model):
 
 class DeliveryOption(models.Model):
     def __unicode__(self):
-        return self.name
+        return self.get_display_name()
 
     def _get_weekday_availability(self):
         return reduce(lambda a, d: a + (str(d + 1) if self.valid_for_weekday(d) else '-'), xrange(7), '')
@@ -109,6 +109,10 @@ class Category(models.Model):
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='categories')
     parent = models.ForeignKey('Category', blank=True, null=True, related_name='sub_categories')
 
+    # Shopping info
+    shop_order = models.IntegerField(default=0)
+    shop_location_note = models.TextField(default='', blank=True)
+
 
 class Item(models.Model):
     def __unicode__(self):
@@ -120,6 +124,9 @@ class Item(models.Model):
     def __eq__(self, other):
         return type(self) == type(other) and (self.id) == (other.id)
 
+    def increase_sold_number(self, quantity):
+        self.sold_number += quantity
+        self.save()
 
     # Tax Classes
     TAX_CLASSES = (

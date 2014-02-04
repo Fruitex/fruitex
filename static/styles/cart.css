@@ -1,4 +1,4 @@
-#cart-wrapper {
+.order-section-wrapper {
   width: 700px;
   margin: 20px auto;
   background: white;
@@ -34,41 +34,24 @@
   left: 40px;
 }
 
-#delivery-wrapper {
-  width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  background: white;
-  border: 1px solid #d3d3d3;
-  margin-top: 20px;
-  border-radius: 8px;
-  border-bottom: 5px solid #d3d3d3;
-}
-
 #cart-container {
-  margin-left: auto;
-  margin-right: auto;
-  width: 600px;
-  margin-bottom: 20px;
   margin-top:20px;
 }
 
-#delivery-container {
+.order-section-container {
   margin-left: auto;
   margin-right: auto;
   width: 600px;
   margin-bottom: 20px;
 }
 
-
-#cart-header {
-  font-size: 20px;
+.order-section-header {
   margin: 20px;
 }
 
-#delivery-header {
-  font-size: 20px;
-  margin: 20px;
+.order-section-header .cart-header-go-back {
+  float: right;
+  text-decoration: underline;
 }
 
 #items-in-cart-summary-container {
@@ -106,13 +89,13 @@
   font-weight: bold;
 }
 
-#delivery-container-table tr td {
+.order-table tr td {
   height: 30px;
   padding: 10px;
   font-size: 14px;
   vertical-align:text-top;
 }
-#delivery-container input {
+#delivery-container input, #delivery-container textarea {
   border: 1px solid #d3d3d3;
   line-height: 22px;
 }
@@ -165,7 +148,7 @@
   margin-left: 5px;
 }
 
-#checkout-button {
+.cart-button {
     background: rgb(153,235,65);
     width: 110px;
     height: 34px;
@@ -178,6 +161,10 @@
     font-weight: 700;
     outline: none;
 }
-#checkout-button:hover {
+.cart-button:hover {
     opacity: 1;
+}
+
+.payment-table li {
+  list-style: none;
 }

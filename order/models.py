@@ -3,7 +3,7 @@ from django.utils.timezone import localtime
 
 from datetime import date
 
-from order import managers
+from order import managers, emails
 
 class Invoice(models.Model):
   def __unicode__(self):
@@ -12,28 +12,32 @@ class Invoice(models.Model):
   def _get_total(self):
     return self.subtotal + self.tax + self.delivery - self.discount;
 
-  # Payment methods
-  PAYMENT_METHODS_PAYPAL = 'PP'
-  PAYMENT_METHODS_SQUARE = 'SQ'
-  PAYMENT_METHODS = (
-    (PAYMENT_METHODS_PAYPAL, 'Paypal'),
-    (PAYMENT_METHODS_SQUARE, 'On delivery (Square)'),
-  )
+  def set_status(self, status):
+    if status == self.STATUS_PAID or status == self.STATUS_FLAGGED or status == self.STATUS_PAY_ON_DELIVERY:
+      for order in self.orders.all():
+        order.set_status(Order.STATUS_WAITING)
+      if self.coupon is not None:
+        self.coupon.has_been_used()
+      emails.send_order_received(self)
+
+    self.status = status
+    self.save()
 
   # Status
   STATUS_PENDING = 'PEND'
   STATUS_PAID = 'PAID'
   STATUS_FLAGGED = 'FLAG'
   STATUS_CANCELLED = 'CANC'
+  STATUS_PAY_ON_DELIVERY = 'POD'
   STATUSES = (
     (STATUS_PENDING, 'Pending'),
     (STATUS_PAID, 'Paid'),
     (STATUS_FLAGGED, 'Flagged'),
     (STATUS_CANCELLED, 'Cancelled'),
+    (STATUS_PAY_ON_DELIVERY, 'Pay on Delivery')
   )
 
   invoice_num = models.CharField(max_length=64, unique=True)
-  payment_method = models.CharField(max_length=2, choices=PAYMENT_METHODS, default=PAYMENT_METHODS_PAYPAL)
   status = models.CharField(max_length=4, choices=STATUSES)
   payer = models.CharField(max_length=256, blank=True)
   when_created = models.DateTimeField(auto_now_add=True)
@@ -55,6 +59,46 @@ class Invoice(models.Model):
   email = models.EmailField(max_length=256)
   user = models.ForeignKey('auth.User', blank=True, null=True, related_name='invoices', on_delete=models.SET_NULL)
 
+class Payment(models.Model):
+  def __unicode__(self):
+    return str(self.id)
+
+  def set_status(self, status):
+    if status == self.STATUS_COMPLETED:
+      self.invoice.set_status(Invoice.STATUS_PAID)
+    if status == self.STATUS_CANCELLED:
+      self.invoice.set_status(Invoice.STATUS_CANCELLED)
+    self.status = status
+    self.save()
+
+  # Payment methods
+  METHODS_PAYPAL = 'PP'
+  METHODS_SQUARE = 'SQ'
+  METHODS = (
+    (METHODS_PAYPAL, 'Paypal'),
+    (METHODS_SQUARE, 'Square (pay on delivery)'),
+  )
+
+  # Payment status
+  STATUS_CREATED = 'CREA'
+  STATUS_COMPLETED = 'COMP'
+  STATUS_CANCELLED = 'CANC'
+  STATUSES = (
+    (STATUS_CREATED, 'Created'),
+    (STATUS_COMPLETED, 'Completed'),
+    (STATUS_CANCELLED, 'Cancelled'),
+  )
+
+  invoice = models.ForeignKey('Invoice', related_name='payments')
+  method = models.CharField(max_length=2, choices=METHODS)
+  status = models.CharField(max_length=4, choices=STATUSES, default=STATUS_CREATED)
+  amount = models.DecimalField(max_digits=16, decimal_places=2)
+  raw = models.TextField(blank=True)
+  when_created = models.DateTimeField(auto_now_add=True)
+  when_updated = models.DateTimeField(auto_now=True)
+
+  objects = managers.PaymentManager()
+
 
 class DeliveryWindow(models.Model):
   def __unicode__(self):
@@ -75,6 +119,9 @@ class OrderItem(models.Model):
   def __unicode__(self):
     return str(self.item) + ' * ' + str(self.quantity)
 
+  def item_paid(self):
+    self.item.increase_sold_number(self.quantity)
+
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
   quantity = models.IntegerField()
@@ -89,6 +136,13 @@ class Order(models.Model):
 
   def _get_order_items(self):
     return OrderItem.objects.filter(order__id=self.id)
+
+  def set_status(self, status):
+    if self.status == self.STATUS_PENDING and status == self.STATUS_WAITING:
+      for order_item in self.order_items:
+        order_item.item_paid()
+    self.status = status
+    self.save()
 
   # Status
   STATUS_PENDING = 'PEND'                 # Pending until invoice has been paid
@@ -122,6 +176,10 @@ class Order(models.Model):
 class Coupon(models.Model):
   def __unicode__(self):
     return self.code
+
+  def has_been_used(self):
+    self.used = True
+    self.save()
 
   # Coupon types
   TYPE_FIXED_AMOUNT = 'FIX'

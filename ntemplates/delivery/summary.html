@@ -21,7 +21,7 @@
       {% for order in delivery_window.orders.all %}
       <li>
         <div>
-          <a href="{% url 'order:show' order.invoice.id %}">
+          <a href="{% url 'order:show' order.invoice.invoice_num %}">
             Invoice #{{ order.invoice.id }} Order #{{ order.id }}: {{ order.get_status_display }} ({{ order.items.count }} items)
           </a>
         </div>
