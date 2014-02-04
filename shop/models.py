@@ -124,6 +124,9 @@ class Item(models.Model):
     def __eq__(self, other):
         return type(self) == type(other) and (self.id) == (other.id)
 
+    def increase_sold_number(self, quantity):
+        self.sold_number += quantity
+        self.save()
 
     # Tax Classes
     TAX_CLASSES = (
