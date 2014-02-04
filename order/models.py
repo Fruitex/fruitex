@@ -18,10 +18,10 @@ class Invoice(models.Model):
         order.set_status(Order.STATUS_WAITING)
       if self.coupon is not None:
         self.coupon.has_been_used()
+      emails.send_order_received(self)
 
     self.status = status
     self.save()
-    emails.send_order_received(self)
 
   # Status
   STATUS_PENDING = 'PEND'
