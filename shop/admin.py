@@ -30,7 +30,7 @@ class DeliveryOptionAdmin(admin.ModelAdmin):
 admin.site.register(DeliveryOption, DeliveryOptionAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
-  list_display = ['__unicode__', 'id', 'store', 'icon']
+  list_display = ['__unicode__', 'id', 'store', 'icon', 'shop_order']
   ordering = ['store', 'parent']
   search_fields = ['name']
   list_filter = ['store']
