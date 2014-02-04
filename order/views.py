@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 from querystring_parser import parser
 
@@ -184,7 +185,10 @@ def checkout(request):
 
 def show_invoice(request, invoice_num):
   template = loader.get_template('order/show.html')
-  invoice = Invoice.objects.get(invoice_num=invoice_num)
+  try:
+    invoice = Invoice.objects.get(invoice_num=invoice_num)
+  except ObjectDoesNotExist:
+    return HttpResponse('Invalid invoice number', status=404)
 
   # Setup context and render
   context = Context({
@@ -197,7 +201,10 @@ def show_invoice(request, invoice_num):
 
 def payment_paypal_execute(request, id):
   id = int(id)
-  invoice = Invoice.objects.get(id=id)
+  try:
+    invoice = Invoice.objects.get(id=id)
+  except ObjectDoesNotExist:
+    return HttpResponse('Invalid invoice id', status=404)
   payer_id = request.GET['PayerID']
   payments = invoice.payments.all()
   for payment in payments:
@@ -212,7 +219,10 @@ def payment_paypal_execute(request, id):
 
 def payment_paypal_cancel(request, id):
   id = int(id)
-  invoice = Invoice.objects.get(id=id)
+  try:
+    invoice = Invoice.objects.get(id=id)
+  except ObjectDoesNotExist:
+    return HttpResponse('Invalid invoice id', status=404)
   if invoice.status == Invoice.STATUS_PENDING:
     payments = invoice.payments.all()
     for payment in payments:

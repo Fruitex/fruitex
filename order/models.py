@@ -15,11 +15,13 @@ class Invoice(models.Model):
   def set_status(self, status):
     if status == self.STATUS_PAID or status == self.STATUS_FLAGGED or status == self.STATUS_PAY_ON_DELIVERY:
       for order in self.orders.all():
-        order.status = Order.STATUS_WAITING
-        order.save()
+        order.set_status(Order.STATUS_WAITING)
+      if self.coupon is not None:
+        self.coupon.has_been_used()
+      emails.send_order_received(self)
+
     self.status = status
     self.save()
-    emails.send_order_received(self)
 
   # Status
   STATUS_PENDING = 'PEND'
@@ -117,6 +119,9 @@ class OrderItem(models.Model):
   def __unicode__(self):
     return str(self.item) + ' * ' + str(self.quantity)
 
+  def item_paid(self):
+    self.item.increase_sold_number(self.quantity)
+
   order = models.ForeignKey('Order')
   item = models.ForeignKey('shop.Item')
   quantity = models.IntegerField()
@@ -131,6 +136,13 @@ class Order(models.Model):
 
   def _get_order_items(self):
     return OrderItem.objects.filter(order__id=self.id)
+
+  def set_status(self, status):
+    if self.status == self.STATUS_PENDING and status == self.STATUS_WAITING:
+      for order_item in self.order_items:
+        order_item.item_paid()
+    self.status = status
+    self.save()
 
   # Status
   STATUS_PENDING = 'PEND'                 # Pending until invoice has been paid
@@ -164,6 +176,10 @@ class Order(models.Model):
 class Coupon(models.Model):
   def __unicode__(self):
     return self.code
+
+  def has_been_used(self):
+    self.used = True
+    self.save()
 
   # Coupon types
   TYPE_FIXED_AMOUNT = 'FIX'

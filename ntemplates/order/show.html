@@ -21,7 +21,7 @@
 
 {% block content %}
 <div id='order-confirm-wrapper'>
-  <p id="order-confirm-header">You Order Confirmation</p>
+  <p id="order-confirm-header">You Order</p>
   <p id="order-confirm-invoice">Your Invoice#: {{ invoice.invoice_num }}</p>
   <div id="order-confirm-item-list">
     {% for order in invoice.orders.all %}
