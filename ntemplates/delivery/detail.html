@@ -9,7 +9,7 @@
 <h1>Delivery Window</h1>
 <h2>{{ delivery_window.store }}: {{ delivery_window }}</h2>
 <ul>
-  {% for order in delivery_window.orders.all %}
+  {% for order in delivery_window.waiting_orders %}
   <li>
     <div>
       <a href="{% url 'order:show' order.invoice.invoice_num %}">
@@ -86,7 +86,7 @@
   {% endfor %}
 </ul>
 
-<h1>Shopping List (Excluding pending orders)</h1>
+<h1>Shopping List</h1>
 <ol class="shopping-item-list">
   {% for item, quantity in combined_items.items %}
   <li class="item">
