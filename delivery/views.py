@@ -34,8 +34,6 @@ def detail(request, id):
   def combine_items(orders):
     items = {}
     for order in orders:
-      if order.status == Order.STATUS_PENDING:
-        continue
       for order_item in order.order_items:
         if order_item.item in items:
           items[order_item.item] += order_item.quantity
@@ -48,7 +46,7 @@ def detail(request, id):
 
   context = Context({
     'delivery_window': delivery_window,
-    'combined_items': combine_items(delivery_window.orders.all())
+    'combined_items': combine_items(delivery_window.waiting_orders)
   })
 
   template = loader.get_template('delivery/detail.html')
