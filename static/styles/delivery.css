@@ -1,3 +1,13 @@
+.container {
+  width: 95%;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 5px;
+  padding: 0px;
+}
+
 .item {
   margin: 2px auto;
 }
@@ -10,7 +20,23 @@ a:hover {
   text-decoration: underline;
 }
 
-a, a:visited {
-  color: #0645AD;
+.stores {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
 }
 
+.stores a {
+  color: red;
+}
+
+.orders {
+  font-size: 15px;
+  font-weight: bold;
+  color: gray;
+  margin-top: 10px;
+}
+
+.orders a {
+  color: blue;
+}
