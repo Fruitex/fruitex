@@ -11,3 +11,4 @@ config/*
 config/**/*
 !settings.py
 !*.sample.py
+static/store_imgs/*

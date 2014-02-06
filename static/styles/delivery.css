@@ -1,5 +1,10 @@
 .container {
   width: 95%;
+  padding: 0px;
+}
+
+header {
+  display: none;
 }
 
 ul {
@@ -9,10 +14,24 @@ ul {
 }
 
 .item {
+  font-weight: bold;
   margin: 2px auto;
+  margin-bottom: 10px;
 }
 
-.item img {
+.shopping_item_list {
+  overflow: hidden;
+}
+
+#shopping_list {
+  margin-bottom: 30px;
+}
+
+.item_image {
+  width: 200px;
+}
+
+.order_image {
   width: 50px;
 }
 
@@ -40,4 +59,15 @@ a:hover {
 
 .orders a {
   color: blue;
+}
+
+.order_title a {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.hide_button {
+  width: 50px;
+  margin-right: 10px;
 }
