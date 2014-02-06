@@ -1,78 +1,51 @@
+<meta name="viewport" content="width=device-width">
+
 {% extends "delivery/base.html" %}
+
+
 {% load static %}
 {% load tz %}
 
 {% localtime on %}
 
-{% block content %}
 
-<h3>{{ delivery_window.store }}: {{ delivery_window }}</h2>
+{% block extra_script %}
+<script type="text/javascript" src="{% static "javascript/delivery.js" %}"></script>
+{% endblock %}
+
+{% block content %}	
+
+<h3>Shopping List</h3>
+  {% for item, quantity in combined_items.items %}
+  <div class="item" id="shopping_list">
+    <img class="item_image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+	<img class="hide_button" src="{% static 'imgs/' %}hide_button.png"><br />
+    <span>{{ quantity }} x </span>
+    <span>{{ item.name }}</span>
+    {% if item.on_sale %}
+    <span> Sales Price: {{ item.sales_price }}</span>
+    {% else %}
+    <span> Price: {{ item.price }}</span>
+    {% endif %}
+    {% if item.category.shop_location_note %}
+    <br>
+    <span> Location: {{ item.category.shop_location_note }}</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+
 <ul>
   {% for order in delivery_window.waiting_orders %}
   <li>
-    <div>
+    <div class="order_title">
       <a href="{% url 'order:show' order.invoice.invoice_num %}">
-        Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)
+        Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
       </a>
-    </div>
-    <div>
-      <table id='order-confirm-table'>
-      <tbody>
-        <tr>
-          <td>
-            Invoice status:
-          </td>
-          <td>
-            {{ order.invoice.get_status_display }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Name:
-          </td>
-          <td>
-            {{ order.invoice.customer_name }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Address:
-          </td>
-          <td>
-            {{ order.invoice.address }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            ZIP:
-          </td>
-          <td>
-            {{ order.invoice.postcode }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Phone:
-          </td>
-          <td>
-            {{ order.invoice.phone }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Email:
-          </td>
-          <td>
-            {{ order.invoice.email }}
-          </td>
-        </tr>
-      </tbody>
-      </table>
     </div>
     <ul class="delivery-item-list">
       {% for order_item in order.order_items %}
       <li class="item">
-        <img src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+        <img class="order_image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
         <span>{{ order_item.quantity }} x</span>
         <span>
           <span>{{ order_item.item.name }}</span>
@@ -85,27 +58,7 @@
   {% endfor %}
 </ul>
 
-<h1>Shopping List</h1>
-<ol class="shopping-item-list">
-  {% for item, quantity in combined_items.items %}
-  <li class="item">
-    <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
-    <span>{{ quantity }} x </span>
-    <span>{{ item.name }}</span>
-    {% if item.on_sale %}
-    <span> Sales Price: {{ item.sales_price }}</span>
-    {% else %}
-    <span> Price: {{ item.price }}</span>
-    {% endif %}
-    {% if item.category.shop_location_note %}
-    <br>
-    <span> Location: {{ item.category.shop_location_note }}</span>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ol>
-
-<a href="{% url 'delivery:summary' %}">Go back to summary</a>
+<h3><a href="{% url 'delivery:summary' %}">Go back to summary</a></h3>
 
 {% endblock %}
 
