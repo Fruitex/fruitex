@@ -1,6 +1,10 @@
 {% extends "common/base.html" %}
 {% load static %}
 
+{% block extra_meta %}
+	<meta name="viewport" content="width=device-width">
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles/delivery.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'styles/itemlist.css' %}"/>

@@ -1,8 +1,37 @@
-.item {
-  margin: 2px auto;
+.container {
+  width: 95%;
+  padding: 0px;
 }
 
-.item img {
+header {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 0px;
+  padding: 0px;
+}
+
+.item {
+  font-weight: bold;
+  margin: 2px auto;
+  margin-bottom: 10px;
+}
+
+.shopping_item_list {
+  overflow: hidden;
+}
+
+#shopping_list {
+  margin-bottom: 30px;
+}
+
+.item_image {
+  width: 200px;
+}
+
+.order_image {
   width: 50px;
 }
 
@@ -10,7 +39,44 @@ a:hover {
   text-decoration: underline;
 }
 
-a, a:visited {
-  color: #0645AD;
+.stores {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
 }
 
+.stores a {
+  color: red;
+}
+
+.orders {
+  font-size: 15px;
+  font-weight: bold;
+  color: gray;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.orders a {
+  color: blue;
+}
+
+.order_title a {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.hide_button {
+  width: 50px;
+  margin-right: 10px;
+}
+
+table {
+  font-size: 15px;
+}
+
+#back_button {
+  font-size: 20px;
+  font-weight: bold;
+}
