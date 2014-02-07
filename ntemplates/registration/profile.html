@@ -1,20 +1,38 @@
 {% extends "registration/base.html" %}
-
+{% load widget_tweaks %}
 {% block title %}{{ block.super }} | Your profile{% endblock %}
 
 {% block content %}
-  <h1>Your profile</h1>
-  <div class="account-greating">Welcome back, {{ user }}!</div>
-  <div class="account-profile">
-    <div>Firstname: {{firstname}}</div>
-    <div>Lastname: {{lastname}}</div>
-    <div>email: {{email}}</div>
-    <div>phone number: {{phonenum}}</div>
-    <div>address: {{address}}</div>
+  <div class="page-header">
+    <h1>Welcome back, {{ user }}!
+      <small>your profile</small>
+    </h1>
   </div>
-  <div class="account-actions">
-    <div><a href="{% url 'profile_change' %}">Update profile</a></div>
-    <div><a href="{% url 'password_change' %}">Change password</a></div>
-    <div><a href="{% url 'logout' %}">Logout</a></div>
+  <table class="table">
+    <tr>
+      <td>First Name</td>
+      <td>{{firstname}}</td>
+    </tr>
+    <tr>
+      <td>Last Name</td>
+      <td>{{lastname}}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{{email}}</td>
+    </tr>
+    <tr>
+      <td>Phone Number</td>
+      <td>{{phonenum}}</td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>{{address}}</td>
+    </tr>
+  </table>
+  <div class="btn-group-vertical">
+    <a href="{% url 'profile_change' %}" class="btn btn-default" role="button">Update profile</a>
+    <a href="{% url 'password_change' %}" class="btn btn-default" role="button">Change password</a>
+    <a href="{% url 'logout' %}" class="btn btn-default" role="button">Logout</a>
   </div>
 {% endblock %}
