@@ -11,11 +11,11 @@
 {% block content %}
 
 <h3>Shopping List</h3>
-<ul class="shopping-item-list">
+<ul class="shopping-list">
   {% for item, quantity in combined_items.items %}
   <li class="item">
-    <img class="item_image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
-    <img class="hide_button" src="{% static 'imgs/' %}hide_button.png"><br />
+    <img class="item-image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
     <span>{{ quantity }} x </span>
     <span>{{ item.name }}</span>
     {% if item.on_sale %}
@@ -35,13 +35,13 @@
 <ul>
   {% for order in delivery_window.waiting_orders %}
   <li>
-    <div class="order_title">
+    <div class="order-title">
       <a href="{% url 'order:show' order.invoice.invoice_num %}">
         Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
       </a>
     </div>
     <div>
-      <table id='order-confirm-table'>
+      <table class='order-info-table'>
       <tbody>
         <tr>
           <td>
@@ -65,7 +65,7 @@
     <ul class="delivery-item-list">
       {% for order_item in order.order_items %}
       <li class="item">
-        <img class="order_image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+        <img class="order-image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
         <span>{{ order_item.quantity }} x</span>
         <span>
           <span>{{ order_item.item.name }}</span>
@@ -78,7 +78,7 @@
   {% endfor %}
 </ul>
 
-<div id="back_button"><a href="{% url 'delivery:summary' %}">Go back to summary</a></div>
+<div class="back-button"><a href="{% url 'delivery:summary' %}">Go back to summary</a></div>
 
 {% endblock %}
 

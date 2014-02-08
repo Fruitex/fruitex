@@ -1,6 +1,6 @@
 .container {
   width: 95%;
-  padding: 0px;
+  padding: 0;
 }
 
 header {
@@ -9,8 +9,8 @@ header {
 
 ul {
   list-style-type: none;
-  margin-left: 0px;
-  padding: 0px;
+  margin-left: 0;
+  padding: 0;
 }
 
 .item {
@@ -19,19 +19,16 @@ ul {
   margin-bottom: 10px;
 }
 
-.shopping_item_list {
+.shopping-list {
   overflow: hidden;
-}
-
-#shopping_list {
   margin-bottom: 30px;
 }
 
-.item_image {
+.item-image {
   width: 200px;
 }
 
-.order_image {
+.order-image {
   width: 50px;
 }
 
@@ -61,22 +58,22 @@ a:hover {
   color: blue;
 }
 
-.order_title a {
+.order-title a {
   font-size: 20px;
   font-weight: bold;
   color: red;
 }
 
-.hide_button {
+.hide-button {
   width: 50px;
   margin-right: 10px;
 }
 
-table {
+.order-info-table {
   font-size: 15px;
 }
 
-#back_button {
+.back-button {
   font-size: 20px;
   font-weight: bold;
 }
