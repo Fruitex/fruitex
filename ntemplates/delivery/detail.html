@@ -1,96 +1,21 @@
 {% extends "delivery/base.html" %}
+
+{% block title %}Delivery Details{% endblock %}
+
 {% load static %}
 {% load tz %}
 
 {% localtime on %}
 
+
 {% block content %}
 
-<h1>Delivery Window</h1>
-<h2>{{ delivery_window.store }}: {{ delivery_window }}</h2>
-<ul>
-  {% for order in delivery_window.waiting_orders %}
-  <li>
-    <div>
-      <a href="{% url 'order:show' order.invoice.invoice_num %}">
-        Order {{ order }}: {{ order.get_status_display }} ({{ order.items.count }} items)
-      </a>
-    </div>
-    <div>
-      <table id='order-confirm-table'>
-      <tbody>
-        <tr>
-          <td>
-            Invoice status:
-          </td>
-          <td>
-            {{ order.invoice.get_status_display }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Name:
-          </td>
-          <td>
-            {{ order.invoice.customer_name }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Address:
-          </td>
-          <td>
-            {{ order.invoice.address }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            ZIP:
-          </td>
-          <td>
-            {{ order.invoice.postcode }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Phone:
-          </td>
-          <td>
-            {{ order.invoice.phone }}
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Email:
-          </td>
-          <td>
-            {{ order.invoice.email }}
-          </td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
-    <ul class="delivery-item-list">
-      {% for order_item in order.order_items %}
-      <li class="item">
-        <img src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
-        <span>{{ order_item.quantity }} x</span>
-        <span>
-          <span>{{ order_item.item.name }}</span>
-          <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
-        </span>
-      </li>
-      {% endfor %}
-    </ul>
-  </li>
-  {% endfor %}
-</ul>
-
-<h1>Shopping List</h1>
-<ol class="shopping-item-list">
+<h3>Shopping List</h3>
+<ul class="shopping-list">
   {% for item, quantity in combined_items.items %}
   <li class="item">
-    <img src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <img class="item-image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
     <span>{{ quantity }} x </span>
     <span>{{ item.name }}</span>
     {% if item.on_sale %}
@@ -104,9 +29,56 @@
     {% endif %}
   </li>
   {% endfor %}
-</ol>
+</ul>
 
-<a href="{% url 'delivery:summary' %}">Go back to summary</a>
+<h3>Order List</h3>
+<ul>
+  {% for order in delivery_window.waiting_orders %}
+  <li>
+    <div class="order-title">
+      <a href="{% url 'order:show' order.invoice.invoice_num %}">
+        Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
+      </a>
+    </div>
+    <div>
+      <table class='order-info-table'>
+      <tbody>
+        <tr>
+          <td>
+            Invoice status:
+          </td>
+          <td>
+            {{ order.invoice.get_status_display }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Order status:
+          </td>
+          <td>
+            {{ order.get_status_display }}
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+    <ul class="delivery-item-list">
+      {% for order_item in order.order_items %}
+      <li class="item">
+        <img class="order-image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+        <span>{{ order_item.quantity }} x</span>
+        <span>
+          <span>{{ order_item.item.name }}</span>
+          <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
+<div class="back-button"><a href="{% url 'delivery:summary' %}">Go back to summary</a></div>
 
 {% endblock %}
 
