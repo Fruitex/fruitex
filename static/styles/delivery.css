@@ -73,6 +73,22 @@ a:hover {
   font-size: 15px;
 }
 
+.address-list .address-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.address-list .address-invoice-status {
+  font-weight: bold;
+}
+
+.address-list .address-order-list {
+  list-style-type: circle;
+  padding-left: 20px;
+  font-weight: bold;
+}
+
 .back-button {
   font-size: 20px;
   font-weight: bold;

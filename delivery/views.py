@@ -5,7 +5,7 @@ from django.utils.datastructures import SortedDict
 
 from datetime import datetime, timedelta
 
-from order.models import DeliveryWindow, Order
+from order.models import DeliveryWindow, Invoice
 
 def summary(request):
   def divide_delivery_window_by_days(delivery_windows):
@@ -43,10 +43,12 @@ def detail(request, id):
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
+  invoices = filter(lambda invoice: invoice.status != Invoice.STATUS_PENDING, map(lambda order: order.invoice, delivery_window.orders.all()))
 
   context = Context({
     'delivery_window': delivery_window,
-    'combined_items': combine_items(delivery_window.waiting_orders)
+    'combined_items': combine_items(delivery_window.waiting_orders),
+    'invoices': invoices,
   })
 
   template = loader.get_template('delivery/detail.html')
