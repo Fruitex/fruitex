@@ -8,30 +8,28 @@
 {% localtime on %}
 
 
-{% block extra_script %}
-	<script type="text/javascript" src="{% static "javascript/delivery.js" %}"></script>
-{% endblock %}
-
-{% block content %}	
+{% block content %}
 
 <h3>Shopping List</h3>
-{% for item, quantity in combined_items.items %}
-<div class="item" id="shopping_list">
-  <img class="item_image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
-  <img class="hide_button" src="{% static 'imgs/' %}hide_button.png"><br />
-  <span>{{ quantity }} x </span>
-  <span>{{ item.name }}</span>
-  {% if item.on_sale %}
-  <span> Sales Price: {{ item.sales_price }}</span>
-  {% else %}
-  <span> Price: {{ item.price }}</span>
-  {% endif %}
-  {% if item.category.shop_location_note %}
-  <br>
-  <span> Location: {{ item.category.shop_location_note }}</span>
-  {% endif %}
-</div>
-{% endfor %}
+<ul class="shopping-item-list">
+  {% for item, quantity in combined_items.items %}
+  <li class="item">
+    <img class="item_image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <img class="hide_button" src="{% static 'imgs/' %}hide_button.png"><br />
+    <span>{{ quantity }} x </span>
+    <span>{{ item.name }}</span>
+    {% if item.on_sale %}
+    <span> Sales Price: {{ item.sales_price }}</span>
+    {% else %}
+    <span> Price: {{ item.price }}</span>
+    {% endif %}
+    {% if item.category.shop_location_note %}
+    <br>
+    <span> Location: {{ item.category.shop_location_note }}</span>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
 
 <h3>Order List</h3>
 <ul>
