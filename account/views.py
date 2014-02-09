@@ -144,14 +144,18 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         profile = user.get_profile()
-        return {
+        details = {
             'user': user.username,
             'firstname': user.first_name,
             'lastname': user.last_name,
             'email': user.email,
-            'phonenum': profile.phone_num,
-            'address': profile.address
+            'phone': profile.phone,
+            'address': profile.address,
+            'postcode': profile.postcode,
         }
+        if details['firstname'] == details['lastname']:
+           del details['lastname']
+        return details
 
 profile = ProfileView.as_view()
 
@@ -171,7 +175,7 @@ class ProfileChangeView(LoginRequiredMixin, FormView):
             'lastname': user.last_name,
             'email': user.email,
             'address': profile.address,
-            'phonenum': profile.phone_num,
+            'phone': profile.phone,
         })
         return kwargs
 

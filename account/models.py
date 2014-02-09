@@ -10,7 +10,7 @@ from django.db.models.signals import post_save
 import datetime
 import random
 import re
-import sha
+import hashlib
 
 from account.auth_settings import ACCOUNT_SETTING
 
@@ -63,7 +63,7 @@ class RegistrationManager(models.Manager):
                 return user
         return False
 
-    def create_user(self, username, password, email, firstname, lastname, phonenum, address,
+    def create_user(self, username, password, email, firstname, lastname, phone, address, postcode,
                              send_email=True, profile_callback=None):
         """
         Create a new, inactive ``User``, generates a
@@ -88,8 +88,9 @@ class RegistrationManager(models.Manager):
         new_user.first_name = firstname
         new_user.last_name = lastname
         user_profile = new_user.get_profile()
-        user_profile.phone_num = phonenum
+        user_profile.phone = phone
         user_profile.address = address
+        user_profile.postcode = postcode
         user_profile.save()
 
         if ACCOUNT_SETTING.NEED_ACTIVATION:
@@ -129,8 +130,12 @@ class RegistrationManager(models.Manager):
         username and a random salt.
 
         """
-        salt = sha.new(str(random.random())).hexdigest()[:5]
-        activation_key = sha.new(salt+user.username).hexdigest()
+        salthash = hashlib.sha1()
+        salthash.update(str(random.random()))
+        salt = salthash.hexdigest()[:5]
+        keyhash = hashlib.sha1()
+        keyhash.update(salt+user.username)
+        activation_key = keyhash.hexdigest()
         return self.create(user=user,
                            activation_key=activation_key)
 
@@ -254,8 +259,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
     # Other fields here
-    phone_num = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
     address = models.CharField(max_length=40)
+    postcode = models.CharField(max_length=10)
 
 
 def create_user_profile(sender, instance, created, **kwargs):
