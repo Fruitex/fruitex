@@ -113,9 +113,13 @@ def view_cart(request):
 
 def checkout(request):
   error = None
-  checkout_package = request.session['checkout_package']
-  if checkout_package is None or len(checkout_package) <= 0:
-    return HttpResponseRedirect(reverse('order:cart'))
+  try:
+     checkout_package = request.session['checkout_package']
+     if checkout_package is None or len(checkout_package) <= 0:
+         return HttpResponseRedirect(reverse('order:cart'))
+  except KeyError:
+      return HttpResponseRedirect(reverse('order:cart'))
+
 
   cart = checkout_package['cart'];
   delivery_choices = checkout_package['delivery_choices'];
