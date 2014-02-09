@@ -1,6 +1,7 @@
 {% extends "common/base.html" %}
 {% load static %}
 {% load collection_extra %}
+{% load widget_tweaks %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}"/>
@@ -10,11 +11,7 @@
 {% endblock %}
 
 {% block extra_script %}
-<script type="text/javascript" src="{% static 'javascript/lib/underscore.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'javascript/lib/jquery.tmpl.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
 <script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -54,51 +51,111 @@
   <div id='items-in-cart-summary-container'>
   </div>
 </div>
+<iframe id="ifm-login" src="{% url 'login' %}" class="hidden"></iframe>
+<iframe id="ifm-register" src="{% url 'registration_register' %}" class="hidden"></iframe>
 <form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
 <div id='delivery-wrapper' class="order-section-wrapper">
-  <div id="delivery-header" class="order-section-header">
-    <h3>Delivery Info</h3>
+  <div id="delivery-header" class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="col-sm-6">Delivery Info</h3>
+      {% if not request.user %}
+      <div class="btn-group pull-right">
+        <button class="btn btn-default" id="acc-chk-login" data-toggle="button">Login</button>
+        <button class="btn btn-default" id="acc-chk-register" data-toggle="button">Register</button>
+      </div>
+      <div class="clearfix"></div>
+      <div id="acc-chk-pnl" class="bg-info well-sm">
+        <div id="acc-chk-login-pnl" class="form-inline">
+          <div class="form-group">
+            <input type="text" class="form-control" id="login-id_username" name="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="login-id_password" name="password" placeholder="Password">
+          </div>
+          <button type="button" class="btn btn-primary" id="login-submit">Login</button>
+        </div>
+        <div id="acc-chk-register-pnl" class="form-inline ">
+          <div class="form-group">
+            <input type="text" class="form-control" id="register-id_username" name="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="register-id_password1" name="password1" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" id="register-id_password2" name="password2" placeholder="Password Confirm">
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <input type="hidden" id="user-id_firstname" value="{{ request.user.first_name }}" />
+      <input type="hidden" id="user-id_lastname" value="{{ request.user.last_name }}" />
+      <input type="hidden" id="user-id_email" value="{{ request.user.email }}" />
+      <input type="hidden" id="user-id_phone" value="{{ request.user.get_profile.phone }}" />
+      <input type="hidden" id="user-id_address" value="{{ request.user.get_profile.address }}" />
+      <input type="hidden" id="user-id_postcode" value="{{ request.user.get_profile.postcode }}" />
+      {% endif %}
+    </div>
   </div>
-  <div id='delivery-container' class="order-section-container">
+
+  <div id='delivery-container' class="panel-body">
+    <div id="errors" class="alert alert-warning"></div>
     {{ form.non_field_errors }}
-    <table id="delivery-container-table" class="order-table">
-      <tr>
-        <td>Name</td>
-        <td>
-          {{ checkout_form.name }}{{ checkout_form.name.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Phone</td>
-        <td>
-          {{ checkout_form.phone }}{{ checkout_form.phone.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Email</td>
-        <td>
-          {{ checkout_form.email }}{{ checkout_form.email.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Address</td>
-        <td>
-          {{ checkout_form.address }}{{ checkout_form.address.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Post Code</td>
-        <td>
-          {{ checkout_form.postcode }}{{ checkout_form.postcode.errors }}
-        </td>
-      </tr>
-      <tr>
-        <td>Comment</td>
-        <td>
-          {{ checkout_form.comment }}{{ checkout_form.comment.errors }}
-        </td>
-      </tr>
-    </table>
+    <div class="form-horizontal col-sm-11" role="form">
+      <div class="form-group">
+        <label for="id_name" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-5">
+          {{ checkout_form.name|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.name.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_phone" class="col-sm-2 control-label">Phone</label>
+        <div class="col-sm-5">
+          {{ checkout_form.phone|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.phone.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_email" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-5">
+          {{ checkout_form.email|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.email.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_address" class="col-sm-2 control-label">Address</label>
+        <div class="col-sm-5">
+          {{ checkout_form.address|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.address.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_postcode" class="col-sm-2 control-label">Postal Code</label>
+        <div class="col-sm-5">
+          {{ checkout_form.postcode|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.postcode.errors }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_comment" class="col-sm-2 control-label">Comment</label>
+        <div class="col-sm-5">
+          {{ checkout_form.comment|add_class:"form-control" }}
+        </div>
+        <div class="col-sm-5">
+          {{ checkout_form.comment.errors }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div class="order-section-wrapper payment-wrapper">
@@ -154,12 +211,188 @@
   </table>
 </script>
 <script type="text/javascript">
+var account_check = {};
+
 $(document).ready(function() {
   // Gather items data
   var items = _.object(_.map($('.item-in-cart'), function(el) {
     return [$(el).data('id'), $(el).data('json')];
   }));
   var datetime = {{ datetime|date:"U" }};
+
+  $('#login-submit').click(function() {
+    var ifm = $("#ifm-login");
+    var frm = ifm.contents().find("form#form-login");
+    if(frm.length < 1) {
+      return;
+    }
+    var fields = $("input[id^='login-id']");
+    fields.each(function(idx, el) {
+      el = $(el);
+      var name = el.attr('name');
+      var targetEl = frm.find("input[name='"+ name + "']");
+      targetEl.val(el.val());
+    });
+    frm.submit();
+    ifm.load(function() {
+      var errors = $("#errors");
+      errors.empty();
+      errors.hide();
+      ifm.off('load');
+      var ifmErrors = ifm.contents().find("#errors");
+      if(ifmErrors.length > 0) {
+        errors.html(ifmErrors.html());
+        errors.show();
+
+      } else {
+        //NOTE: it's expcted we are in profile page.Otherwise show error message
+        var fields = ifm.contents().find("td[id^='id_']");
+        if(fields.length > 0) {
+          fields.each(function(idx, el){
+            el = $(el);
+            var id = el.attr('id');
+            $("#" + id).val(el.text());
+          });
+          // value adapter: first, last name
+          var firstname = ifm.contents().find("#id_firstname");
+          var lastname = ifm.contents().find("#id_lastname");
+          var fullname = firstname.text();
+          if(lastname.length > 0) {
+            fullname += " " + lastname.text();
+          }
+          $("#id_name").val(fullname);
+          $("#acc-chk-pnl, #acc-chk-login, #acc-chk-register").hide();
+        } else {
+          errors.html("<p>Login failed. Please try again later or report this account to us. Thank you</p>");
+          errors.show();
+          // it's highly possible the iframe is not in login page any more.
+          ifm.prop('src', ifm.prop('src'));
+        }
+      }
+    });
+  });
+
+  var isRegisterOk = function(cbfunc) {
+    var accountOption = $("#acc-chk-register");
+    if(!accountOption.hasClass("active")) {
+      cbfunc();
+      return true;
+    }
+    var ifm = $("#ifm-register");
+    var frm = ifm.contents().find("form");
+    if(frm.length < 1) {
+      return false;
+    }
+    var fields = $("input[id^='register-id'], input[id^='id_'], textarea[id^='id_']");
+    fields.each(function(idx, el){
+      el = $(el);
+      var name = el.attr('name');
+      var tagName = el.prop('tagName');
+      var targetEl = frm.find(tagName + "[name='" + name + "']");
+      targetEl.val(el.val());
+    });
+    // value adapter: first, last name
+    var $fullname = $("#id_name");
+    if($fullname.length > 0) {
+      var firstname = $fullname.val();
+      var lastname = firstname;
+      var idxSpc = firstname.indexOf(' ');
+      if(idxSpc > -1) {
+        lastname = firstname.substr(idxSpc+1);
+        firstname = firstname.substring(0, idxSpc);
+      }
+      frm.find("#id_firstname").val(firstname);
+      frm.find("#id_lastname").val(lastname);
+    }
+    frm.submit();
+    ifm.load(function() {
+      var errors = $("#errors");
+      errors.empty();
+      errors.hide();
+      ifm.unbind("load");
+      var ifmErrors = ifm.contents().find("#errors");
+      var seenError = false;
+      if(ifmErrors.length > 0) {
+        errors.html(ifmErrors.html());
+        seenError = true;
+      }
+      ifmErrors = ifm.contents().find(".errors");
+      ifmErrors.each(function(idx, elem){
+        var $elem = $(elem); // Assume the form is using bootstrap styling
+        var label = $elem.parent().parent().find("label");
+        $elem.text(label.text() + $elem.text());
+        errors.append($elem);
+        seenError = true;
+      });
+      if(seenError) {
+        errors.show();
+        return false;
+      }
+
+      cbfunc();
+    });
+  };
+
+  $("#acc-chk-login").click(function(evt){
+    var other = $("#acc-chk-register");
+    var pnlContainer = $("#acc-chk-pnl");
+    var otherPnl = $("#acc-chk-register-pnl");
+    var thisPnl = $("#acc-chk-login-pnl");
+    if($(this).hasClass('active')) {
+      thisPnl.hide();
+      pnlContainer.slideUp();
+    } else {
+      if(other.hasClass('active')) {
+        other.button('toggle');
+        otherPnl.hide();
+      }
+      thisPnl.show();
+      pnlContainer.slideDown();
+    }
+  });
+
+  $("#acc-chk-register").click(function(evt){
+    var other = $("#acc-chk-login");
+    var pnlContainer = $("#acc-chk-pnl");
+    var otherPnl = $("#acc-chk-login-pnl");
+    var thisPnl = $("#acc-chk-register-pnl");
+    if($(this).hasClass('active')) {
+      thisPnl.hide();
+      pnlContainer.slideUp();
+    } else {
+      if(other.hasClass('active')) {
+        other.button('toggle');
+        otherPnl.hide();
+      }
+      thisPnl.show();
+      pnlContainer.slideDown();
+    }
+  });
+
+  var detect_user = function() {
+    var fields = $("input[id^='user-']");
+    if(fields.length > 0) {
+      fields.each(function(idx, el) {
+        el = $(el);
+        var id = el.attr('id'); // so we could
+        var name = id;
+        var idxHyphen = id.indexOf("-");
+        if(idxHyphen > -1) {
+          name = id.substr(idxHyphen+1);
+        }
+        var targetEl = $("#" + name);
+        targetEl.val(el.val());
+      });
+
+      var firstname = $("#user-id_firstname");
+      var lastname = $("#user-id_lastname");
+      var fullname = firstname.val();
+      if(lastname.length > 0) {
+        fullname += " " + lastname.val();
+      }
+      $("#id_name").val(fullname);
+    }
+  };
 
   // Defualt no coupon
   var coupon = null;
@@ -258,7 +491,13 @@ $(document).ready(function() {
   $("#checkout-button").click(function() {
     if (isValidUserInput()) {
       $('#datetime').val(datetime);
-      $("#checkout-form").submit();
+      isRegisterOk(function() {
+        // TODO: add detect if the registration is successful
+        if(account_check.username) {
+          alert("Thank you for register " + account_check.username + "!");
+        }
+        $("#checkout-form").submit();
+      });
     }
   });
 
@@ -282,7 +521,11 @@ $(document).ready(function() {
     spinner.spinner('disable');
   });
 
+  $("#acc-chk-login, #acc-chk-register").button();
+  $("#acc-chk-pnl, #acc-chk-register-pnl, #acc-chk-login-pnl").hide();
+  $("#errors").hide();
   checkCoupon();
+  detect_user();
 });
 </script>
 {% endblock %}

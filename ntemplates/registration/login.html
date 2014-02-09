@@ -5,10 +5,10 @@
   <h1>Login to Fruitex</h1>
 </div>
 {% if form.errors %}
-<div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+<div id="errors" class="alert alert-danger">Your username and password didn't match. Please try again.</div>
 {% endif %}
 
-<form method="post" action="{% url 'login' %}" class="col-sm-4">
+<form id="form-login" method="post" action="{% url 'login' %}" class="col-sm-4">
 {% csrf_token %}
   <div class="form-group">
     <label for="id_username">{{ form.username.label_tag }}</label>
