@@ -63,7 +63,7 @@ def detail(request, id):
   template = loader.get_template('delivery/detail.html')
   return HttpResponse(template.render(context))
 
-def invoices(request, ids):
+def destinations(request, ids):
   delivery_window_ids = map(lambda s: int(s), ids.split('+'))
   delivery_windows = DeliveryWindow.objects.filter(id__in=delivery_window_ids)
   orders = map(lambda delivery_window: delivery_window.orders.all(), delivery_windows)

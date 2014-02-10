@@ -35,7 +35,7 @@
     </li>
     {% endfor %}
     <li class="stores">
-      <a href="invoices/{{ delivery_windows|join_by_attr:"id" }}">
+      <a href="{% url 'delivery:destinations' delivery_windows|join_by_attr:"id" %}">
         Destinations
       </a>
     </li>
