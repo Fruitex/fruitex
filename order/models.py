@@ -75,8 +75,8 @@ class Payment(models.Model):
   METHODS_PAYPAL = 'PP'
   METHODS_SQUARE = 'SQ'
   METHODS = (
-    (METHODS_PAYPAL, 'Paypal'),
-    (METHODS_SQUARE, 'Square (pay on delivery)'),
+    (METHODS_PAYPAL, 'Paypal or online credit card payment'),
+    (METHODS_SQUARE, 'Offline credit card payment at delivery'),
   )
 
   # Payment status
@@ -105,7 +105,7 @@ class DeliveryWindow(models.Model):
     start = localtime(self.start)
     end = localtime(self.end)
     return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
-    
+
   def _get_waiting_orders(self):
     orders = []
     for order in self.orders.all():
