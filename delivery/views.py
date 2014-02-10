@@ -24,7 +24,7 @@ def summary(request):
   divider_func = lambda dw: localtime(dw.start).date()
   divided_by_days = divide_delivery_window(delivery_windows, divider_func)
   divider_func = lambda dw: datetime.strftime(localtime(dw.start), "%H:%M") + '~' + datetime.strftime(localtime(dw.end), "%H:%M")
-  divided_by_time = {day: divide_delivery_window(divided_by_days[day], divider_func) for day in divided_by_days}
+  divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
   
   divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
   divided_delivery_windows_ids = [dict([(time, day[1][time]) for time in day[1]]) for day in divided_delivery_windows]
