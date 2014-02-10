@@ -43,7 +43,7 @@ def detail(request, id):
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
-  invoices = filter(lambda invoice: invoice.status != Invoice.STATUS_PENDING, map(lambda order: order.invoice, delivery_window.orders.all()))
+  invoices = filter(lambda invoice: invoice.status in (Invoice.STATUS_PAID, Invoice.STATUS_PAY_ON_DELIVERY), map(lambda order: order.invoice, delivery_window.orders.all()))
 
   context = Context({
     'delivery_window': delivery_window,
