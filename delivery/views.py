@@ -27,12 +27,7 @@ def summary(request):
   divided_by_time = {day: divide_delivery_window(divided_by_days[day], divider_func) for day in divided_by_days}
   
   divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
-  divided_delivery_windows_ids = [{time: day[1][time] for time in day[1] } for day in divided_delivery_windows]
-  import sys
-  print >>sys.stderr, divided_delivery_windows
-  print >>sys.stderr, "\n\n"
-  print >>sys.stderr, divided_delivery_windows_ids
-  # {time: divided_delivery_windows[day][time] for time in divided_delivery_windows[day] }
+  divided_delivery_windows_ids = [dict([(time, day[1][time]) for time in day[1]]) for day in divided_delivery_windows]
 
   context = Context({
     'delivery_windows_divided_by_days_and_time': divided_delivery_windows,
@@ -74,5 +69,5 @@ def destinations(request, ids):
     'invoices': invoices
   })
   
-  template = loader.get_template('delivery/invoices.html')
+  template = loader.get_template('delivery/destinations.html')
   return HttpResponse(template.render(context))
