@@ -1,8 +1,34 @@
-.item {
-  margin: 2px auto;
+.container {
+  width: 95%;
+  padding: 0;
 }
 
-.item img {
+header {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 0;
+  padding: 0;
+}
+
+.item {
+  font-weight: bold;
+  margin: 2px auto;
+  margin-bottom: 10px;
+}
+
+.shopping-list {
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.item-image {
+  width: 200px;
+}
+
+.order-image {
   width: 50px;
 }
 
@@ -10,7 +36,60 @@ a:hover {
   text-decoration: underline;
 }
 
-a, a:visited {
-  color: #0645AD;
+.stores {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
 }
 
+.stores a {
+  color: red;
+}
+
+.orders {
+  font-size: 15px;
+  font-weight: bold;
+  color: gray;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.orders a {
+  color: blue;
+}
+
+.order-title a {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.hide-button {
+  width: 50px;
+  margin-right: 10px;
+}
+
+.order-info-table {
+  font-size: 15px;
+}
+
+.address-list .address-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.address-list .address-invoice-status {
+  font-weight: bold;
+}
+
+.address-list .address-order-list {
+  list-style-type: circle;
+  padding-left: 20px;
+  font-weight: bold;
+}
+
+.back-button {
+  font-size: 20px;
+  font-weight: bold;
+}

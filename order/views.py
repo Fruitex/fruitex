@@ -128,14 +128,16 @@ def checkout(request):
   delivery_options = validate_delivery_choices(delivery_choices)
 
   if request.method == 'POST' and isinstance(cart, list) and len(cart) > 0:
+    # No response by default
+    response = None
     checkout_form = CheckoutForm(request.POST)
 
     if delivery_options == False:
       error = 'The delivery option you select is no longer valid'
-      return HttpResponseRedirect(reverse('shop:to_default'))
+      return HttpResponseRedirect(reverse('order:cart'))
     elif len(coupon_code) > 0 and coupon == False:
       error = 'The coupon you have entered is no longer valid'
-      return HttpResponseRedirect(reverse('shop:to_default'))
+      return HttpResponseRedirect(reverse('order:cart'))
     elif checkout_form.is_valid():
       payment_method = checkout_form.cleaned_data['payment_method'];
       invoice = create_invoice(
@@ -151,22 +153,24 @@ def checkout(request):
       if payment_method != Payment.METHODS_PAYPAL:
         Payment.objects.create_payment(invoice, payment_method)
         invoice.set_status(Invoice.STATUS_PAY_ON_DELIVERY)
-        return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
-
-      raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
-        'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
-        'cancel_url': request.build_absolute_uri(reverse('order:payment_paypal_cancel', kwargs={'id': invoice.id})),
-      })
-      if raw_payment is None:
-        error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
+        response = HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
       else:
-        payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
-        redirect_url = paypal.get_redirect_url(payment.raw, reverse('shop:to_default'))
+        raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
+          'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
+          'cancel_url': request.build_absolute_uri(reverse('order:payment_paypal_cancel', kwargs={'id': invoice.id})),
+        })
+        if raw_payment is None:
+          error = 'Fail to create the PayPal payment at the moment, please try again or choose another payment method'
+        else:
+          payment = Payment.objects.create_paypal_payment(invoice, raw_payment)
+          redirect_url = paypal.get_redirect_url(payment.raw, reverse('shop:to_default'))
+          response = HttpResponseRedirect(redirect_url)
 
-        request.session['checkout_package'] = None
-        response = HttpResponseRedirect(redirect_url)
-        response.set_cookie('cart', '')
-        return response
+    if response is not None:
+      # Clean up checkout_package and cookie cart.
+      request.session['checkout_package'] = None
+      response.set_cookie('cart', '')
+      return response
 
   else:
     checkout_form = CheckoutForm();

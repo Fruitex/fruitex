@@ -5,7 +5,7 @@ from django.utils.datastructures import SortedDict
 
 from datetime import datetime, timedelta
 
-from order.models import DeliveryWindow, Order
+from order.models import DeliveryWindow, Invoice
 
 def summary(request):
   def divide_delivery_window_by_days(delivery_windows):
@@ -18,7 +18,7 @@ def summary(request):
         divided[date] = [delivery_window]
     return divided
 
-  datetime_threshold = make_aware(datetime.now() - timedelta(days=30), get_default_timezone())
+  datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
   divided_by_days = divide_delivery_window_by_days(delivery_windows)
 
@@ -34,8 +34,6 @@ def detail(request, id):
   def combine_items(orders):
     items = {}
     for order in orders:
-      if order.status == Order.STATUS_PENDING:
-        continue
       for order_item in order.order_items:
         if order_item.item in items:
           items[order_item.item] += order_item.quantity
@@ -45,10 +43,12 @@ def detail(request, id):
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
+  invoices = filter(lambda invoice: invoice.status in (Invoice.STATUS_PAID, Invoice.STATUS_PAY_ON_DELIVERY), map(lambda order: order.invoice, delivery_window.orders.all()))
 
   context = Context({
     'delivery_window': delivery_window,
-    'combined_items': combine_items(delivery_window.orders.all())
+    'combined_items': combine_items(delivery_window.waiting_orders),
+    'invoices': invoices,
   })
 
   template = loader.get_template('delivery/detail.html')

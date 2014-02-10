@@ -75,8 +75,8 @@ class Payment(models.Model):
   METHODS_PAYPAL = 'PP'
   METHODS_SQUARE = 'SQ'
   METHODS = (
-    (METHODS_PAYPAL, 'Paypal'),
-    (METHODS_SQUARE, 'Square (pay on delivery)'),
+    (METHODS_PAYPAL, 'Paypal or online credit card payment'),
+    (METHODS_SQUARE, 'Offline credit card payment at delivery'),
   )
 
   # Payment status
@@ -106,11 +106,19 @@ class DeliveryWindow(models.Model):
     end = localtime(self.end)
     return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
 
+  def _get_waiting_orders(self):
+    orders = []
+    for order in self.orders.all():
+      if order.status == Order.STATUS_WAITING:
+        orders.append(order)
+    return orders
+
   DATETIME_FORMAT = '%a %b %d  %H:%M'
 
   store = models.ForeignKey('shop.Store', related_name='delivery_windows')
   start = models.DateTimeField()
   end = models.DateTimeField()
+  waiting_orders = property(_get_waiting_orders)
 
   objects = managers.DeliveryWindowManager()
 
@@ -164,7 +172,7 @@ class Order(models.Model):
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
   delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', on_delete=models.PROTECT)
-  comment = models.TextField()
+  comment = models.TextField(blank=True)
 
   # Metas
   invoice = models.ForeignKey('Invoice', related_name='orders', on_delete=models.PROTECT)

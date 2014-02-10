@@ -23,6 +23,7 @@
 
 .banner img {
   width: 800px;
+  border-radius: 12px;
 }
 
 .stores ul {
