@@ -36,9 +36,15 @@
       <td id="id_postcode">{{postcode}}</td>
     </tr>
   </table>
-  <div class="btn-group-vertical">
+  <div class="btn-group">
+    <a href="javascript:history.back();" class="btn btn-primary" role="button">Go Back</a>
+  </div>
+
+  <div class="btn-group">
     <a href="{% url 'profile_change' %}" class="btn btn-default" role="button">Update profile</a>
     <a href="{% url 'password_change' %}" class="btn btn-default" role="button">Change password</a>
+  </div>
+  <div class="btn-group">
     <a href="{% url 'logout' %}" class="btn btn-default" role="button">Logout</a>
   </div>
 {% endblock %}

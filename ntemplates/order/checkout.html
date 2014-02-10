@@ -56,9 +56,9 @@
 <form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
 <div id='delivery-wrapper' class="order-section-wrapper">
   <div id="delivery-header" class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="col-sm-6">Delivery Info</h3>
-      {% if not request.user %}
+    <div class="panel-heading col-sm-12">
+      <h3 class="col-sm-8">Delivery Info</h3>
+      {% if not user.is_authenticated %}
       <div class="btn-group pull-right">
         <button class="btn btn-default" id="acc-chk-login" data-toggle="button">Login</button>
         <button class="btn btn-default" id="acc-chk-register" data-toggle="button">Register</button>
@@ -87,12 +87,21 @@
         </div>
       </div>
       {% else %}
-      <input type="hidden" id="user-id_firstname" value="{{ request.user.first_name }}" />
-      <input type="hidden" id="user-id_lastname" value="{{ request.user.last_name }}" />
-      <input type="hidden" id="user-id_email" value="{{ request.user.email }}" />
-      <input type="hidden" id="user-id_phone" value="{{ request.user.get_profile.phone }}" />
-      <input type="hidden" id="user-id_address" value="{{ request.user.get_profile.address }}" />
-      <input type="hidden" id="user-id_postcode" value="{{ request.user.get_profile.postcode }}" />
+      <input type="hidden" id="user-id_firstname" value="{{ user.first_name }}" />
+      <input type="hidden" id="user-id_lastname" value="{{ user.last_name }}" />
+      <input type="hidden" id="user-id_email" value="{{ user.email }}" />
+      <input type="hidden" id="user-id_phone" value="{{ user.get_profile.phone }}" />
+      <input type="hidden" id="user-id_address" value="{{ user.get_profile.address }}" />
+      <input type="hidden" id="user-id_postcode" value="{{ user.get_profile.postcode }}" />
+      <div clas="col-sm-2 pull-right">
+        <span class="label label-primary">Welcome back, {{ user.username }}</span>
+        <p></p><!-- separater -->
+        <div class="btn-group">
+          <a href="{% url 'profile' %}" class="btn btn-default">My Profile</a>
+          <a href="{% url 'logout' %}" class="btn btn-default">Logout</a>
+        </div>
+      </div>
+      <div class="clearfix"></div>
       {% endif %}
     </div>
   </div>
@@ -101,6 +110,7 @@
     <div id="errors" class="alert alert-warning"></div>
     {{ form.non_field_errors }}
     <div class="form-horizontal col-sm-11" role="form">
+      <div class="form-group"></div>
       <div class="form-group">
         <label for="id_name" class="col-sm-2 control-label">Name</label>
         <div class="col-sm-5">
@@ -248,20 +258,8 @@ $(document).ready(function() {
         //NOTE: it's expcted we are in profile page.Otherwise show error message
         var fields = ifm.contents().find("td[id^='id_']");
         if(fields.length > 0) {
-          fields.each(function(idx, el){
-            el = $(el);
-            var id = el.attr('id');
-            $("#" + id).val(el.text());
-          });
-          // value adapter: first, last name
-          var firstname = ifm.contents().find("#id_firstname");
-          var lastname = ifm.contents().find("#id_lastname");
-          var fullname = firstname.text();
-          if(lastname.length > 0) {
-            fullname += " " + lastname.text();
-          }
-          $("#id_name").val(fullname);
-          $("#acc-chk-pnl, #acc-chk-login, #acc-chk-register").hide();
+          location.reload();
+          //$("#acc-chk-pnl, #acc-chk-login, #acc-chk-register").hide();
         } else {
           errors.html("<p>Login failed. Please try again later or report this account to us. Thank you</p>");
           errors.show();
@@ -387,7 +385,7 @@ $(document).ready(function() {
       var firstname = $("#user-id_firstname");
       var lastname = $("#user-id_lastname");
       var fullname = firstname.val();
-      if(lastname.length > 0) {
+      if(lastname.length > 0 && fullname != lastname.val()) {
         fullname += " " + lastname.val();
       }
       $("#id_name").val(fullname);
