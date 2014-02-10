@@ -18,7 +18,7 @@ def summary(request):
         divided[date] = [delivery_window]
     return divided
 
-  datetime_threshold = make_aware(datetime.now() - timedelta(days=30), get_default_timezone())
+  datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
   divided_by_days = divide_delivery_window_by_days(delivery_windows)
 
