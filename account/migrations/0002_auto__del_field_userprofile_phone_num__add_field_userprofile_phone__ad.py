@@ -8,13 +8,8 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'UserProfile.phone_num'
-        db.delete_column(u'account_userprofile', 'phone_num')
-
-        # Adding field 'UserProfile.phone'
-        db.add_column(u'account_userprofile', 'phone',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=20),
-                      keep_default=False)
+        # Rename field 'UserProfile.phone_num' to 'UserProfile.phone'
+        db.rename_column(u'account_userprofile', 'phone_num', 'phone')
 
         # Adding field 'UserProfile.postcode'
         db.add_column(u'account_userprofile', 'postcode',
@@ -23,13 +18,8 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Adding field 'UserProfile.phone_num'
-        db.add_column(u'account_userprofile', 'phone_num',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=20),
-                      keep_default=False)
-
-        # Deleting field 'UserProfile.phone'
-        db.delete_column(u'account_userprofile', 'phone')
+        # Rename field 'UserProfile.phone' to 'UserProfile.phone_num'
+        db.rename_column(u'account_userprofile', 'phone', 'phone_num')
 
         # Deleting field 'UserProfile.postcode'
         db.delete_column(u'account_userprofile', 'postcode')
