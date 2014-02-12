@@ -8,23 +8,29 @@ from datetime import datetime, timedelta
 from order.models import DeliveryWindow, Invoice
 
 def summary(request):
-  def divide_delivery_window_by_days(delivery_windows):
+  def divide_delivery_window(delivery_windows, divider_func):
     divided = {}
     for delivery_window in delivery_windows:
-      date = localtime(delivery_window.start).date()
-      if date in divided:
-        divided[date].append(delivery_window)
+      divider = divider_func(delivery_window)
+      if divider in divided:
+        divided[divider].append(delivery_window)
       else:
-        divided[date] = [delivery_window]
+        divided[divider] = [delivery_window]
     return divided
 
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
-  divided_by_days = divide_delivery_window_by_days(delivery_windows)
+  
+  divider_func = lambda dw: localtime(dw.start).date()
+  divided_by_days = divide_delivery_window(delivery_windows, divider_func)
+  divider_func = lambda dw: datetime.strftime(localtime(dw.start), "%H:%M") + '~' + datetime.strftime(localtime(dw.end), "%H:%M")
+  divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
+  
+  divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
+  divided_delivery_windows_ids = [dict([(time, day[1][time]) for time in day[1]]) for day in divided_delivery_windows]
 
   context = Context({
-    'delivery_windows': delivery_windows,
-    'delivery_windows_divided_by_days': sorted(divided_by_days.items(), reverse=True),
+    'delivery_windows_divided_by_days_and_time': divided_delivery_windows,
   })
 
   template = loader.get_template('delivery/summary.html')
@@ -52,4 +58,18 @@ def detail(request, id):
   })
 
   template = loader.get_template('delivery/detail.html')
+  return HttpResponse(template.render(context))
+
+def destinations(request, ids):
+  delivery_window_ids = map(lambda s: int(s), ids.split('+'))
+  delivery_windows = DeliveryWindow.objects.filter(id__in=delivery_window_ids)
+  orders = map(lambda delivery_window: delivery_window.orders.all(), delivery_windows)
+  orders = reduce(list.__add__, map(lambda order: list(order), orders))
+  invoices = list(set(map(lambda order: order.invoice, orders)))
+  
+  context = Context({
+    'invoices': invoices
+  })
+  
+  template = loader.get_template('delivery/destinations.html')
   return HttpResponse(template.render(context))
