@@ -21,20 +21,20 @@
 
 <h3 id="shopping-list">Shopping List</h3>
 <ul class="shopping-list">
-  {% for item, quantity in combined_items.items %}
+  {% for item in combined_items %}
   <li class="item">
     <img class="item-image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
     <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
-    <span>{{ quantity }} x </span>
-    <span>{{ item.name }}</span>
-    {% if item.on_sale %}
-    <span> Sales Price: {{ item.sales_price }}</span>
+    <span>{{ item.quantity }} x </span>
+    <span>{{ item.item.name }}</span>
+    {% if item.item.on_sale %}
+    <span> Sales Price: {{ item.item.sales_price }}</span>
     {% else %}
-    <span> Price: {{ item.price }}</span>
+    <span> Price: {{ item.item.price }}</span>
     {% endif %}
-    {% if item.category.shop_location_note %}
+    {% if item.item.category.shop_location_note %}
     <br>
-    <span> Location: {{ item.category.shop_location_note }}</span>
+    <span> Location: {{ item.item.category.shop_location_note }}</span>
     {% endif %}
   </li>
   {% endfor %}

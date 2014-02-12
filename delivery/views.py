@@ -38,14 +38,11 @@ def summary(request):
 
 def detail(request, id):
   def combine_items(orders):
-    items = {}
+    items = []
     for order in orders:
-      for order_item in order.order_items:
-        if order_item.item in items:
-          items[order_item.item] += order_item.quantity
-        else:
-          items[order_item.item] = order_item.quantity
-    items = SortedDict(map(lambda x: (x, items[x]), sorted(items.keys(), key=lambda item: item.category.shop_order)))
+      items += order.order_items
+    items = sorted(items, key=lambda item: item.item.name)
+    items = sorted(items, key=lambda item: item.item.category.shop_order)
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
