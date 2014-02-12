@@ -16,7 +16,7 @@
         {% endfor %}
         <div class="form-group">
           <button type="submit" class="btn btn-primary">Change profile</button>
-          <button type="button" class="btn btn-default" onclick="history.back()">Back</button>
+          <a href="{% url 'profile' %}" class="btn btn-default">Back</a>
         </div>
     </form>
 {% endblock %}
