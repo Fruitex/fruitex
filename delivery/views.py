@@ -11,6 +11,8 @@ def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
     divided = {}
     for delivery_window in delivery_windows:
+      if len(delivery_window.waiting_orders) == 0:
+        continue
       divider = divider_func(delivery_window)
       if divider in divided:
         divided[divider].append(delivery_window)
