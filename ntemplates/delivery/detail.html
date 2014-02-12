@@ -21,22 +21,22 @@
 
 <h3 id="shopping-list">Shopping List</h3>
 <ul class="shopping-list">
-  {% for item in combined_items %}
+  {% for order_item in order_items %}
   <li class="item">
     <span class="counter">{{ forloop.counter }}.</span>
     <img class="item-image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
     <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
-    <span>{{ item.quantity }} x </span>
-    <span>{{ item.item.name }}</span>
-    {% if item.item.on_sale %}
-    <span> Sales Price: {{ item.item.sales_price }}</span>
+    <span>{{ order_item.quantity }} x </span>
+    <span>{{ order_item.item.name }}</span>
+    {% if order_item.item.on_sale %}
+    <span> Sales Price: {{ order_item.item.sales_price }}</span>
     {% else %}
-    <span> Price: {{ item.item.price }}</span>
+    <span> Price: {{ order_item.item.price }}</span>
     {% endif %}
-    <label><input type="checkbox" {% if item.allow_sub %}checked{% endif %} disabled>Sub</label>
-    {% if item.item.category.shop_location_note %}
+    <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
+    {% if order_item.item.category.shop_location_note %}
     <br>
-    <span> Location: {{ item.item.category.shop_location_note }}</span>
+    <span> Location: {{ order_item.item.category.shop_location_note }}</span>
     {% endif %}
   </li>
   {% endfor %}

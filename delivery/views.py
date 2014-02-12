@@ -37,12 +37,12 @@ def summary(request):
   return HttpResponse(template.render(context))
 
 def detail(request, id):
-  def combine_items(orders):
+  def order_items(orders):
     items = []
     for order in orders:
       items += order.order_items
-    items = sorted(items, key=lambda item: item.item.name)
-    items = sorted(items, key=lambda item: item.item.category.shop_order)
+    items = sorted(items, key=lambda order_item: order_item.item.id)
+    items = sorted(items, key=lambda order_item: order_item.item.category.shop_order)
     return items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
@@ -50,7 +50,7 @@ def detail(request, id):
 
   context = Context({
     'delivery_window': delivery_window,
-    'combined_items': combine_items(delivery_window.waiting_orders),
+    'order_items': order_items(delivery_window.waiting_orders),
     'invoices': invoices,
   })
 
