@@ -32,6 +32,7 @@
     {% else %}
     <span> Price: {{ item.item.price }}</span>
     {% endif %}
+    <label><input type="checkbox" {% if item.allow_sub %}checked{% endif %} disabled>Sub</label>
     {% if item.item.category.shop_location_note %}
     <br>
     <span> Location: {{ item.item.category.shop_location_note }}</span>
