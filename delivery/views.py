@@ -21,9 +21,9 @@ def summary(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
   
-  divider_func = lambda dw: localtime(dw.start).date()
+  divider_func = lambda dw: localtime(dw.start).date().strftime("%b %d, %a")
   divided_by_days = divide_delivery_window(delivery_windows, divider_func)
-  divider_func = lambda dw: datetime.strftime(localtime(dw.start), "%H:%M") + '~' + datetime.strftime(localtime(dw.end), "%H:%M")
+  divider_func = lambda dw: localtime(dw.start).strftime("%H:%M") + '~' + localtime(dw.end).strftime("%H:%M")
   divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
   
   divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
