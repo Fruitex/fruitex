@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from account.forms import RegistrationForm, ProfileForm
 from account.models import RegistrationProfile, UserProfile
@@ -116,7 +117,10 @@ def register(request, success_url='/account/register/complete/',
             if ACCOUNT_SETTING.NEED_ACTIVATION:
                 return HttpResponseRedirect(reverse('register_complete'))
             else:
-                return HttpResponseRedirect(reverse('login'))
+                user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'])
+                login(request, user)
+                return HttpResponseRedirect(reverse('profile'))
     else:
         form = form_class()
 
