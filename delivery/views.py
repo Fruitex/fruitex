@@ -37,23 +37,18 @@ def summary(request):
   return HttpResponse(template.render(context))
 
 def detail(request, id):
-  def combine_items(orders):
-    items = {}
-    for order in orders:
-      for order_item in order.order_items:
-        if order_item.item in items:
-          items[order_item.item] += order_item.quantity
-        else:
-          items[order_item.item] = order_item.quantity
-    items = SortedDict(map(lambda x: (x, items[x]), sorted(items.keys(), key=lambda item: item.category.shop_order)))
-    return items
+  def sorted_order_items(orders):
+    order_items = reduce(lambda acc, order: acc.extend(order.order_items), orders, [])
+    order_items = sorted(order_items, key=lambda order_item: order_item.item.id)
+    order_items = sorted(order_items, key=lambda order_item: order_item.item.category.shop_order)
+    return order_items
 
   delivery_window = DeliveryWindow.objects.get(id=id)
   invoices = filter(lambda invoice: invoice.status in (Invoice.STATUS_PAID, Invoice.STATUS_PAY_ON_DELIVERY), map(lambda order: order.invoice, delivery_window.orders.all()))
 
   context = Context({
     'delivery_window': delivery_window,
-    'combined_items': combine_items(delivery_window.waiting_orders),
+    'order_items': sorted_order_items(delivery_window.waiting_orders),
     'invoices': invoices,
   })
 

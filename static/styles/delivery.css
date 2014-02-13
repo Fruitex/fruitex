@@ -24,6 +24,11 @@ ul {
   margin-bottom: 30px;
 }
 
+.shopping-list .counter {
+  font-size: 20px;
+  margin: 5px;
+}
+
 .item-image {
   width: 200px;
 }
