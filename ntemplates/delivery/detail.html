@@ -24,7 +24,7 @@
   {% for order_item in order_items %}
   <li class="item">
     <span class="counter">{{ forloop.counter }}.</span>
-    <img class="item-image" src="{% static 'store_imgs/' %}{{ item.sku }}.JPG">
+    <img class="item-image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
     <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
     <span>{{ order_item.quantity }} x </span>
     <span>{{ order_item.item.name }}</span>
