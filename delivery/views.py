@@ -11,8 +11,6 @@ def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
     divided = {}
     for delivery_window in delivery_windows:
-      if len(delivery_window.waiting_orders) == 0:
-        continue
       divider = divider_func(delivery_window)
       if divider in divided:
         divided[divider].append(delivery_window)
@@ -22,6 +20,7 @@ def summary(request):
 
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
+  delivery_windows = filter(lambda dw: len(dw.waiting_orders) != 0, delivery_windows)
   
   divider_func = lambda dw: localtime(dw.start).date()
   divided_by_days = divide_delivery_window(delivery_windows, divider_func)
@@ -29,7 +28,6 @@ def summary(request):
   divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
   
   divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
-  divided_delivery_windows_ids = [dict([(time, day[1][time]) for time in day[1]]) for day in divided_delivery_windows]
 
   context = Context({
     'delivery_windows_divided_by_days_and_time': divided_delivery_windows,
