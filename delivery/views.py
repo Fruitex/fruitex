@@ -60,6 +60,7 @@ def destinations(request, ids):
   orders = map(lambda delivery_window: delivery_window.orders.all(), delivery_windows)
   orders = reduce(list.__add__, map(lambda order: list(order), orders))
   invoices = list(set(map(lambda order: order.invoice, orders)))
+  invoices = filter(lambda invoice: invoice.status in (Invoice.STATUS_PAID, Invoice.STATUS_PAY_ON_DELIVERY), invoices)
 
   context = Context({
     'invoices': invoices
