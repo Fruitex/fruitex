@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.utils.timezone import make_aware, get_default_timezone, localtime
-from django.utils.datastructures import SortedDict
 
 from datetime import datetime, timedelta
+from itertools import chain
 
 from order.models import DeliveryWindow, Invoice
 
@@ -21,12 +21,12 @@ def summary(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
   delivery_windows = filter(lambda dw: len(dw.waiting_orders) != 0, delivery_windows)
-  
+
   divider_func = lambda dw: localtime(dw.start).date().strftime("%b %d, %a")
   divided_by_days = divide_delivery_window(delivery_windows, divider_func)
   divider_func = lambda dw: localtime(dw.start).strftime("%H:%M") + '~' + localtime(dw.end).strftime("%H:%M")
   divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
-  
+
   divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
 
   context = Context({
@@ -38,7 +38,7 @@ def summary(request):
 
 def detail(request, id):
   def sorted_order_items(orders):
-    order_items = reduce(lambda acc, order: acc.extend(order.order_items), orders, [])
+    order_items = chain.from_iterable(map(lambda order: order.order_items, orders))
     order_items = sorted(order_items, key=lambda order_item: order_item.item.id)
     order_items = sorted(order_items, key=lambda order_item: order_item.item.category.shop_order)
     return order_items
@@ -61,10 +61,10 @@ def destinations(request, ids):
   orders = map(lambda delivery_window: delivery_window.orders.all(), delivery_windows)
   orders = reduce(list.__add__, map(lambda order: list(order), orders))
   invoices = list(set(map(lambda order: order.invoice, orders)))
-  
+
   context = Context({
     'invoices': invoices
   })
-  
+
   template = loader.get_template('delivery/destinations.html')
   return HttpResponse(template.render(context))
