@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.utils.timezone import make_aware, get_default_timezone, localtime
+from django.utils.datastructures import SortedDict
 
 from datetime import datetime, timedelta
 from itertools import chain
@@ -9,7 +10,7 @@ from order.models import DeliveryWindow, Invoice
 
 def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
-    divided = {}
+    divided = SortedDict()
     for delivery_window in delivery_windows:
       divider = divider_func(delivery_window)
       if divider in divided:
@@ -23,14 +24,12 @@ def summary(request):
   delivery_windows = filter(lambda dw: len(dw.waiting_orders) != 0, delivery_windows)
 
   divider_func = lambda dw: localtime(dw.start).date().strftime("%b %d, %a")
-  divided_by_days = divide_delivery_window(delivery_windows, divider_func)
+  divided_by_date = divide_delivery_window(delivery_windows, divider_func)
   divider_func = lambda dw: localtime(dw.start).strftime("%H:%M") + '~' + localtime(dw.end).strftime("%H:%M")
-  divided_by_time = dict([(day, divide_delivery_window(divided_by_days[day], divider_func)) for day in divided_by_days])
-
-  divided_delivery_windows = sorted(divided_by_time.items(), reverse=True)
+  divided_by_date_and_time = [(day, divide_delivery_window(divided_by_date[day], divider_func)) for day in divided_by_date]
 
   context = Context({
-    'delivery_windows_divided_by_days_and_time': divided_delivery_windows,
+    'delivery_windows_divided_by_date_and_time': divided_by_date_and_time,
   })
 
   template = loader.get_template('delivery/summary.html')
