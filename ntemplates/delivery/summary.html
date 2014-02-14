@@ -10,7 +10,7 @@
 
 {% block content %}
 
-{% for date, delivery_windows_divided_by_time in delivery_windows_divided_by_days_and_time %}
+{% for date, delivery_windows_divided_by_time in delivery_windows_divided_by_date_and_time %}
   {% for time, delivery_windows in delivery_windows_divided_by_time.items %}
   <h3 class="date">{{ date }}, {{ time }}</h3>
   <ul>
