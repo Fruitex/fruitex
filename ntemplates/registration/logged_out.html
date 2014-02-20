@@ -5,5 +5,11 @@
 {% block content %}
 <h1>You've been logged out.</h1>
 <p>Thanks for stopping by.</p>
-<a href="{% url 'login' %}">Login again</a>
+<div class="btn-group">
+  <a href="{% url 'login' %}" class="btn btn-default" role="button">Login again</a>
+</div>
+
+<div class="btn-group">
+  <a href="{% url 'order:cart' %}" class="btn btn-primary" role="button">Go to Cart</a>
+</div>
 {% endblock %}

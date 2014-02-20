@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'compressor',
     'south',
+    'widget_tweaks',
     # Apps
     'fruitex',
     'shop',

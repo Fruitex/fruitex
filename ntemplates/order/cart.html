@@ -32,7 +32,9 @@
         <div class="item-info-left">
           <div class="item-in-cart-name">{{ item.obj.name }}</div>
           <div class="item-in-cart-store">From: {{ item.obj.category.store.name }}</div>
-          <div><label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label></div>
+          <div title="If checked, the delivery person will pick up alternative item for this item. Or you'll get refund on delivery">
+            <label><input type="checkbox" name="allow_sub_detail[{{ item.obj.id }}]" checked="">Allow substitution</label>
+          </div>
         </div>
         <div>
           <input class="item-in-cart-quantity num-spinner" name="quantity[{{ item.obj.id }}]" value="{{ item.quantity }}" data-id="{{ item.obj.id }}" data-max="{{ item.obj.max_quantity_per_order }}" autocomplete="off">
