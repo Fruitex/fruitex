@@ -25,7 +25,9 @@
   <div class="form-group">
     <a href="{% url 'registration_register' %}" class="btn btn-default">Register</a>
     <span class="col-sm-2"></span>
+    <!--
     <a href="{% url 'password_reset' %}" class="btn btn-default">Forgot password</a>
+    -->
   </div>
 <input type="hidden" name="next" value="{{ next | default:'/account/profile' }}" />
 </form>
