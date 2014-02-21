@@ -118,6 +118,11 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "ntemplates"),
 )
 
+# Predefined data for models
+FIXTURE_DIRS = (
+   os.path.join(BASE_DIR, 'fixtures'),
+)
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
