@@ -1,0 +1,54 @@
+{% extends "delivery/base.html" %}
+
+{% block title %}Delivery Statistics{% endblock %}
+
+{% load static %}
+{% load tz %}
+{% load delivery_extra %}
+
+{% localtime on %}
+
+{% block page_css %}
+<style type="text/css">
+  th, td {
+    padding: 2px
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Delivery Statistics</h1>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Store</th>
+      <th>#total</th>
+      <th>#normal</th>
+      <th>#pending</th>
+      <th>$total</th>
+      <th>$normal</th>
+      <th>$pending</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for date, stat in stats %}
+    {% for store, num_total, num_normal, num_pending, val_total, val_normal, val_pending in stat %}
+    <tr>
+      <td>{{ date }}</td>
+      <td>{{ store }}</td>
+      <td>{{ num_total }}</td>
+      <td>{{ num_normal }}</td>
+      <td>{{ num_pending }}</td>
+      <td>${{ val_total }}</td>
+      <td>${{ val_normal }}</td>
+      <td>${{ val_pending }}</td>
+    </tr>
+    {% endfor %}
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% endlocaltime %}
