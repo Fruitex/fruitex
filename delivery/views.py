@@ -2,11 +2,19 @@ from django.http import HttpResponse
 from django.template import Context, loader
 from django.utils.timezone import make_aware, get_default_timezone, localtime
 from django.utils.datastructures import SortedDict
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from datetime import datetime, timedelta
 
 from order.models import DeliveryWindow, Order
 
+def can_user_view_delivery(user):
+   if user:
+      return user.groups.filter(name='driver').count() > 0
+   return False
+
+@login_required
+@user_passes_test(can_user_view_delivery, login_url='/account/login')
 def summary(request):
   def divide_delivery_window_by_days(delivery_windows):
     divided = {}
@@ -30,6 +38,8 @@ def summary(request):
   template = loader.get_template('delivery/summary.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery, login_url='/account/login')
 def detail(request, id):
   def combine_items(orders):
     items = {}
