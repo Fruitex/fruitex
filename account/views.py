@@ -14,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from account.forms import RegistrationForm, ProfileForm
 from account.models import RegistrationProfile, UserProfile
 from account.auth_settings import ACCOUNT_SETTING
@@ -119,6 +120,10 @@ def register(request, success_url='/account/register/complete/',
             else:
                 user = authenticate(username=form.cleaned_data['username'],
                                     password=form.cleaned_data['password1'])
+                grp_customer = Group.objects.get(name="customer")
+                if grp_customer:
+                   new_user.groups.add(grp_customer)
+                   new_user.save()
                 login(request, user)
                 return HttpResponseRedirect(reverse('profile'))
     else:

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template import Context, loader
 from django.utils.timezone import make_aware, get_default_timezone, localtime
 from django.utils.datastructures import SortedDict
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from datetime import datetime, timedelta
 from itertools import chain
@@ -9,6 +10,13 @@ from decimal import Decimal
 
 from order.models import DeliveryWindow, Invoice, Order
 
+def can_user_view_delivery(user):
+   if user:
+      return user.groups.filter(name='driver').count() > 0
+   return False
+
+@login_required
+@user_passes_test(can_user_view_delivery, login_url='/account/login')
 def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
     divided = SortedDict()
@@ -36,6 +44,8 @@ def summary(request):
   template = loader.get_template('delivery/summary.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery, login_url='/account/login')
 def detail(request, id):
   def sorted_order_items(orders):
     order_items = chain.from_iterable(map(lambda order: order.order_items, orders))
