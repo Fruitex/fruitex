@@ -83,11 +83,11 @@ def destinations(request, ids):
 def statistics(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   orders = Order.objects.filter(when_created__gt=datetime_threshold).order_by('-delivery_window__start', 'delivery_window__id', 'status')
-  dates = set(map(lambda order: order.delivery_window.start.date(), orders))
+  dates = set(map(lambda order: localtime(order.delivery_window.start).date(), orders))
   dates = sorted(list(dates), reverse=True)
 
   def stats_for_date(date):
-    date_orders = filter(lambda order: order.delivery_window.start.date() == date, orders)
+    date_orders = filter(lambda order: localtime(order.delivery_window.start).date() == date, orders)
     stores = set(map(lambda order: order.delivery_window.store, date_orders))
     def stats_for_store(store):
       store_orders = filter(lambda order: order.delivery_window.store == store, date_orders)
