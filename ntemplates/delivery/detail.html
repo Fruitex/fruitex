@@ -23,21 +23,27 @@
 <ul class="shopping-list">
   {% for order_item in order_items %}
   <li class="item">
-    <span class="counter">{{ forloop.counter }}.</span>
-    <img class="item-image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
-    <img class="hide-button" src="{% static 'imgs/' %}hide_button.png"><br />
-    <span>{{ order_item.quantity }} x </span>
-    <span>{{ order_item.item.name }}</span>
-    {% if order_item.item.on_sale %}
-    <span> Sales Price: {{ order_item.item.sales_price }}</span>
-    {% else %}
-    <span> Price: {{ order_item.item.price }}</span>
-    {% endif %}
-    <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
-    {% if order_item.item.category.shop_location_note %}
-    <br>
-    <span> Location: {{ order_item.item.category.shop_location_note }}</span>
-    {% endif %}
+    <div>
+      <span>{{ order_item.quantity }} x </span>
+      <img class="item-image" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+      <img class="hide-button" src="{% static 'imgs/' %}hide_button.png">
+    </div>
+    <div>
+      <span>{{ order_item.item.name }}</span>
+    </div>
+    <div>
+      {% if order_item.item.on_sale %}
+      <span> Sales Price: {{ order_item.item.sales_price }}</span>
+      {% else %}
+      <span> Price: {{ order_item.item.price }}</span>
+      {% endif %}
+      <label><input type="checkbox" {% if order_item.allow_sub %}checked{% endif %} disabled>Sub</label>
+    </div>
+    <div>
+      {% if order_item.item.category.shop_location_note %}
+      <span> Location: {{ order_item.item.category.shop_location_note }}</span>
+      {% endif %}
+    </div>
   </li>
   {% endfor %}
 </ul>
