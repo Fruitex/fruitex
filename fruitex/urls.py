@@ -40,4 +40,4 @@ urlpatterns = patterns('',
     # Pages
     url(r'^error', 'fruitex.views.error'),
     url(r'^not-support', 'fruitex.views.browserNotSupport'),
-) 
+)
