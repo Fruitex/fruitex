@@ -16,7 +16,7 @@ def can_user_view_delivery(user):
    return False
 
 @login_required
-@user_passes_test(can_user_view_delivery, login_url='/account/login')
+@user_passes_test(can_user_view_delivery)
 def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
     divided = SortedDict()
@@ -45,7 +45,7 @@ def summary(request):
   return HttpResponse(template.render(context))
 
 @login_required
-@user_passes_test(can_user_view_delivery, login_url='/account/login')
+@user_passes_test(can_user_view_delivery)
 def detail(request, id):
   def sorted_order_items(orders):
     order_items = chain.from_iterable(map(lambda order: order.order_items, orders))
