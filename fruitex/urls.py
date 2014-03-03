@@ -3,18 +3,6 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-# API
-from rest_framework import routers
-from api import views
-
-router = routers.DefaultRouter()
-router.register(r'stores', views.StoreViewSet)
-router.register(r'items', views.ItemViewSet)
-router.register(r'orders', views.OrderViewSet)
-router.register(r'order_items', views.OrderItemViewSet)
-router.register(r'invoices', views.InvoiceViewSet)
-router.register(r'delivery_windows', views.DeliveryWindowViewSet)
-
 urlpatterns = patterns('',
     # Statics
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
@@ -35,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^account/', include('account.urls')),
 
     # API
-    url(r'^api/', include(router.urls)),
+    url(r'^api/', include('api.urls')),
 
     # Pages
     url(r'^error', 'fruitex.views.error'),
