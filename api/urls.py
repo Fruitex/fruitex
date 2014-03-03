@@ -15,7 +15,4 @@ router.register(r'invoices', views.InvoiceViewSet)
 router.register(r'delivery_windows', views.DeliveryWindowViewSet)
 router.register(r'coupon', views.CouponViewSet)
 
-urlpatterns = patterns('api.views',
-    # API
-    url(r'', include(router.urls)),
-)
+urlpatterns = router.urls
