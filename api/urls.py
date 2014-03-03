@@ -13,6 +13,6 @@ router.register(r'orders', views.OrderViewSet)
 router.register(r'order_items', views.OrderItemViewSet)
 router.register(r'invoices', views.InvoiceViewSet)
 router.register(r'delivery_windows', views.DeliveryWindowViewSet)
-router.register(r'coupon', views.CouponViewSet)
+router.register(r'coupons', views.CouponViewSet)
 
 urlpatterns = router.urls
