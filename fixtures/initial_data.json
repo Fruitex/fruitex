@@ -1,0 +1,18 @@
+[
+	{
+		"pk": 1,
+		"model": "auth.group",
+		"fields": {
+			"name": "driver",
+			"permissions": []
+		}
+	},
+	{
+		"pk": 2,
+		"model": "auth.group",
+		"fields": {
+			"name": "customer",
+			"permissions": []
+		}
+	}
+]

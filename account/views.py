@@ -12,7 +12,9 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from account.forms import RegistrationForm, ProfileForm
 from account.models import RegistrationProfile, UserProfile
 from account.auth_settings import ACCOUNT_SETTING
@@ -116,7 +118,14 @@ def register(request, success_url='/account/register/complete/',
             if ACCOUNT_SETTING.NEED_ACTIVATION:
                 return HttpResponseRedirect(reverse('register_complete'))
             else:
-                return HttpResponseRedirect(reverse('login'))
+                user = authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'])
+                grp_customer = Group.objects.get(name="customer")
+                if grp_customer:
+                   new_user.groups.add(grp_customer)
+                   new_user.save()
+                login(request, user)
+                return HttpResponseRedirect(reverse('profile'))
     else:
         form = form_class()
 
@@ -144,14 +153,18 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         profile = user.get_profile()
-        return {
+        details = {
             'user': user.username,
             'firstname': user.first_name,
             'lastname': user.last_name,
             'email': user.email,
-            'phonenum': profile.phone_num,
-            'address': profile.address
+            'phone': profile.phone,
+            'address': profile.address,
+            'postcode': profile.postcode,
         }
+        if details['firstname'] == details['lastname']:
+           del details['lastname']
+        return details
 
 profile = ProfileView.as_view()
 
@@ -171,7 +184,7 @@ class ProfileChangeView(LoginRequiredMixin, FormView):
             'lastname': user.last_name,
             'email': user.email,
             'address': profile.address,
-            'phonenum': profile.phone_num,
+            'phone': profile.phone,
         })
         return kwargs
 

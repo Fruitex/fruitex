@@ -113,9 +113,13 @@ def view_cart(request):
 
 def checkout(request):
   error = None
-  checkout_package = request.session['checkout_package']
-  if checkout_package is None or len(checkout_package) <= 0:
-    return HttpResponseRedirect(reverse('order:cart'))
+  try:
+     checkout_package = request.session['checkout_package']
+     if checkout_package is None or len(checkout_package) <= 0:
+         return HttpResponseRedirect(reverse('order:cart'))
+  except KeyError:
+      return HttpResponseRedirect(reverse('order:cart'))
+
 
   cart = checkout_package['cart'];
   delivery_choices = checkout_package['delivery_choices'];
@@ -139,7 +143,10 @@ def checkout(request):
       error = 'The coupon you have entered is no longer valid'
       return HttpResponseRedirect(reverse('order:cart'))
     elif checkout_form.is_valid():
-      payment_method = checkout_form.cleaned_data['payment_method'];
+      payment_method = checkout_form.cleaned_data['payment_method']
+      user = None
+      if request.user and request.user.is_authenticated():
+         user = request.user
       invoice = create_invoice(
         store_items,
         checkout_form,
@@ -147,6 +154,7 @@ def checkout(request):
         allow_sub_detail,
         page_datetime,
         coupon,
+        user
       )
 
       # If is not paypal, create payment directly
@@ -243,7 +251,7 @@ def coupon(request, code):
 
 # Invoice and Order process
 
-def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime, coupon):
+def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detail, page_datetime, coupon, user):
   # Gether info from POST to setup the order
   # Customer infos
   customer_name = checkout_form.cleaned_data['name']
@@ -285,6 +293,7 @@ def create_invoice(store_items, checkout_form, delivery_options, allow_sub_detai
     postcode = postcode,
     phone = phone,
     email = email,
+    user = user
   )
 
   # Construct orders

@@ -51,12 +51,16 @@ class RegistrationForm(forms.Form):
     lastname = forms.CharField(max_length=30,
                                widget=forms.TextInput(attrs=attrs_dict),
                                label=_(u'lastname'))
-    phonenum = forms.CharField(max_length=15,
+    phone = forms.CharField(max_length=15,
                                widget=forms.TextInput(attrs=attrs_dict),
                                label=_(u'phone number'))
     address = forms.CharField(max_length=75,
                                widget=forms.TextInput(attrs=attrs_dict),
                                label=_(u'address'))
+    postcode = forms.CharField(max_length=15,
+                               widget=forms.TextInput(attrs=attrs_dict),
+                               label=_(u'post code'))
+
     def clean_username(self):
         """
         Validate that the username is alphanumeric and is not already
@@ -101,8 +105,9 @@ class RegistrationForm(forms.Form):
                                                                     email=self.cleaned_data['email'],
                                                                     firstname=self.cleaned_data['firstname'],
                                                                     lastname=self.cleaned_data['lastname'],
-                                                                    phonenum=self.cleaned_data['phonenum'],
+                                                                    phone=self.cleaned_data['phone'],
                                                                     address=self.cleaned_data['address'],
+                                                                    postcode=self.cleaned_data['postcode'],
                                                                     profile_callback=profile_callback)
         return new_user
 
@@ -176,7 +181,8 @@ class ProfileForm(forms.ModelForm):
     lastname = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('E-mail'))
     address = forms.CharField(label=_('Address'), required=False)
-    phonenum = forms.CharField(label=_('Phone num'), required=False)
+    phone = forms.CharField(label=_('Phone num'), required=False)
+    postcode = forms.CharField(label=_('Post Code'), required=False)
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -191,7 +197,8 @@ class ProfileForm(forms.ModelForm):
         user.first_name = self.cleaned_data['firstname']
         user.last_name = self.cleaned_data['lastname']
         profile.address = self.cleaned_data['address']
-        profile.phone_num = self.cleaned_data['phonenum']
+        profile.phone = self.cleaned_data['phone']
+        profile.postcode = self.cleaned_data['postcode']
         if ACCOUNT_SETTING.ALLOW_TO_CHANGE_EMAIL:
             user.email = self.cleaned_data['email']
 
