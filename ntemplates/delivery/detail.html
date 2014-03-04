@@ -14,9 +14,28 @@
 
 <h3 id="content-index">Jump to section</h3>
 <ul class="content-index">
+  <li><a href="#comment-list">Comments</a></li>
   <li><a href="#shopping-list">Shopping List</a></li>
   <li><a href="#order-list">Order List</a></li>
   <li><a href="#address-list">Address List</a></li>
+</ul>
+
+<h3 id="comment-list">Comments</h3>
+<ul class="comment-list">
+  {% for order in delivery_window.waiting_orders %}
+  {%   if order.comment %}
+  <li>
+    <div class="order-title">
+      <a href="{% url 'order:show' order.invoice.invoice_num %}">
+        Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
+      </a>
+    </div>
+    <div>
+      Comment: {{ order.comment }}
+    </div>
+  </li>
+  {% endif %}
+  {% endfor %}
 </ul>
 
 <h3 id="shopping-list">Shopping List</h3>
@@ -74,6 +93,14 @@
           </td>
           <td>
             {{ order.get_status_display }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Comment:
+          </td>
+          <td>
+            {{ order.comment }}
           </td>
         </tr>
       </tbody>
