@@ -15,12 +15,15 @@ urlpatterns = patterns('',
     url(r'^delivery/', include('delivery.urls', namespace='delivery')),
     url(r'^page/', include('page.urls', namespace='page')),
 
-    # Dango admin
+    # Django admin
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
     # Accounts
     url(r'^account/', include('account.urls')),
+
+    # API
+    url(r'^api/', include('api.urls')),
 
     # Pages
     url(r'^error', 'fruitex.views.error'),
