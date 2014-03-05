@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'south',
     'widget_tweaks',
     'rest_framework',
+    'django_extensions',
     # Apps
     'fruitex',
     'shop',
@@ -157,7 +158,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-  
+
     'PAGINATE_BY': 10
 }
 
