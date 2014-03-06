@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'shop',
     'order',
     'account',
+    'delivery',
 )
 
 REST_FRAMEWORK = {
