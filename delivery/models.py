@@ -19,7 +19,7 @@ class DeliveryBucket(models.Model):
   def __unicode__(self):
     start = localtime(self.start)
     end = localtime(self.end)
-    return start.strftime(self.DATETIME_FORMAT) + " ~ " + end.strftime(self.DATETIME_FORMAT)
+    return start.strftime(self.DATETIME_FORMAT) + ' ~ ' + end.strftime(self.DATETIME_FORMAT) + ' (' + str(self.assignee) + ')'
 
   DATETIME_FORMAT = '%a %b %d  %H:%M'
 
