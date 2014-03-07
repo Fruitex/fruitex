@@ -21,7 +21,8 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('start', self.gf('django.db.models.fields.DateTimeField')()),
             ('end', self.gf('django.db.models.fields.DateTimeField')()),
-            ('driver', self.gf('django.db.models.fields.related.ForeignKey')(related_name='delivery_buckets', to=orm['auth.User'])),
+            ('assignee', self.gf('django.db.models.fields.related.ForeignKey')(related_name='delivery_buckets', to=orm['auth.User'])),
+            ('assignor', self.gf('django.db.models.fields.related.ForeignKey')(related_name='managed_delivery_buckets', to=orm['auth.User'])),
         ))
         db.send_create_signal(u'delivery', ['DeliveryBucket'])
 
@@ -73,7 +74,8 @@ class Migration(SchemaMigration):
         },
         u'delivery.deliverybucket': {
             'Meta': {'object_name': 'DeliveryBucket'},
-            'driver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'delivery_buckets'", 'to': u"orm['auth.User']"}),
+            'assignee': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'delivery_buckets'", 'to': u"orm['auth.User']"}),
+            'assignor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'managed_delivery_buckets'", 'to': u"orm['auth.User']"}),
             'end': ('django.db.models.fields.DateTimeField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'orders': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'delivery_buckets'", 'symmetrical': 'False', 'through': u"orm['delivery.DeliveryBucketOrder']", 'to': u"orm['order.Order']"}),
