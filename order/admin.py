@@ -25,6 +25,17 @@ class PaymentAdmin(admin.ModelAdmin):
 
 admin.site.register(Payment, PaymentAdmin)
 
+class DeliveryWindowOrderInline(admin.TabularInline):
+  model = Order
+  raw_id_fields = ['invoice']
+  fields = [
+    'status', 'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  readonly_fields = [
+    'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  extra = 0
+
 class DeliveryWindowAdmin(admin.ModelAdmin):
   def create_delivery_bucket(self, request, queryset):
     for window in queryset:
@@ -38,6 +49,7 @@ class DeliveryWindowAdmin(admin.ModelAdmin):
   ordering = [ '-start', 'store__id' ]
   search_fields = ['store', 'start', 'end']
   actions = ['create_delivery_bucket']
+  inlines = [DeliveryWindowOrderInline]
 
 admin.site.register(DeliveryWindow, DeliveryWindowAdmin)
 
