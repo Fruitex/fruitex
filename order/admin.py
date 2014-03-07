@@ -39,7 +39,7 @@ class DeliveryWindowOrderInline(admin.TabularInline):
 class DeliveryWindowAdmin(admin.ModelAdmin):
   def create_delivery_bucket(self, request, queryset):
     for window in queryset:
-      DeliveryBucket.objects.create_bucket_from_window(window, request.user)
+      DeliveryBucket.objects.create_bucket_from_window(window, request.user, request.user)
     self.message_user(request, "%d delivery bucket has been created." % queryset.count())
 
   date_hierarchy = 'start'

@@ -1,15 +1,19 @@
 from django.db import models
 from django.utils.timezone import localtime
 
-from delivery import managers
-
 class DeliveryBucketOrder(models.Model):
   def __unicode__(self):
-    return self.order + ' ' + self.delivery_bucket
+    return str(self.order) + ' @ ' + str(self.delivery_bucket)
 
   delivery_bucket = models.ForeignKey('DeliveryBucket')
   order = models.ForeignKey('order.Order')
 
+class DeliveryBucketManager(models.Manager):
+  def create_bucket_from_window(self, window, assignee, assignor):
+    delivery_bucket = self.create(start = window.start, end = window.end, assignee = assignee, assignor = assignor)
+    for order in window.orders.all():
+      DeliveryBucketOrder.objects.create(delivery_bucket = delivery_bucket, order = order)
+    return delivery_bucket
 
 class DeliveryBucket(models.Model):
   def __unicode__(self):
@@ -21,7 +25,8 @@ class DeliveryBucket(models.Model):
 
   start = models.DateTimeField()
   end = models.DateTimeField()
-  driver = models.ForeignKey('auth.User', related_name='delivery_buckets')
   orders = models.ManyToManyField('order.Order', related_name='delivery_buckets', through=DeliveryBucketOrder)
+  assignee = models.ForeignKey('auth.User', related_name='delivery_buckets')
+  assignor = models.ForeignKey('auth.User', related_name='managed_delivery_buckets')
 
-  objects = managers.DeliveryBucketManager()
+  objects = DeliveryBucketManager()
