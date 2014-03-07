@@ -65,6 +65,8 @@ def detail(request, id):
   template = loader.get_template('delivery/detail.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery)
 def destinations(request, ids):
   delivery_window_ids = map(lambda s: int(s), ids.split('+'))
   delivery_windows = DeliveryWindow.objects.filter(id__in=delivery_window_ids)
@@ -80,6 +82,8 @@ def destinations(request, ids):
   template = loader.get_template('delivery/destinations.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery)
 def statistics(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   orders = Order.objects.filter(when_created__gt=datetime_threshold).order_by('-delivery_window__start', 'delivery_window__id', 'status')
@@ -112,4 +116,3 @@ def statistics(request):
     'stats': stats,
   })
   return HttpResponse(template.render(context))
-
