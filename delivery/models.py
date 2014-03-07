@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import localtime
 
+from delivery import managers
 
 class DeliveryBucketOrder(models.Model):
   def __unicode__(self):
@@ -22,3 +23,5 @@ class DeliveryBucket(models.Model):
   end = models.DateTimeField()
   driver = models.ForeignKey('auth.User', related_name='delivery_buckets')
   orders = models.ManyToManyField('order.Order', related_name='delivery_buckets', through=DeliveryBucketOrder)
+
+  objects = managers.DeliveryBucketManager()
