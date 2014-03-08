@@ -19,7 +19,7 @@ class DeliveryBucketAdmin(admin.ModelAdmin):
     delivery_bucket.save()
 
   date_hierarchy = 'start'
-  list_display = ['__unicode__', 'start', 'end', 'assignee', 'assignor']
+  list_display = ['__unicode__', 'start', 'end', 'assignee', 'assignor', 'num_of_orders']
   readonly_fields = ['assignor']
   ordering = [ '-start', 'assignee' ]
   search_fields = ['start', 'assignee']
