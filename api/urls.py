@@ -3,6 +3,8 @@ from rest_framework import routers
 from api import views
 
 router = routers.DefaultRouter()
+# Account
+router.register(r'users', views.UserViewSet)
 # Shop
 router.register(r'stores', views.StoreViewSet)
 router.register(r'store_customizations', views.StoreCustomizationViewSet)

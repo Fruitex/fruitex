@@ -2,8 +2,14 @@ from rest_framework import viewsets
 
 from api.serializers import *
 
+from django.contrib.auth.models import User
 from shop.models import *
 from order.models import *
+
+# Account
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 # Shop
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
