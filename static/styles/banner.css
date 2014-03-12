@@ -18,12 +18,6 @@
     z-index: -1;
 }
 
-#logo {
-    float: left;
-    margin-top: 5px;
-    margin-left: 10px;
-}
-
 #btn_cart {
     float: right;
     margin-right: 20px;
@@ -53,9 +47,7 @@
 }
 
 #search-btn {
-    margin-left: 5px;
     cursor: pointer;
-    display: inline-block;
 }
 
 #search-container {
