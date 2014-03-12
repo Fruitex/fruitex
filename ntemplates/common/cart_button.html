@@ -11,6 +11,7 @@
     <div class="cart-list-wrapper">
       <ul id="cart-list" class="list-group clear-margin">
       </ul>
+      <div class="cart-is-empty">No item in the cart</div>
     </div>
     <div class="bg-mid-green text-center">
       <a href="{% url 'order:cart' %}" class="btn">Checkout</a>
@@ -44,6 +45,7 @@
     this.$cart_adding = this.$cart.find(".cart-adding");
     this.$cart_body = this.$cart.find(".cart-body");
     this.$cart_list = $("#cart-list");
+    this.$cart_is_empty = this.$cart_body.find(".cart-is-empty");
     this.$cart.find(".cart-header").click(function() {
       self.viewToggleCart();
     });
@@ -119,7 +121,7 @@
     } else {
       this.$cart_num.css('opacity', 0);
       this.$cart_list.children().remove();
-      this.viewToggleCart(true);
+      this.viewToggleCart();
     }
     if(showAdding === true) {
       var $cart_adding = this.$cart_adding;
@@ -129,13 +131,15 @@
     }
   }
 
-  CartClass.prototype.viewToggleCart = function(forceHide) {
-    forceHide = forceHide === true;
-    if(forceHide) {
-      this.$cart_body.hide();
-    } else if(this._items.length > 0) {
-      this.$cart_body.slideToggle("slow");
+  CartClass.prototype.viewToggleCart = function() {
+    if(this._items.length > 0) {
+      this.$cart_list.show();
+      this.$cart_is_empty.hide();
+    } else {
+      this.$cart_list.hide();
+      this.$cart_is_empty.show();
     }
+    this.$cart_body.slideToggle(200);
   }
 
   var cart = null;
@@ -146,6 +150,6 @@
     cart.tmpl = minicart_list_item;
     cart.fromLocal();
     cart.viewRefresh(false);
-    cart.viewToggleCart(true);
+    cart.viewToggleCart();
   });
 </script>

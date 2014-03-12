@@ -4,24 +4,35 @@
     margin: 0!important;
     bottom: 0;
     right: 5em;
+    z-index: 9999;
 }
 .cart-body {
-    border: 1px solid rgb(101,150,46);
+    border: 0 solid rgb(101,150,46);
 }
 .cart-header {
-    padding: 0.2em 0 0.2em 0;
+    padding: 0.5em 0 0.5em 0;
     background: rgb(193,230,108);
     border-radius: 8px 8px 0 0;
     border-top: none;
     box-shadow: 0 1px 1px;
 }
 .cart-list-wrapper {
+    overflow: auto;
     overflow-y: scroll;
     max-height: 15em;
 }
 .cart-img {
     position: absolute;
     left: .5em;
+}
+.cart-is-empty {
+    background-color: #c1e2b3;
+    font-weight: bold;
+    font-style: oblique;
+    font-size: x-large;
+    line-height: 6em;
+    text-align: center;
+    height: 6em;
 }
 .cart-count {
     position: absolute;
