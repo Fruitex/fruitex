@@ -38,7 +38,7 @@ var ItemDetail = function () {
         .attr('class', 'item-detail-btn-add')
         .attr('src', '/static/imgs/btn_add.png')
         .click(function() {
-        	addToCart(item.id);
+        	cart.add(item.id);
         	$(this).parent().parent().remove();
         });
     var cancelBtn = $('<img>')
