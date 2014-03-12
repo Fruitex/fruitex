@@ -1,12 +1,12 @@
 from django.http import HttpResponse
-from django.template import Context, loader
+from django.template import RequestContext, loader
 
 from shop.models import Store
 
 def home(request):
   stores = Store.objects.order_by('display_order')[:5]
 
-  context = Context({
+  context = RequestContext(request, {
     'stores': stores,
   })
 
