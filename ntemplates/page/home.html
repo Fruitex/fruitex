@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block header_content %}
-{% include 'common/cart_button.html' %}
 {% endblock %}
 
 {% block content %}
+{% include 'common/cart_button.html' %}
 <div class="banner">
   <a href="{% url 'shop:store_home' 'rocky_mountain' %}"><img src="{% static 'imgs/' %}home_banner.png" alter="Banner" /></a>
 </div>
