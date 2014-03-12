@@ -20,22 +20,19 @@
     cursor: pointer;
 }
 .menu-emphasis {
-    display: inline-table;
     padding: .5em 0 .5em 0;
     line-height: 2em;
     width: 16em;
-    border-bottom: 2px solid wheat;
+    border-bottom: 2px solid lavender;
 }
 .menu-emphasis-title {
     padding: 0.2em 0.2em;
     font-size: large;
-    vertical-align:middle;
 }
 .menu-emphasis-desc {
     padding: 0.2em 0.2em;
     font-size: small;
     color: darkgray;
-    vertical-align:middle;
     float: right;
 }
 .container>aside {
