@@ -2,7 +2,7 @@ body{
     background: #fcfcfc;
 }
 body>header {
-    height: 56px;
+    height: 50px;
     background: rgba(244, 244, 244, 0.7);
     border-bottom: 2px rgb(228, 228, 228) solid;
     position: fixed;
