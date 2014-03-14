@@ -8,7 +8,7 @@ from order.models import *
 class UserSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = User
-    fields = ('id', 'url', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined')
+    fields = ['id', 'url', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined']
 
 # Shop
 class StoreSerializer(serializers.HyperlinkedModelSerializer):

@@ -1,10 +1,19 @@
 from rest_framework import viewsets
+import django_filters
 
 from api.serializers import *
 
 from django.contrib.auth.models import User
 from shop.models import *
 from order.models import *
+
+# Filters
+class ItemFilter(django_filters.FilterSet):
+    min_sold = django_filters.NumberFilter(name="sold_number", lookup_type='gte')
+    max_sold = django_filters.NumberFilter(name="sold_number", lookup_type='lte')
+    class Meta:
+        model = Item
+        fields = ['on_sale', 'out_of_stock', 'featured', 'sold_number', 'min_sold', 'max_sold']
 
 # Account
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -27,6 +36,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class ItemViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    filter_class = ItemFilter
 
 # Order
 class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
@@ -36,10 +46,12 @@ class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    filter_fields = ['status', 'invoice__invoice_num']
 
 class InvoiceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
+    filter_fields = ['status', 'email', 'user__username']
 
 class OrderItemViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = OrderItem.objects.all()
