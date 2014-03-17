@@ -2,7 +2,18 @@ from django.contrib import admin
 from order.models import Invoice, Payment, DeliveryWindow, Order, OrderItem, Coupon
 from delivery.models import DeliveryBucket
 
-class InvoiceAdmin(admin.ModelAdmin):
+class ReadonlyAdmin(admin.ModelAdmin):
+  def get_readonly_fields(self, request, obj=None):
+    if request.user.is_superuser:
+      return self.readonly_fields
+    if self.declared_fieldsets:
+      return flatten_fieldsets(self.declared_fieldsets)
+    return list(set(
+        [field.name for field in self.opts.local_fields] +
+        [field.name for field in self.opts.local_many_to_many]
+    ))
+
+class InvoiceAdmin(ReadonlyAdmin):
   date_hierarchy = 'when_created'
   list_display = [
     'invoice_num', 'customer_name', 'email', 'status', 'total', 'when_created'
@@ -14,7 +25,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 admin.site.register(Invoice, InvoiceAdmin)
 
-class PaymentAdmin(admin.ModelAdmin):
+class PaymentAdmin(ReadonlyAdmin):
   date_hierarchy = 'when_created'
   list_display = [
     'id', 'invoice', 'method', 'status', 'amount', 'when_created', 'when_updated'
@@ -36,7 +47,7 @@ class DeliveryWindowOrderInline(admin.TabularInline):
   ]
   extra = 0
 
-class DeliveryWindowAdmin(admin.ModelAdmin):
+class DeliveryWindowAdmin(ReadonlyAdmin):
   def create_delivery_bucket(self, request, queryset):
     for window in queryset:
       DeliveryBucket.objects.create_bucket_from_window(window, request.user, request.user)
@@ -53,7 +64,7 @@ class DeliveryWindowAdmin(admin.ModelAdmin):
 
 admin.site.register(DeliveryWindow, DeliveryWindowAdmin)
 
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ReadonlyAdmin):
   date_hierarchy = 'when_created'
   list_display = [
     'id', 'invoice', 'status', 'delivery_window', 'when_created',
@@ -65,7 +76,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 
-class OrderItemAdmin(admin.ModelAdmin):
+class OrderItemAdmin(ReadonlyAdmin):
   list_display = [
     'id', 'item', 'order', 'quantity', 'allow_sub',
     'item_cost', 'item_tax'
@@ -77,7 +88,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 admin.site.register(OrderItem, OrderItemAdmin)
 
-class CouponAdmin(admin.ModelAdmin):
+class CouponAdmin(ReadonlyAdmin):
   list_display = [ 'code', 'id', 'type', 'value', 'used' ]
   list_filter = [ 'type', 'used' ]
   ordering = [ '-id' ]
