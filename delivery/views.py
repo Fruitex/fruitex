@@ -16,7 +16,7 @@ def can_user_view_delivery(user):
    return False
 
 @login_required
-@user_passes_test(can_user_view_delivery, login_url='/account/login')
+@user_passes_test(can_user_view_delivery)
 def summary(request):
   def divide_delivery_window(delivery_windows, divider_func):
     divided = SortedDict()
@@ -45,7 +45,7 @@ def summary(request):
   return HttpResponse(template.render(context))
 
 @login_required
-@user_passes_test(can_user_view_delivery, login_url='/account/login')
+@user_passes_test(can_user_view_delivery)
 def detail(request, id):
   def sorted_order_items(orders):
     order_items = chain.from_iterable(map(lambda order: order.order_items, orders))
@@ -65,6 +65,8 @@ def detail(request, id):
   template = loader.get_template('delivery/detail.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery)
 def destinations(request, ids):
   delivery_window_ids = map(lambda s: int(s), ids.split('+'))
   delivery_windows = DeliveryWindow.objects.filter(id__in=delivery_window_ids)
@@ -80,6 +82,8 @@ def destinations(request, ids):
   template = loader.get_template('delivery/destinations.html')
   return HttpResponse(template.render(context))
 
+@login_required
+@user_passes_test(can_user_view_delivery)
 def statistics(request):
   datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
   orders = Order.objects.filter(when_created__gt=datetime_threshold).order_by('-delivery_window__start', 'delivery_window__id', 'status')
@@ -112,4 +116,3 @@ def statistics(request):
     'stats': stats,
   })
   return HttpResponse(template.render(context))
-

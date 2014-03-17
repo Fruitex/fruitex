@@ -119,7 +119,7 @@ TEMPLATE_DIRS = (
 
 # Predefined data for models
 FIXTURE_DIRS = (
-   os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'fixtures'),
 )
 
 INSTALLED_APPS = (
@@ -139,11 +139,13 @@ INSTALLED_APPS = (
     'south',
     'widget_tweaks',
     'rest_framework',
+    'django_extensions',
     # Apps
     'fruitex',
     'shop',
     'order',
     'account',
+    'delivery',
 )
 
 REST_FRAMEWORK = {
@@ -157,8 +159,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-  
-    'PAGINATE_BY': 10
+
+    'PAGINATE_BY': 10,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
 }
 
 # A sample logging configuration. The only tangible logging
@@ -197,7 +201,7 @@ COMPRESS_JS_FILTERS = [
 
 # Account setup
 AUTH_PROFILE_MODULE = 'account.UserProfile'    # enable User.get_profile()
-LOGIN_URL = '/account/login'
+LOGIN_URL = 'login'
 
 try:
     from local_settings import *
