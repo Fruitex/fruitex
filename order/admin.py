@@ -1,5 +1,6 @@
 from django.contrib import admin
-from order.models import Invoice, Payment, Order, OrderItem, Coupon
+from order.models import Invoice, Payment, DeliveryWindow, Order, OrderItem, Coupon
+from delivery.models import DeliveryBucket
 
 class InvoiceAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_created'
@@ -23,6 +24,34 @@ class PaymentAdmin(admin.ModelAdmin):
   search_fields = ['invoice', 'amount']
 
 admin.site.register(Payment, PaymentAdmin)
+
+class DeliveryWindowOrderInline(admin.TabularInline):
+  model = Order
+  raw_id_fields = ['invoice']
+  fields = [
+    'status', 'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  readonly_fields = [
+    'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  extra = 0
+
+class DeliveryWindowAdmin(admin.ModelAdmin):
+  def create_delivery_bucket(self, request, queryset):
+    for window in queryset:
+      DeliveryBucket.objects.create_bucket_from_window(window, request.user, request.user)
+    self.message_user(request, "%d delivery bucket has been created." % queryset.count())
+
+  date_hierarchy = 'start'
+  list_display = [
+    '__unicode__', 'store', 'start', 'end'
+  ]
+  ordering = [ '-start', 'store__id' ]
+  search_fields = ['store', 'start', 'end']
+  actions = ['create_delivery_bucket']
+  inlines = [DeliveryWindowOrderInline]
+
+admin.site.register(DeliveryWindow, DeliveryWindowAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
   date_hierarchy = 'when_created'

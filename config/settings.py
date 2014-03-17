@@ -119,7 +119,7 @@ TEMPLATE_DIRS = (
 
 # Predefined data for models
 FIXTURE_DIRS = (
-   os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'fixtures'),
 )
 
 INSTALLED_APPS = (
@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'shop',
     'order',
     'account',
+    'delivery',
 )
 
 REST_FRAMEWORK = {
@@ -200,7 +201,7 @@ COMPRESS_JS_FILTERS = [
 
 # Account setup
 AUTH_PROFILE_MODULE = 'account.UserProfile'    # enable User.get_profile()
-LOGIN_URL = '/account/login'
+LOGIN_URL = 'login'
 
 try:
     from local_settings import *

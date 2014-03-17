@@ -6,6 +6,7 @@ from api.serializers import *
 from django.contrib.auth.models import User
 from shop.models import *
 from order.models import *
+from delivery.models import *
 
 # Filters
 class ItemFilter(django_filters.FilterSet):
@@ -60,3 +61,8 @@ class OrderItemViewSet(viewsets.ReadOnlyModelViewSet):
 class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
+
+# Delivery
+class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = DeliveryBucket.objects.all()
+    serializer_class = DeliveryBucketSerializer

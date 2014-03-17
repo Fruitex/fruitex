@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from shop.models import *
 from order.models import *
+from delivery.models import *
 
 # Account
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,6 +39,7 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
     model = Invoice
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
+  delivery_buckets = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='deliverybucket-detail')
   class Meta:
     model = Order
 
@@ -48,3 +50,8 @@ class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
 class CouponSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Coupon
+
+# Delivery
+class DeliveryBucketSerializer(serializers.HyperlinkedModelSerializer):
+  class Meta:
+    model = DeliveryBucket
