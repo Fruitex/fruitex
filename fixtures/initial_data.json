@@ -14,5 +14,21 @@
 			"name": "customer",
 			"permissions": []
 		}
+	},
+	{
+		"pk": 3,
+		"model": "auth.group",
+		"fields": {
+			"name": "delivery_manager",
+			"permissions": []
+		}
+	},
+	{
+		"pk": 4,
+		"model": "auth.group",
+		"fields": {
+			"name": "shop_manager",
+			"permissions": []
+		}
 	}
 ]
