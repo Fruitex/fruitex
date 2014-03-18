@@ -72,3 +72,4 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DeliveryBucket.objects.all()
     serializer_class = DeliveryBucketSerializer
+    ordering = ['-start']
