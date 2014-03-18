@@ -14,12 +14,12 @@
       <div class="cart-is-empty">No item in the cart</div>
     </div>
     <div class="bg-mid-green text-center">
-      <a href="{% url 'order:cart' %}" class="btn">Checkout</a>
+      <a id="cart-checkout" href="{% url 'order:cart' %}" class="btn">Checkout</a>
     </div>
   </div>
 </div>
 <script type="text/html+template" id="minicart-list-item">
-  <li class="list-group-item">
+  <li class="list-group-item straighten-border">
     <div class="media">
       <a href="#" class="pull-left">
       <img onload="image_loaded(this);" src="{% static 'store_imgs/' %}${item.sku}.JPG" alter="Item Picture">
@@ -46,9 +46,19 @@
     this.$cart_body = this.$cart.find(".cart-body");
     this.$cart_list = $("#cart-list");
     this.$cart_is_empty = this.$cart_body.find(".cart-is-empty");
+    this.$cart_checkout = $("#cart-checkout");
     this.$cart.find(".cart-header").click(function() {
       self.viewToggleCart();
     });
+    this.$cart_checkout.click(function(evt) {
+      if(this.hasClass("disabled")) {
+        evt.preventDefault();
+        evt.stopPropagation();
+      }
+    });
+    if($.cookie("cart.isopen") == "true") {
+      this.viewToggleCart();
+    }
   }
   CartClass.prototype.fromLocal = function() {
     var sess = $.cookie("cart");
@@ -121,8 +131,8 @@
     } else {
       this.$cart_num.css('opacity', 0);
       this.$cart_list.children().remove();
-      this.viewToggleCart();
     }
+    this.viewToggleCart(true);
     if(showAdding === true) {
       var $cart_adding = this.$cart_adding;
       $cart_adding.fadeIn(500, function() {
@@ -131,15 +141,22 @@
     }
   }
 
-  CartClass.prototype.viewToggleCart = function() {
+  CartClass.prototype.viewToggleCart = function(isKeepStatus) {
+    var self = this;
     if(this._items.length > 0) {
       this.$cart_list.show();
       this.$cart_is_empty.hide();
+      this.$cart_checkout.removeClass("disabled");
     } else {
       this.$cart_list.hide();
       this.$cart_is_empty.show();
+      this.$cart_checkout.addClass("disabled");
     }
-    this.$cart_body.slideToggle(200);
+    if(isKeepStatus !== true) {
+      this.$cart_body.slideToggle(200, function() {
+        $.cookie("cart.isopen", !self.$cart_body.is(":hidden"), {path: "/"});
+      });
+    }
   }
 
   var cart = null;

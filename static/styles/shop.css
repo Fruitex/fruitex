@@ -22,18 +22,29 @@
 .menu-emphasis {
     padding: .5em 0 .5em 0;
     line-height: 2em;
-    width: 16em;
+    width: 100%;
+    white-space: nowrap;
     border-bottom: 2px solid lavender;
 }
+.menu-emphasis > a {
+    min-width: 40em;
+}
 .menu-emphasis-title {
-    padding: 0.2em 0.2em;
+    padding: .2em 0;
     font-size: large;
+    max-width: 50em;
+    word-wrap: break-word;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .menu-emphasis-desc {
-    padding: 0.2em 0.2em;
+    position: absolute;
+    right: .2em;
+    padding: 0.2em 0.4em;
     font-size: small;
     color: darkgray;
-    float: right;
+    word-wrap: break-word;
+    white-space: nowrap;
 }
 .container>aside {
     width: 200px;

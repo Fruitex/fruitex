@@ -17,8 +17,7 @@
     box-shadow: 0 1px 1px;
 }
 .cart-list-wrapper {
-    overflow: auto;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 15em;
 }
 .cart-img {
@@ -27,12 +26,10 @@
 }
 .cart-is-empty {
     background-color: #c1e2b3;
-    font-weight: bold;
-    font-style: oblique;
-    font-size: x-large;
-    line-height: 6em;
+    line-height: 10em;
     text-align: center;
-    height: 6em;
+    height: 10em;
+    text-shadow: 1px 4px 6px #def, 0 0 0 #000, 1px 4px 6px #def;
 }
 .cart-count {
     position: absolute;
