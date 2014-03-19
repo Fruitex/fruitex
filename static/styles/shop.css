@@ -27,12 +27,12 @@
     border-bottom: 2px solid lavender;
 }
 .menu-emphasis > a {
-    min-width: 40em;
+    min-width: 28em;
 }
 .menu-emphasis-title {
     padding: .2em 0;
     font-size: large;
-    max-width: 50em;
+    max-width: 40em;
     word-wrap: break-word;
     overflow: hidden;
     white-space: nowrap;
