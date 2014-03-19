@@ -58,12 +58,18 @@ class DeliveryBucketOrderItemSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = OrderItem
 
+class DeliveryBucketDeliveryWindowSerializer(serializers.HyperlinkedModelSerializer):
+  store = StoreSerializer()
+  class Meta:
+    model = DeliveryWindow
+
 class DeliveryBucketOrderSerializer(serializers.HyperlinkedModelSerializer):
   order_items = DeliveryBucketOrderItemSerializer()
   invoice = InvoiceSerializer()
+  delivery_window = DeliveryBucketDeliveryWindowSerializer()
   class Meta:
     model = Order
-    fields = ['invoice', 'status', 'when_created', 'when_updated', 'order_items', 'subtotal', 'comment']
+    fields = ['invoice', 'status', 'when_created', 'when_updated', 'order_items', 'subtotal', 'comment', 'delivery_window']
 
 class DeliveryBucketSerializer(serializers.HyperlinkedModelSerializer):
   orders = DeliveryBucketOrderSerializer(many=True)
