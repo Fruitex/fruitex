@@ -4,6 +4,8 @@
     margin: 0!important;
     bottom: 0;
     right: 5em;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 1px 0 1px 1px #c1e2b3;
     z-index: 9999;
 }
 .cart-body {
@@ -14,7 +16,6 @@
     background: rgb(193,230,108);
     border-radius: 8px 8px 0 0;
     border-top: none;
-    box-shadow: 0 1px 1px;
 }
 .cart-list-wrapper {
     overflow-y: auto;
@@ -25,7 +26,7 @@
     left: .5em;
 }
 .cart-is-empty {
-    background-color: #c1e2b3;
+    background-color: #ffffff;
     line-height: 10em;
     text-align: center;
     height: 10em;
@@ -53,6 +54,6 @@
     height: 80px;
     background:url('../imgs/add_success.png') no-repeat;
     top:-4em;
-    right:1em;
+    right:1.5em;
     display: none;
 }
