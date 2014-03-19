@@ -38,15 +38,15 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Invoice
 
-class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
-  class Meta:
-    model = OrderItem
-
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
   order_items = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='orderitem-detail')
   delivery_buckets = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='deliverybucket-detail')
   class Meta:
     model = Order
+
+class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
+  class Meta:
+    model = OrderItem
 
 class CouponSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
