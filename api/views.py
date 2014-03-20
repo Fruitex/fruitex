@@ -68,5 +68,5 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DeliveryBucket.objects.all()
     serializer_class = DeliveryBucketSerializer
-    filter_fields = ['assignee__username']
+    filter_fields = ['assignee__username', 'assignee__id']
     ordering = ['-start']
