@@ -36,11 +36,12 @@
     loading.fadeIn();
 
     $.get(url, function(data){
-      var ul = article.find('ul').empty();
-      data.forEach(function(item) {
-        $.tmpl(item_template,{'item':item}).appendTo(ul);
-      })
-
+      if(data.length > 0) {
+        var ul = article.find('ul').empty();
+        data.forEach(function(item) {
+          $.tmpl(item_template,{'item':item}).appendTo(ul);
+        })
+      }
       loading.fadeOut();
       callback && callback();
     },'json');
