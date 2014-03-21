@@ -60,10 +60,6 @@ class InvoiceViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['-when_created']
     ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
-class OrderItemViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
-
 class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
@@ -72,4 +68,5 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DeliveryBucket.objects.all()
     serializer_class = DeliveryBucketSerializer
+    filter_fields = ['assignee__username', 'assignee__id']
     ordering = ['-start']
