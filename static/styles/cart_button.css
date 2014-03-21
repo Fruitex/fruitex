@@ -11,6 +11,10 @@
 .cart-body {
     border: 0 solid rgb(101,150,46);
 }
+.cart-body img {
+    max-width: 30px;
+    height: 20px;
+}
 .cart-header {
     padding: 0.5em 0 0.5em 0;
     background: rgb(193,230,108);
@@ -30,7 +34,6 @@
     line-height: 10em;
     text-align: center;
     height: 10em;
-    text-shadow: 1px 4px 6px #def, 0 0 0 #000, 1px 4px 6px #def;
 }
 .cart-count {
     position: absolute;
