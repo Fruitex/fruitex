@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, loader
+from django.template import RequestContext, loader
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -31,7 +31,7 @@ def items_response(items):
 
   return HttpResponse(encoded, mimetype='application/json')
 
-def common_context(store_slug):
+def common_context(request, store_slug):
   # Fetch all stores, current store and base categories of current store
   try:
     stores = Store.objects.order_by('display_order');
@@ -41,7 +41,7 @@ def common_context(store_slug):
     return HttpResponse(e)
 
   # Build common context
-  context = Context({
+  context = RequestContext(request, {
     'stores': stores,
     'store':store,
     'categories':categories,
@@ -68,12 +68,12 @@ def to_default(request):
 
 def store_home(request, store_slug):
   template = loader.get_template('shop/store_home.html')
-  context = common_context(store_slug)
+  context = common_context(request, store_slug)
   return HttpResponse(template.render(context))
 
 def store_category(request, store_slug, category_id=None):
   template = loader.get_template('shop/store_search.html')
-  context = common_context(store_slug)
+  context = common_context(request, store_slug)
 
   # Fetch category for current selection
   if category_id is not None:
@@ -90,7 +90,7 @@ def store_category(request, store_slug, category_id=None):
 
 def store_search(request, store_slug, keyword=None):
   template = loader.get_template('shop/store_search.html')
-  context = common_context(store_slug)
+  context = common_context(request, store_slug)
 
   # Add search_keyword to the context
   if keyword is not None:

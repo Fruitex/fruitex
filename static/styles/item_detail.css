@@ -110,6 +110,7 @@
     width: 100px;
     box-shadow: 1px 1px 1px rgb(21,21,21);
     opacity:.8;
+    float: none;
 }
 .md-modal .md-content .ops button:hover{
     opacity:1;

@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
+from django.template import loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -203,7 +203,7 @@ def show_invoice(request, invoice_num):
     return HttpResponse('Invalid invoice number', status=404)
 
   # Setup context and render
-  context = Context({
+  context = RequestContext(request, {
     'invoice': invoice,
   })
 

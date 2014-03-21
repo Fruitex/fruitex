@@ -33,7 +33,7 @@
     }
   });
   $('#md-modal').delegate('.add','click',function(){
-    addToCart($(this).data('id'));
+    cart.add($(this).data('id'));
     $('#md-modal').removeClass('md-show');
   });
   $('#md-modal').delegate('.close','click',function(){
@@ -46,7 +46,7 @@
   var item_detail_template = $.template(null,$('#item_detail_template').html());
   $('article > ul').delegate('li','click',function(e){
     if (e.target.tagName.toLowerCase() == 'i') {
-      addToCart($(e.target).data('id'));
+      cart.add($(e.target).data('id'));
       return false;
     }
     var o = $(this).data('o');

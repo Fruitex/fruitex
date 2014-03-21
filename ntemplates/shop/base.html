@@ -9,43 +9,74 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="search">
-  <span class="store">{{ store.name }}</span>
-  <span class="filters">
-    {% if category %}
-    <span>{{ category }}<i>×</i></span>
-    {% endif %}
-  </span>
-  <input class="search-content"{% if search_keyword %} value="{{search_keyword}}"{% endif %}/>
-  <span class="search-btn"><i>Search</i></span>
+<ul class="nav navbar-nav">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle fix-dropmenu-padding-bottom" data-toggle="dropdown">
+      <span class="font-large"><b>{{ store.name }}</b>&nbsp;|</span>
+      <span class="font-small">{{ store.address }}</span>
+      <b class="caret"></b></a>
+    <ul class="dropdown-menu clear-padding">
+      {% for e in stores %}
+      <li class="menu-emphasis">
+        <a href="{% url 'shop:store_home' e.slug %}">
+          <span class="menu-emphasis-title">{{e.name}}</span>
+          <span class="menu-emphasis-desc"></span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </li>
+</ul>
+<div class="col-sm-4 col-md-5 col-lg-5 col-xs-5">
+  <div class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+      <div class="input-group">
+        {% if category %}
+          <span class="input-group-addon bg-mid-green bd-mid-green" role="filters">
+            <span>{{ category }}
+              <b class="text-action ani-brighten">X</b>
+            </span>
+          </span>
+        {% endif %}
+        <input class="form-control width-full" id="search-content"{% if search_keyword %} value="{{search_keyword}}"{% endif %}/>
+        <span class="input-group-btn">
+          <button type="button" id="search-btn" class="btn bg-mid-green fg-dark-green">Search</button>
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
-{% include 'common/cart_button.html' %}
 {% endblock %}
 
 {% block content %}
 {% include "shop/aside.html" %}
+{% include 'common/cart_button.html' %}
 {% endblock %}
 
 {% block page_script %}
 {% include "common/item_detail.html" %}
 {% include "common/item.html" %}
 <script type="text/javascript">
-  $('body>header .filters i').click(function(){
-    location.href = '{% url "shop:store_home" store.slug %}';
+  $("span[role='filters']").each(function(idx, el) {
+    $(el).find("b").click(function(){
+      location.href = '{% url "shop:store_home" store.slug %}';
+    });
   });
 
   var search = function(){
-    var keyword = $('body>header .search-content').val().trim();
+    var $searchbtn = $('#search-btn');
+    var keyword = $('#search-content').val().trim();
     if (!keyword) {
-      return false
+      $searchbtn.blur();
+      return false;
     }
     var template = '{% url "shop:store_search" store.slug "KEYWORD" %}'
     location.href = template.replace('KEYWORD', encodeURIComponent(keyword));
   }
-  $('header .search-btn').click(function(){
+  $('#search-btn').click(function(){
     search();
   });
-  $('header .search-content').keyup(function (evt) {
+  $('#search-content').keyup(function (evt) {
     if (evt.which == 13) {
       search();
     }
