@@ -202,6 +202,13 @@ def show_invoice(request, invoice_num):
   except ObjectDoesNotExist:
     return HttpResponse('Invalid invoice number', status=404)
 
+  # Check access permission
+  if invoice.user:
+    if not request.user.is_authenticated():
+      return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=' + request.path)
+    if invoice.user.id != request.user.id:
+      return HttpResponseRedirect(reverse('shop:to_default'))
+
   # Setup context and render
   context = RequestContext(request, {
     'invoice': invoice,
