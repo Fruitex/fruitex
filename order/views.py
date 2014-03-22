@@ -206,7 +206,7 @@ def show_invoice(request, invoice_num):
   if invoice.user:
     if not request.user.is_authenticated():
       return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=' + request.path)
-    if invoice.user.id != request.user.id:
+    if invoice.user.id != request.user.id and request.user.groups.filter(name='driver').count() == 0:
       return HttpResponseRedirect(reverse('shop:to_default'))
 
   # Setup context and render
