@@ -1,13 +1,5 @@
 {% load static %}
 <aside>
-  <div class="stores">
-    <header>Stores</header>
-    <ul>
-      {% for item in stores %}
-      <li{% if store.slug == item.slug %} class="current"{% endif %}><a href="{% url 'shop:store_home' item.slug %}">{{item.name}}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
   {% if categories %}
   <div class="categories">
     <header>Categories</header>

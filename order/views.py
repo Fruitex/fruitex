@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
+from django.template import loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -202,8 +202,15 @@ def show_invoice(request, invoice_num):
   except ObjectDoesNotExist:
     return HttpResponse('Invalid invoice number', status=404)
 
+  # Check access permission
+  if invoice.user:
+    if not request.user.is_authenticated():
+      return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=' + request.path)
+    if invoice.user.id != request.user.id:
+      return HttpResponseRedirect(reverse('shop:to_default'))
+
   # Setup context and render
-  context = Context({
+  context = RequestContext(request, {
     'invoice': invoice,
   })
 

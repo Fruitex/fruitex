@@ -20,6 +20,7 @@ class ItemFilter(django_filters.FilterSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    ordering_fields = ['date_joined', 'last_login']
 
 # Shop
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
@@ -38,6 +39,7 @@ class ItemViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     filter_class = ItemFilter
+    ordering_fields = ['sold_number']
 
 # Order
 class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
@@ -48,15 +50,15 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     filter_fields = ['status', 'invoice__invoice_num']
+    ordering = ['-when_created']
+    ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
 class InvoiceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
     filter_fields = ['status', 'email', 'user__username']
-
-class OrderItemViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
+    ordering = ['-when_created']
+    ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
 class CouponViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Coupon.objects.all()
@@ -66,3 +68,5 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DeliveryBucket.objects.all()
     serializer_class = DeliveryBucketSerializer
+    filter_fields = ['assignee__username', 'assignee__id']
+    ordering = ['-start']

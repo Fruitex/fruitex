@@ -22,8 +22,40 @@
   </head>
   <body>
     <header>
-      <a href="{% url 'home' %}" title="Fruitex" class="home"></a>
-      {% block header_content %}{% endblock %}
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-wrapper-top">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="{% url 'home' %}" title="Fruitex" class="navbar-brand">
+              <img src="{% static 'imgs/logo.png' %}" class="logo-img"/>
+            </a>
+          </div>
+
+          <div id="nav-wrapper-top" class="collapse navbar-collapse">
+            {% block header_content %}{% endblock %}
+            <ul class="nav navbar-nav navbar-right">
+              {% if not user.is_authenticated %}
+              <li class="bg-mid-green">
+                <a href="{% url 'login' %}"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
+              </li>
+              {% else %}
+              <li class="dropdown bg-mid-green">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome!&nbsp;{{ user.first_name }}&nbsp;<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'profile' %}">My Profile</a></li>
+                  <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
     </header>
     <div class="container clearfix">
       {% block content %} {% endblock %}
@@ -31,5 +63,6 @@
     {% include "common/footer.html" %}
     {% block page_script %}{% endblock %}
     {% include "common/analytics.html" %}
+    {% include "common/uservoice.html" %}
   </body>
 </html>

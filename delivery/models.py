@@ -21,6 +21,9 @@ class DeliveryBucket(models.Model):
     end = localtime(self.end)
     return start.strftime(self.DATETIME_FORMAT) + ' ~ ' + end.strftime(self.DATETIME_FORMAT) + ' (' + str(self.assignee) + ')'
 
+  def _get_delivery_bucket_orders(self):
+    return DeliveryBucketOrder.objects.filter(delivery_bucket__id=self.id)
+
   def _get_num_of_orders(self):
     return self.orders.count()
 
@@ -29,6 +32,7 @@ class DeliveryBucket(models.Model):
   start = models.DateTimeField()
   end = models.DateTimeField()
   orders = models.ManyToManyField('order.Order', related_name='delivery_buckets', through=DeliveryBucketOrder)
+  delivery_bucket_orders = property(_get_delivery_bucket_orders)
   assignee = models.ForeignKey('auth.User', related_name='delivery_buckets')
   assignor = models.ForeignKey('auth.User', related_name='managed_delivery_buckets')
   num_of_orders = property(_get_num_of_orders)

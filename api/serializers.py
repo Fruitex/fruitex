@@ -30,6 +30,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
 # Order
 class DeliveryWindowSerializer(serializers.HyperlinkedModelSerializer):
+  store = StoreSerializer()
   class Meta:
     model = DeliveryWindow
 
@@ -38,20 +39,32 @@ class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Invoice
 
+class OrderItemSerializer(serializers.ModelSerializer):
+  item = ItemSerializer()
+  class Meta:
+    model = OrderItem
+
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
+  order_items = OrderItemSerializer()
+  delivery_window = DeliveryWindowSerializer()
   delivery_buckets = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='deliverybucket-detail')
   class Meta:
     model = Order
-
-class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
-  class Meta:
-    model = OrderItem
 
 class CouponSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Coupon
 
 # Delivery
+class DeliveryBucketOrderSerializer(serializers.ModelSerializer):
+  order = OrderSerializer()
+  class Meta:
+    model = DeliveryBucketOrder
+
 class DeliveryBucketSerializer(serializers.HyperlinkedModelSerializer):
+  delivery_bucket_orders = DeliveryBucketOrderSerializer()
+  assignor = UserSerializer()
+  assignee = UserSerializer()
   class Meta:
     model = DeliveryBucket
+    fields = ['start', 'end', 'assignor', 'assignee', 'delivery_bucket_orders']
