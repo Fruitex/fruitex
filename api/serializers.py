@@ -25,6 +25,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
     model = Category
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
+  category = CategorySerializer()
   class Meta:
     model = Item
 
@@ -46,6 +47,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
   order_items = OrderItemSerializer()
+  invoice = InvoiceSerializer()
   delivery_window = DeliveryWindowSerializer()
   delivery_buckets = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='deliverybucket-detail')
   class Meta:
