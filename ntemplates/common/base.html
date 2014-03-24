@@ -40,8 +40,8 @@
             {% block header_content %}{% endblock %}
             <ul class="nav navbar-nav navbar-right">
               {% if not user.is_authenticated %}
-              <li class="bg-mid-green">
-                <a href="{% url 'login' %}"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
+              <li class="bg-mid-green" id="menu-sign-in">
+                <a href="#" id="menu-login"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
               </li>
               {% else %}
               <li class="dropdown bg-mid-green">
@@ -60,6 +60,93 @@
     <div class="container clearfix">
       {% block content %} {% endblock %}
     </div>
+    {% if not user.is_authenticated %}
+    <iframe id="ifm-login" src="{% url 'login' %}" class="hidden"></iframe>
+    <div class="modal fade" id="dlg-login">
+      <div class="modal-dialog">
+        <div class="modal-content width-60 center-parent">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Login</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <button class="btn btn-block disabled">Login with Facebook</button>
+            </div>
+            <div class="divider-wrapper">
+              <div class="divider">
+                <span>OR</span>
+              </div>
+            </div>
+            <div id="errors" class="alert alert-warning"></div>
+            <div id="acc-chk-register-pnl" class="form-group ">
+              <div class="form-group">
+                <input type="text" class="form-control" id="login-id_username" name="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="login-id_password" name="password" placeholder="Password">
+              </div>
+            </div>
+            <div class="text-center">
+              <button id="dlg-login-ok" type="button" class="btn btn-default width-50 bg-dark-green fg-white">OK</button>
+              <a href="{% url 'registration_register' %}" class="btn btn-default width-50 bg-light-green">SIGN UP</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="application/javascript">
+      $(document).ready(function() {
+        var $error = $("#errors");
+        $("#menu-login").click(function(evt) {
+          var dlgSignIn = $("#dlg-login");
+          var dlgSignInOk = $("#dlg-login-ok");
+          dlgSignIn.modal("toggle");
+          $error.hide();
+          dlgSignInOk.click(function() {
+            $error.hide();
+            var ifm = $("#ifm-login");
+            var frm = ifm.contents().find("form#form-login");
+            if(frm.length < 1) {
+              return;
+            }
+            var fields = $("input[id^='login-id']");
+            fields.each(function(idx, el) {
+              el = $(el);
+              var name = el.attr('name');
+              var targetEl = frm.find("input[name='"+ name + "']");
+              targetEl.val(el.val());
+            });
+            frm.submit();
+            ifm.load(function() {
+              var errors = $("#errors");
+              errors.empty();
+              errors.hide();
+              ifm.off('load');
+              var ifmErrors = ifm.contents().find("#errors");
+              if(ifmErrors.length > 0) {
+                errors.html(ifmErrors.html());
+                errors.show();
+
+              } else {
+                //NOTE: it's expcted we are in profile page.Otherwise show error message
+                var fields = ifm.contents().find("td[id^='id_']");
+                if(fields.length > 0) {
+                  location.reload();
+                  //$("#acc-chk-pnl, #acc-chk-login, #acc-chk-register").hide();
+                } else {
+                  errors.html("<p>Login failed. Please try again later or refresh this page</p>");
+                  errors.show();
+                  // it's highly possible the iframe is not in login page any more.
+                  ifm.prop('src', ifm.prop('src'));
+                }
+              }
+            });
+          });
+        });
+      });
+    </script>
+    {% endif %}
     {% include "common/footer.html" %}
     {% block page_script %}{% endblock %}
     {% include "common/analytics.html" %}
