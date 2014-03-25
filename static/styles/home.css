@@ -69,3 +69,130 @@
 article li {
   width: 160px;
 }
+
+header {
+    display: none;
+}
+.container { /* override all container box model */
+    margin: 0!important;
+    padding: 0!important;
+    width: 100%!important;
+}
+body> footer {
+    border: 0!important;
+    margin: -2.2em 0 0 0!important;
+    padding: 2.5em 0!important;
+    background-color: #c1e2b3!important;
+}
+.sec-common {
+    width: 100%;
+    height: 16em;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    clear: both;
+}
+#sec-front {
+    background: url('/static/imgs/intro/front.jpg') repeat-y fixed;
+    background-size: cover;
+    color: white;
+    height: 40em;
+}
+#sec-front .headline {
+    padding: 15em 0 1em 0;
+}
+#sec-front .logo {
+    float: left;
+}
+#sec-front .logo img {
+    float: left;
+    margin: 1.5em;
+}
+#sec-slogan1 {
+    background: url('/static/imgs/intro/slogan1.jpg') no-repeat;
+    background-size: cover;
+}
+#sec-slogan1 div {
+    width: 22em;
+    position: absolute;
+    right: 6em;
+    padding-top: 3em;
+    text-align: right;
+}
+#sec-slogan2 {
+    background: url('/static/imgs/intro/slogan2.jpg') no-repeat;
+    background-size: cover;
+}
+#sec-slogan2 div {
+    width: 22em;
+    position: absolute;
+    left: 6em;
+    padding-top: 3em;
+    text-align: left;
+}
+#sec-slogan3 {
+    background: url('/static/imgs/intro/slogan3.jpg') no-repeat;
+    background-size: cover;
+}
+#sec-slogan3 div {
+    width: 18em;
+    position: absolute;
+    right: 4em;
+    padding-top: 3em;
+    color: white;
+    text-align: right;
+}
+#sec-slogan4 {
+    background: url('/static/imgs/intro/slogan4.jpg') no-repeat;
+    background-size: cover;
+}
+#sec-slogan4 div.outer {
+    position: absolute;
+    left: 50%;
+}
+#sec-slogan4 div.inner {
+    color: white;
+    position: relative;
+    padding-top: 3em;
+    left: -50%;
+}
+#sec-map {
+    background: #c1e2b3 url('/static/imgs/intro/slogan-map.jpg') no-repeat;
+    background-size: cover;
+}
+#sec-map div {
+    width: 21em;
+    position: absolute;
+    right: 6em;
+    padding-top: 6em;
+    color: black;
+    text-align: left;
+}
+#sec-footer {
+    background-color: #c1e2b3;
+    height: 15em;
+    padding: 0 2em;
+}
+#sec-footer .feature {
+    width: 32%;
+    height: 100%;
+    padding: 2em;
+    float: left;
+}
+#sec-footer .feature div {
+    text-align: justify;
+    padding: 0 1em;
+}
+#sec-footer .feature p {
+    font-size: x-small;
+}
+#gotostore {
+    padding-left: 2em;
+    padding-right: 2em;
+    background-color: seagreen;
+    color: wheat;
+}
+#gotostore:hover {
+    opacity: 0.8;
+}
+.popover-title, .popover-content{
+    color: black;
+}
