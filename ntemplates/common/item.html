@@ -40,7 +40,9 @@
         var ul = article.find('ul').empty();
         data.forEach(function(item) {
           $.tmpl(item_template,{'item':item}).appendTo(ul);
-        })
+        });
+      } else {
+        article.find('.not-found').removeClass('hide');
       }
       loading.fadeOut();
       callback && callback();
