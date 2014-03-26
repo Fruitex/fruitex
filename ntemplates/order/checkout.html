@@ -66,6 +66,7 @@
       <div class="clearfix"></div>
       <div id="acc-chk-pnl" class="bg-info well-sm">
         <div id="acc-chk-login-pnl" class="form-inline">
+          <!--
           <div class="form-group">
             <input type="text" class="form-control" id="login-id_username" name="username" placeholder="Username">
           </div>
@@ -73,7 +74,7 @@
             <input type="password" class="form-control" id="login-id_password" name="password" placeholder="Password">
           </div>
           <button type="button" class="btn btn-primary" id="login-submit">Login</button>
-          <!--
+          <!-
           <a href="{% url 'password_reset' %}" class="btn btn-default hidden">Forget Password</a>
           -->
         </div>
@@ -345,6 +346,9 @@ $(document).ready(function() {
   });
 
   $("#acc-chk-login").click(function(evt){
+    $("#menu-login").click();
+    return;
+    /* NOT USED: only one 'register' tab is used *
     var other = $("#acc-chk-register");
     var pnlContainer = $("#acc-chk-pnl");
     var otherPnl = $("#acc-chk-register-pnl");
@@ -361,6 +365,7 @@ $(document).ready(function() {
       pnlContainer.slideDown();
       $("#login-id_username").focus();
     }
+    */
   });
 
   $("#acc-chk-register").click(function(evt){
