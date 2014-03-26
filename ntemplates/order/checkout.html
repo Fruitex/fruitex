@@ -51,7 +51,6 @@
   <div id='items-in-cart-summary-container'>
   </div>
 </div>
-<iframe id="ifm-login" src="{% url 'login' %}" class="hidden"></iframe>
 <iframe id="ifm-register" src="{% url 'registration_register' %}" class="hidden"></iframe>
 <form id='checkout-form' action="{% url 'order:checkout' %}" method="POST">
 <div id='delivery-wrapper' class="order-section-wrapper">
@@ -60,7 +59,7 @@
       <h3 class="col-sm-8">Delivery Info</h3>
       {% if not user.is_authenticated %}
       <div class="btn-group pull-right">
-        <button class="btn btn-default" id="acc-chk-login" data-toggle="button">Login</button>
+        <button class="btn btn-default" id="acc-chk-login">Login</button>
         <button class="btn btn-default" id="acc-chk-register" data-toggle="button">Register</button>
       </div>
       <div class="clearfix"></div>
@@ -97,21 +96,21 @@
       <input type="hidden" id="user-id_phone" value="{{ user.get_profile.phone }}" />
       <input type="hidden" id="user-id_address" value="{{ user.get_profile.address }}" />
       <input type="hidden" id="user-id_postcode" value="{{ user.get_profile.postcode }}" />
-      <div clas="col-sm-2 pull-right">
+      <!--<div clas="col-sm-2 pull-right">
         <span class="label label-primary">Welcome back, {{ user.username }}</span>
-        <p></p><!-- separater -->
+        <br>
         <div class="btn-group">
           <a href="{% url 'profile' %}" class="btn btn-default">My Profile</a>
           <a href="{% url 'logout' %}" class="btn btn-default">Logout</a>
         </div>
-      </div>
+      </div>-->
       <div class="clearfix"></div>
       {% endif %}
     </div>
   </div>
 
   <div id='delivery-container' class="panel-body">
-    <div id="errors" class="alert alert-warning"></div>
+    <div id="errors-register" class="alert alert-warning"></div>
     {{ form.non_field_errors }}
     <div class="form-horizontal col-sm-11" role="form">
       <div class="form-group"></div>
@@ -234,46 +233,6 @@ $(document).ready(function() {
   var datetime = {{ datetime|date:"U" }};
   var account_check = {};
 
-  $('#login-submit').click(function() {
-    var ifm = $("#ifm-login");
-    var frm = ifm.contents().find("form#form-login");
-    if(frm.length < 1) {
-      return;
-    }
-    var fields = $("input[id^='login-id']");
-    fields.each(function(idx, el) {
-      el = $(el);
-      var name = el.attr('name');
-      var targetEl = frm.find("input[name='"+ name + "']");
-      targetEl.val(el.val());
-    });
-    frm.submit();
-    ifm.load(function() {
-      var errors = $("#errors");
-      errors.empty();
-      errors.hide();
-      ifm.off('load');
-      var ifmErrors = ifm.contents().find("#errors");
-      if(ifmErrors.length > 0) {
-        errors.html(ifmErrors.html());
-        errors.show();
-
-      } else {
-        //NOTE: it's expcted we are in profile page.Otherwise show error message
-        var fields = ifm.contents().find("td[id^='id_']");
-        if(fields.length > 0) {
-          location.reload();
-          //$("#acc-chk-pnl, #acc-chk-login, #acc-chk-register").hide();
-        } else {
-          errors.html("<p>Login failed. Please try again later or report this account to us. Thank you</p>");
-          errors.show();
-          // it's highly possible the iframe is not in login page any more.
-          ifm.prop('src', ifm.prop('src'));
-        }
-      }
-    });
-  });
-
   var isRegisterOk = function(cbfunc) {
     var accountOption = $("#acc-chk-register");
     if(!accountOption.hasClass("active")) {
@@ -308,7 +267,7 @@ $(document).ready(function() {
     }
     frm.submit();
     ifm.load(function() {
-      var errors = $("#errors");
+      var errors = $("#errors-register");
       errors.empty();
       errors.hide();
       ifm.unbind("load");
@@ -347,7 +306,7 @@ $(document).ready(function() {
 
   $("#acc-chk-login").click(function(evt){
     $("#menu-login").click();
-    return;
+    evt.preventDefault();
     /* NOT USED: only one 'register' tab is used *
     var other = $("#acc-chk-register");
     var pnlContainer = $("#acc-chk-pnl");
@@ -539,8 +498,8 @@ $(document).ready(function() {
   });
 
   $("#acc-chk-login, #acc-chk-register").button();
-  $("#acc-chk-pnl, #acc-chk-register-pnl, #acc-chk-login-pnl").hide();
-  $("#errors").hide();
+  $("#acc-chk-pnl, #acc-chk-register-pnl").hide();
+  $("#errors-register").hide();
   checkCoupon();
   detectUser();
 });
