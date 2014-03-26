@@ -7,12 +7,14 @@
     {% block extra_meta %}{% endblock %}
     <title>{% block title %}Fruitex{% endblock %}</title>
     {% compress css %}
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Noto+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "styles/base.css" %}"/>
     {% endcompress %}
     {% block extra_css %}{% endblock %}
     {% block page_css %}{% endblock %}
-    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script type="text/javascript" src="{% static "javascript/lib/bootstrap.min.js" %}"></script>
     <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
@@ -31,7 +33,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{% url 'home' %}" title="Fruitex" class="navbar-brand">
+            <a href="{% url 'shop:to_default' %}" title="Fruitex" class="navbar-brand">
               <img src="{% static 'imgs/logo.png' %}" class="logo-img"/>
             </a>
           </div>
@@ -44,7 +46,7 @@
                 <a href="#" id="menu-login"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
               </li>
               {% else %}
-              <li class="dropdown bg-mid-green">
+              <li class="dropdown bg-light-green">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome!&nbsp;{{ user.first_name }}&nbsp;<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'profile' %}">My Profile</a></li>
@@ -65,9 +67,9 @@
     <div class="modal fade" id="dlg-login">
       <div class="modal-dialog">
         <div class="modal-content width-60 center-parent">
-          <div class="modal-header">
+          <div class="modal-header clear-border">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Login</h4>
+            <h4 class="modal-title text-center bg-mid-green"><img width="40%" src="{% static 'imgs/intro/logo_white.png' %}" ></h4>
           </div>
           <div class="modal-body">
             <div class="form-group">

@@ -1,5 +1,6 @@
 body{
     background: #fcfcfc;
+    font-family: 'Open Sans', 'Noto Sans', sans-serif;
 }
 body>header {
     height: 50px;
@@ -49,6 +50,9 @@ body>footer{
 .width-50 {
     width: 49%!important;
 }
+.width-30 {
+    width: 30%!important;
+}
 .center-parent {
     margin: 0 auto!important;
 }
@@ -61,6 +65,9 @@ body>footer{
 .clear-margin {
     margin: 0!important;
 }
+.clear-border {
+    border: 0!important;
+}
 .clear-padding {
     padding: 0!important;
 }
@@ -71,16 +78,16 @@ body>footer{
     cursor: pointer;
 }
 .fg-white {
-    color: #fff;
+    color: #fff!important;
 }
 .fg-dark-green {
     color: rgb(66,107,29);
 }
 .bg-light-green {
-    background: rgb(212, 255, 143);
+    background: rgb(209, 239, 139);
 }
 .bg-mid-green {
-    background: rgb(209, 239, 139);
+    background: rgb(71, 186, 71);
 }
 .bg-dark-green {
     background-color: rgb(66,107,29);

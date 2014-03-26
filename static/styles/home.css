@@ -1,5 +1,5 @@
 .container {
-  width: 800px;
+    background-color: #c1e2b3;
 }
 
 .container > div {
@@ -16,7 +16,9 @@
   background-color: inherit;
   border-bottom: 1px solid #d3d3d3;
 }
-
+.container-full {
+    height: 100%;
+}
 .banner {
   margin: 20px 0;
 }
@@ -81,20 +83,15 @@ header {
 body> footer {
     border: 0!important;
     margin: -2.2em 0 0 0!important;
-    padding: 2.5em 0!important;
+    padding: 3.5em 0!important;
     background-color: #c1e2b3!important;
 }
-.sec-common {
-    width: 100%;
-    height: 16em;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    clear: both;
-}
 #sec-front {
-    background: url('/static/imgs/intro/front.jpg') repeat-y fixed;
+    background: url('/static/imgs/intro/front.jpg') no-repeat;
     background-size: cover;
     color: white;
-    height: 40em;
+    height: 100vh;
+    min-height: 100vh;
 }
 #sec-front .headline {
     padding: 15em 0 1em 0;
@@ -106,20 +103,30 @@ body> footer {
     float: left;
     margin: 1.5em;
 }
+.sec-common {
+    background-size: contain;
+    position: relative;
+    width: 100%;
+}
+.sec-common> img {
+    max-width: 100%;
+    height: auto;
+}
+.sec-common> div {
+    position: absolute;
+    top: 3%;
+}
 #sec-slogan1 {
-    background: url('/static/imgs/intro/slogan1.jpg') no-repeat;
-    background-size: cover;
+    _background: url('/static/imgs/intro/slogan1.jpg') no-repeat;
 }
 #sec-slogan1 div {
-    width: 22em;
-    position: absolute;
+    width: 23em;
     right: 6em;
     padding-top: 3em;
     text-align: right;
 }
 #sec-slogan2 {
-    background: url('/static/imgs/intro/slogan2.jpg') no-repeat;
-    background-size: cover;
+    _background: url('/static/imgs/intro/slogan2.jpg') no-repeat;
 }
 #sec-slogan2 div {
     width: 22em;
@@ -129,8 +136,7 @@ body> footer {
     text-align: left;
 }
 #sec-slogan3 {
-    background: url('/static/imgs/intro/slogan3.jpg') no-repeat;
-    background-size: cover;
+    _background: url('/static/imgs/intro/slogan3.jpg') no-repeat;
 }
 #sec-slogan3 div {
     width: 18em;
@@ -141,8 +147,7 @@ body> footer {
     text-align: right;
 }
 #sec-slogan4 {
-    background: url('/static/imgs/intro/slogan4.jpg') no-repeat;
-    background-size: cover;
+    _background: url('/static/imgs/intro/slogan4.jpg') no-repeat;
 }
 #sec-slogan4 div.outer {
     position: absolute;
@@ -151,18 +156,17 @@ body> footer {
 #sec-slogan4 div.inner {
     color: white;
     position: relative;
-    padding-top: 3em;
+    padding-top: 4em;
     left: -50%;
 }
 #sec-map {
-    background: #c1e2b3 url('/static/imgs/intro/slogan-map.jpg') no-repeat;
-    background-size: cover;
+    _background: #c1e2b3 url('/static/imgs/intro/slogan-map.jpg') no-repeat;
 }
 #sec-map div {
     width: 21em;
     position: absolute;
     right: 6em;
-    padding-top: 6em;
+    padding-top: 4%;
     color: black;
     text-align: left;
 }
@@ -188,6 +192,7 @@ body> footer {
     padding-left: 2em;
     padding-right: 2em;
     background-color: seagreen;
+    margin: 1em 0;
     color: wheat;
 }
 #gotostore:hover {
@@ -195,4 +200,24 @@ body> footer {
 }
 .popover-title, .popover-content{
     color: black;
+}
+@media screen and (max-width: 650px) {
+    #sec-footer .feature {
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+        float: left;
+    }
+    #sec-footer .feature img {
+        float: left;
+        width: 40%;
+        padding: 0 1em;
+    }
+    #sec-footer .feature div {
+        text-align: justify;
+        padding: 0 1em;
+    }
+    #sec-footer .feature p {
+        font-size: x-small;
+    }
 }
