@@ -50,6 +50,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome!&nbsp;{{ user.first_name }}&nbsp;<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'profile' %}">My Profile</a></li>
+                  <li class="divider"></li>
                   <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
@@ -100,50 +101,55 @@
     <script type="application/javascript">
       $(document).ready(function() {
         var $error = $("#errors");
+        var dlgSignIn = $("#dlg-login");
+        var dlgSignInOk = $("#dlg-login-ok");
+        dlgSignInOk.click(function() {
+          var ifm = $("#ifm-login");
+          var frm = ifm.contents().find("form#form-login");
+          if(frm.length < 1) {
+            return;
+          }
+          var fields = $("input[id^='login-id']");
+          fields.each(function(idx, el) {
+            el = $(el);
+            var name = el.attr('name');
+            var targetEl = frm.find("input[name='"+ name + "']");
+            targetEl.val(el.val());
+          });
+          frm.submit();
+          ifm.load(function() {
+            var errors = $("#errors");
+            errors.empty();
+            errors.hide();
+            ifm.off('load');
+            var ifmErrors = ifm.contents().find("#errors");
+            if(ifmErrors.length > 0) {
+              errors.html(ifmErrors.html());
+              errors.show();
+
+            } else {
+              //NOTE: it's expcted we are in profile page.Otherwise show error message
+              var fields = ifm.contents().find("td[id^='id_']");
+              if(fields.length > 0) {
+                location.reload();
+              } else {
+                errors.html("<p>Login failed. Please try again later or refresh this page</p>");
+                errors.show();
+                // it's highly possible the iframe is not in login page any more.
+                ifm.prop('src', ifm.prop('src'));
+              }
+            }
+          });
+        });
         $("#menu-login").click(function(evt) {
-          var dlgSignIn = $("#dlg-login");
-          var dlgSignInOk = $("#dlg-login-ok");
           dlgSignIn.modal("toggle");
           $error.hide();
-          dlgSignInOk.click(function() {
-            $error.hide();
-            var ifm = $("#ifm-login");
-            var frm = ifm.contents().find("form#form-login");
-            if(frm.length < 1) {
-              return;
-            }
-            var fields = $("input[id^='login-id']");
-            fields.each(function(idx, el) {
-              el = $(el);
-              var name = el.attr('name');
-              var targetEl = frm.find("input[name='"+ name + "']");
-              targetEl.val(el.val());
-            });
-            frm.submit();
-            ifm.load(function() {
-              var errors = $("#errors");
-              errors.empty();
-              errors.hide();
-              ifm.off('load');
-              var ifmErrors = ifm.contents().find("#errors");
-              if(ifmErrors.length > 0) {
-                errors.html(ifmErrors.html());
-                errors.show();
-
-              } else {
-                //NOTE: it's expcted we are in profile page.Otherwise show error message
-                var fields = ifm.contents().find("td[id^='id_']");
-                if(fields.length > 0) {
-                  location.reload();
-                } else {
-                  errors.html("<p>Login failed. Please try again later or refresh this page</p>");
-                  errors.show();
-                  // it's highly possible the iframe is not in login page any more.
-                  ifm.prop('src', ifm.prop('src'));
-                }
-              }
-            });
-          });
+          $('#login-id_username').focus();
+        });
+        $('#login-id_password').keyup(function(evt) {
+          if(evt.which == 13) {
+            dlgSignInOk.click();
+          }
         });
       });
     </script>
