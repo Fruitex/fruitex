@@ -170,7 +170,11 @@
       trigger: 'manual'
     });
     txtPostcode.on('change keyup paste', function(evt) {
-      btnGo.popover('hide');
+      if (evt.which == 13) {
+        btnGo.click();
+      } else {
+        btnGo.popover('hide');
+      }
     });
     btnGo.click(function(evt) {
       var postcode = txtPostcode.val();
@@ -179,7 +183,6 @@
       if (txtPostcode.hasClass('hide')) {
         return window.location = "{% url 'shop:store_home' stores.0.slug %}";
       };
-
 
       postcode = postcode && postcode.trim();
       if(postcode) {
