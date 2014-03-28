@@ -1,5 +1,4 @@
 .container {
-    min-width: 580px;
     background-color: #c1e2b3;
 }
 
@@ -97,7 +96,7 @@ body> footer {
     min-height: 100vh;
 }
 #sec-front .headline {
-    padding: 15em 3em 1em 3em;
+    padding: 15% 3em 1em 3em;
 }
 #sec-front .logo {
     float: left;
@@ -114,6 +113,7 @@ body> footer {
 .sec-common> img {
     max-width: 100%;
     height: auto;
+    min-width: 800px;
 }
 .sec-common> div {
     position: absolute;
@@ -126,7 +126,7 @@ body> footer {
 #sec-slogan1 div {
     width: 23em;
     right: 6em;
-    padding-top: 3em;
+    padding-top: 10%;
     text-align: right;
 }
 #sec-slogan2 {
@@ -136,7 +136,7 @@ body> footer {
     width: 22em;
     position: absolute;
     left: 6em;
-    padding-top: 3em;
+    padding-top: 10%;
     text-align: left;
 }
 #sec-slogan3 {
@@ -146,7 +146,7 @@ body> footer {
     width: 18em;
     position: absolute;
     right: 4em;
-    padding-top: 3em;
+    padding-top: 10%;
     color: white;
     text-align: right;
 }
@@ -156,11 +156,11 @@ body> footer {
 #sec-slogan4 div.outer {
     position: absolute;
     left: 50%;
+    padding-top: 10%;
 }
 #sec-slogan4 div.inner {
     color: white;
     position: relative;
-    padding-top: 4%;
     left: -50%;
 }
 #sec-map {
