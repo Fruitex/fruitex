@@ -1,6 +1,10 @@
 {% extends "common/base.html" %}
 {% load static %}
 
+{% block extra_meta %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static "styles/cart_button.css" %}"/>
 <link rel="stylesheet" type="text/css" href="{% static "styles/item_article.css" %}"/>
@@ -188,6 +192,11 @@
         window.location = "{% url 'shop:store_home' stores.0.slug %}";
       }
     });
+
+    $('#sec-front').css('height', window.innerHeight);
+    window.onresize = function() {
+      $('#sec-front').css('height', window.innerHeight);
+    };
   });
 </script>
 {% endblock %}
