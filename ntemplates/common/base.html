@@ -6,9 +6,9 @@
     <meta charset="utf-8"/>
     {% block extra_meta %}{% endblock %}
     <title>{% block title %}Fruitex{% endblock %}</title>
-    {% compress css %}
     <link href='http://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Noto+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "styles/base.css" %}"/>
     {% endcompress %}
