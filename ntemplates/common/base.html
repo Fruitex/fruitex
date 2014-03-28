@@ -7,12 +7,14 @@
     {% block extra_meta %}{% endblock %}
     <title>{% block title %}Fruitex{% endblock %}</title>
     {% compress css %}
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Noto+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "styles/base.css" %}"/>
     {% endcompress %}
     {% block extra_css %}{% endblock %}
     {% block page_css %}{% endblock %}
-    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script type="text/javascript" src="{% static "javascript/lib/bootstrap.min.js" %}"></script>
     <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
@@ -31,7 +33,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="{% url 'home' %}" title="Fruitex" class="navbar-brand">
+            <a href="{% url 'shop:to_default' %}" title="Fruitex" class="navbar-brand">
               <img src="{% static 'imgs/logo.png' %}" class="logo-img"/>
             </a>
           </div>
@@ -40,14 +42,15 @@
             {% block header_content %}{% endblock %}
             <ul class="nav navbar-nav navbar-right">
               {% if not user.is_authenticated %}
-              <li class="bg-mid-green">
-                <a href="{% url 'login' %}"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
+              <li class="bg-light-green" id="menu-sign-in">
+                <a href="#" id="menu-login"><i class="glyphicon glyphicon-user">&nbsp;</i>Sign in</a>
               </li>
               {% else %}
-              <li class="dropdown bg-mid-green">
+              <li class="dropdown bg-light-green">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome!&nbsp;{{ user.first_name }}&nbsp;<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'profile' %}">My Profile</a></li>
+                  <li class="divider"></li>
                   <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
@@ -60,6 +63,97 @@
     <div class="container clearfix">
       {% block content %} {% endblock %}
     </div>
+    {% if not user.is_authenticated %}
+    <iframe id="ifm-login" src="{% url 'login' %}" class="hidden"></iframe>
+    <div class="modal fade" id="dlg-login">
+      <div class="modal-dialog">
+        <div class="modal-content width-60 center-parent">
+          <div class="modal-header clear-border">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title text-center bg-mid-green"><img width="40%" src="{% static 'imgs/intro/logo_white.png' %}" ></h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <button class="btn btn-block disabled">Login with Facebook</button>
+            </div>
+            <div class="divider-wrapper">
+              <div class="divider">
+                <span>OR</span>
+              </div>
+            </div>
+            <div id="errors" class="alert alert-warning"></div>
+            <div class="form-group ">
+              <div class="form-group">
+                <input type="text" class="form-control" id="login-id_username" name="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="login-id_password" name="password" placeholder="Password">
+              </div>
+            </div>
+            <div class="text-center">
+              <button id="dlg-login-ok" type="button" class="btn btn-default width-50 bg-dark-green fg-white">OK</button>
+              <a href="{% url 'registration_register' %}" class="btn btn-default width-50 bg-light-green">SIGN UP</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="application/javascript">
+      $(document).ready(function() {
+        var $error = $("#errors");
+        var dlgSignIn = $("#dlg-login");
+        var dlgSignInOk = $("#dlg-login-ok");
+        dlgSignInOk.click(function() {
+          var ifm = $("#ifm-login");
+          var frm = ifm.contents().find("form#form-login");
+          if(frm.length < 1) {
+            return;
+          }
+          var fields = $("input[id^='login-id']");
+          fields.each(function(idx, el) {
+            el = $(el);
+            var name = el.attr('name');
+            var targetEl = frm.find("input[name='"+ name + "']");
+            targetEl.val(el.val());
+          });
+          frm.submit();
+          ifm.load(function() {
+            var errors = $("#errors");
+            errors.empty();
+            errors.hide();
+            ifm.off('load');
+            var ifmErrors = ifm.contents().find("#errors");
+            if(ifmErrors.length > 0) {
+              errors.html(ifmErrors.html());
+              errors.show();
+
+            } else {
+              //NOTE: it's expcted we are in profile page.Otherwise show error message
+              var fields = ifm.contents().find("td[id^='id_']");
+              if(fields.length > 0) {
+                location.reload();
+              } else {
+                errors.html("<p>Login failed. Please try again later or refresh this page</p>");
+                errors.show();
+                // it's highly possible the iframe is not in login page any more.
+                ifm.prop('src', ifm.prop('src'));
+              }
+            }
+          });
+        });
+        $("#menu-login").click(function(evt) {
+          dlgSignIn.modal("toggle");
+          $error.hide();
+          $('#login-id_username').focus();
+        });
+        $('#login-id_password').keyup(function(evt) {
+          if(evt.which == 13) {
+            dlgSignInOk.click();
+          }
+        });
+      });
+    </script>
+    {% endif %}
     {% include "common/footer.html" %}
     {% block page_script %}{% endblock %}
     {% include "common/analytics.html" %}

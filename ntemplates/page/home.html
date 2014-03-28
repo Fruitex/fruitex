@@ -1,6 +1,10 @@
 {% extends "common/base.html" %}
 {% load static %}
 
+{% block extra_meta %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static "styles/cart_button.css" %}"/>
 <link rel="stylesheet" type="text/css" href="{% static "styles/item_article.css" %}"/>
@@ -12,6 +16,89 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-full">
+  <section id="sec-front">
+    <div class="logo">
+      <img src="/static/imgs/intro/logo_white.png" alt="rocket" width="60%" >
+    </div>
+    <div class="headline">
+      <h1><b>Groceries Delivered in 2 Hours.</b></h1>
+      <h3>From Sobyes, Shoopers and other local stores.</h3>
+      <div class="form-inline">
+        <input id="postcode" type="text" placeholder="Postal Code" class="form-control">
+        <button id="gotostore" type="button" class="btn btn-default bg-mid-green">
+          <img src="/static/imgs/intro/rocket_icon.png" alt="*" width="30%">
+          Start
+        </button>
+      </div>
+    </div>
+  </section>
+  <section id="sec-slogan1" class="sec-common">
+    <img src="{% static 'imgs/intro/slogan1.jpg' %}">
+    <div>
+      <h2>Save time.</h2>
+      <h4>Shop on your own schedule. And get your delivery today, or tomorrow.</h4>
+    </div>
+  </section>
+  <section id="sec-slogan2" class="sec-common">
+    <img src="{% static 'imgs/intro/slogan2.jpg' %}">
+    <div>
+      <h2>Fresh.</h2>
+      <h4>Our professional shopper knows how to pick high quality items.</h4>
+    </div>
+  </section>
+  <section id="sec-slogan3" class="sec-common">
+    <img src="{% static 'imgs/intro/slogan3.jpg' %}">
+    <div>
+      <h2>Cost-effective.</h2>
+      <h4>For only $0.99 we deliver to anywhere in the city.</h4>
+    </div>
+  </section>
+  <section id="sec-slogan4" class="sec-common">
+    <img src="{% static 'imgs/intro/slogan4.jpg' %}">
+    <div class="outer">
+      <div class="inner">
+        <h3>Browse Over 5000 Grocery Items Now.</h3>
+        <p class="text-center">
+          <a href="{% url 'shop:store_home' stores.0.slug %}" class="btn btn-default bg-mid-green">SHOP FRUITEX NOW</a>
+        </p>
+      </div>
+    </div>
+  </section>
+  <section id="sec-map" class="sec-common">
+    <img src="{% static 'imgs/intro/slogan-map.jpg' %}">
+    <div>
+      <h4>We currently serves.</h4>
+      <h3>Waterloo / Kitchener Area.</h3>
+    </div>
+  </section>
+  <section id="sec-footer">
+    <div class="feature">
+      <img src="/static/imgs/intro/clock.png" alt="delivery" width="40%">
+      <div>
+        <h4><b>Same Day Delivery</b></h4>
+        <p>Submit your order at noon and get your delivery before dinner.</p>
+      </div>
+    </div>
+    <div class="feature">
+      <img src="/static/imgs/intro/creditcard.png" alt="delivery" width="40%">
+      <div>
+        <h4><b>Pay On Delivery.</b></h4>
+        <p>Pay online with your PayPal or offline with your credit card.</p>
+      </div>
+    </div>
+    <div class="feature">
+      <img src="/static/imgs/intro/meal.png" alt="delivery" width="60%">
+      <div>
+        <h4><b>Fresh Guaranteed</b></h4>
+        <p>You can return your item and have full refund upon delivery</p>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block content_old %}
 {% include 'common/cart_button.html' %}
 <div class="banner">
   <a href="{% url 'shop:store_home' 'rocky_mountain' %}"><img src="{% static 'imgs/' %}home_banner.png" alter="Banner" /></a>
@@ -68,6 +155,48 @@
   var articles = $('.deals article');
   articles.each(function(i, element) {
     load_items($(element), '', null);
+  });
+  $(document).ready(function() {
+    var btnGo = $("#gotostore");
+    var txtPostcode = $("#postcode");
+    btnGo.popover({
+      placement: 'top',
+      trigger: 'manual'
+    });
+    txtPostcode.on('change keyup paste', function(evt) {
+      btnGo.popover('hide');
+    });
+    btnGo.click(function(evt) {
+      var postcode = txtPostcode.val();
+      var msg = "", title = "Error";
+      postcode = postcode && postcode.trim();
+      if(postcode) {
+        postcode = postcode.toUpperCase();
+        if(postcode.match(/[A-Z]\d[A-Z](\s*\d[A-Z]\d)?/)) {
+          if(postcode.indexOf("N2") != 0) {
+            msg = "We currently deliver to K/W area only.";
+            title = "Sorry";
+          }
+        } else {
+          msg = "Please enter valid Canadian Postal Code";
+        }
+      } else {
+        msg = "Please enter a postal code";
+      }
+      if(msg.length > 0) {
+        btnGo.attr('data-original-title', title);
+        btnGo.attr('data-content', msg);
+        btnGo.popover('show');
+        txtPostcode.focus();
+      } else {
+        window.location = "{% url 'shop:store_home' stores.0.slug %}";
+      }
+    });
+
+    $('#sec-front').css('height', window.innerHeight);
+    window.onresize = function() {
+      $('#sec-front').css('height', window.innerHeight);
+    };
   });
 </script>
 {% endblock %}
