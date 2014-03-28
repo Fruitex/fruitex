@@ -116,3 +116,9 @@ def statistics(request):
     'stats': stats,
   })
   return HttpResponse(template.render(context))
+
+@login_required
+@user_passes_test(can_user_view_delivery)
+def charts(request):
+  template = loader.get_template('delivery/charts.html')
+  return HttpResponse(template.render(Context()))
