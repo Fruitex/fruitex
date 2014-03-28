@@ -159,6 +159,12 @@
   $(document).ready(function() {
     var btnGo = $("#gotostore");
     var txtPostcode = $("#postcode");
+    var cookiePostcode = $.cookie("home.postcode");
+
+    if (cookiePostcode && cookiePostcode.length > 5) {
+      txtPostcode.addClass('hide');
+    };
+
     btnGo.popover({
       placement: 'top',
       trigger: 'manual'
@@ -169,6 +175,12 @@
     btnGo.click(function(evt) {
       var postcode = txtPostcode.val();
       var msg = "", title = "Error";
+
+      if (txtPostcode.hasClass('hide')) {
+        return window.location = "{% url 'shop:store_home' stores.0.slug %}";
+      };
+
+
       postcode = postcode && postcode.trim();
       if(postcode) {
         postcode = postcode.toUpperCase();
@@ -176,6 +188,8 @@
           if(postcode.indexOf("N2") != 0) {
             msg = "We currently deliver to K/W area only.";
             title = "Sorry";
+          } else {
+            $.cookie("home.postcode", postcode);
           }
         } else {
           msg = "Please enter valid Canadian Postal Code";
