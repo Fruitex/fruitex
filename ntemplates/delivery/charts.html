@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fruitex Delivery Stats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+<script>
+
+// Globals
+var REST_URL = "http://fruitex.ca/api/";
+
+Date.prototype.getDayOfMonth = function() {
+  return (this.getMonth() + 1) + "/" + this.getDate();
+}
+
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(function() {
+  $(function() {
+    $.getJSON(REST_URL + "invoices/?page_size=1000&ordering=when_created", function(response) {
+      invoices = response.results;
+      printKeyStats();
+    
+      drawChartSales();
+      drawChartOrderStatus();
+      drawChartRetention();
+      drawChartNewCustomers();
+    });
+  });
+});
+
+function printKeyStats() {
+  var num_invoice = 0;
+  var num_nonpend_invoice = 0;
+  var sum_invoice = 0;
+  var sum_nonpend_invoice = 0;
+  var customers = {};
+  
+  invoices.forEach(function(invoice) {
+    customers[invoice.email] = true;
+    num_invoice += 1;
+    sum_invoice += parseFloat(invoice.total);
+    if (invoice.status !== "PEND") {
+      num_nonpend_invoice += 1;
+      sum_nonpend_invoice += parseFloat(invoice.total);
+    }
+  });
+
+  $("#key-stat").append("<p class='lead'>Total number of customers: " + Object.keys(customers).length + "</p>");
+  $("#key-stat").append("<p class='lead'>Total number of invoices: " + num_invoice + "</p>");
+  $("#key-stat").append("<p class='lead'>Total number of non-pending invoices: " + num_nonpend_invoice + "</p>");
+  $("#key-stat").append("<p class='lead'>Total value of invoices: $" + sum_invoice.toFixed(2) + "</p>");
+  $("#key-stat").append("<p class='lead'>Total value of non-pending invoices: $" + sum_nonpend_invoice.toFixed(2) + "</p>");
+}
+
+function drawChartSales() {
+  var invoices_by_date = {};
+
+  invoices.forEach(function(invoice) {
+    var date = (new Date(invoice.when_created)).getDayOfMonth();
+    if (!(date in invoices_by_date)) {
+      invoices_by_date[date] = {value:0, count:0};
+    }
+    invoices_by_date[date].value += parseFloat(invoice.total);
+    invoices_by_date[date].count += 1;
+  });
+  // Problematic data for Jan 6
+  delete invoices_by_date["1/6"];
+  
+  var raw_data = {
+    cols: [{id: "date", label: "Date", type: "string"},
+           {id: "sales", label: "Sales", type: "number"},
+           {id: "invoices", label: "Invoices", type: "number"}],
+    rows: []
+  };
+  for (var date in invoices_by_date) {
+    var row = {c: [{v:date}, {v:invoices_by_date[date].value.toFixed(2)}, {v:invoices_by_date[date].count}]};
+    raw_data.rows.push(row);
+  }
+  var data = new google.visualization.DataTable(raw_data);
+
+  var options = {
+    title: 'Fruitex Sales',
+    curveType: 'function',
+    vAxis: {viewWindow:{min:0}},
+    series: {0:{targetAxisIndex:0},
+             1:{targetAxisIndex:1}},
+    legend: {position: 'bottom'},
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('sales-chart'));
+  chart.draw(data, options);
+}
+
+function drawChartOrderStatus() {
+  var invoices_by_date = {};
+
+  invoices.forEach(function(invoice) {
+    var date = (new Date(invoice.when_created)).getDayOfMonth();
+    if (!(date in invoices_by_date)) {
+      invoices_by_date[date] = {};
+      invoices_by_date[date].paid = invoices_by_date[date].pend = invoices_by_date[date].pod = 0;
+    }
+    switch (invoice.status) {
+      case "PAID":
+        invoices_by_date[date].paid += 1;
+        break;
+      case "PEND":
+        invoices_by_date[date].pend += 1;
+        break;
+      case "POD":
+        invoices_by_date[date].pod += 1;
+        break;
+      default:
+        break;
+    }
+  });
+  // Problematic data for Jan 6
+  delete invoices_by_date["1/6"];
+  
+  var raw_data = {
+    cols: [{id: "date", label: "Date", type: "string"},
+           {id: "paid", label: "Paid Paypal", type: "number"},
+           {id: "pod",  label: "Pay On Delivery", type: "number"},
+           {id: "pend", label: "Pending", type: "number"}],
+    rows: []
+  };
+  for (var date in invoices_by_date) {
+    var row = {c: [{v:date}, {v:invoices_by_date[date].paid},
+                             {v:invoices_by_date[date].pod},
+                             {v:invoices_by_date[date].pend}]};
+    raw_data.rows.push(row);
+  }
+  var data = new google.visualization.DataTable(raw_data);
+
+  var options = {
+    title: 'Order Status',
+    isStacked: true,
+    connectSteps: false,
+    colors: ['#4374E0', '#53A8FB', '#E49307'],
+    legend: {position: 'bottom'},
+  };
+
+  var chart = new google.visualization.SteppedAreaChart(document.getElementById('order-status-chart'));
+  chart.draw(data, options);
+}
+
+function drawChartNewCustomers() {
+  var emails_all = {};
+  var emails_by_date = {};
+  var customer_by_date = {};
+
+  invoices.forEach(function(invoice) {
+    if (invoice.status === "PEND") {
+      return;
+    }
+    var date = (new Date(invoice.when_created)).getDayOfMonth();
+    if (!(date in emails_by_date)) {
+      emails_by_date[date] = {};
+    }
+    emails_by_date[date][invoice.email] = 0;
+  });
+  
+  for (var date in emails_by_date) {
+    var emails = emails_by_date[date];
+    customer_by_date[date] = {"new": 0, "old": 0};
+    for (var email in emails) {
+      if (email in emails_all) {
+        customer_by_date[date].old += 1;
+      } else {
+        customer_by_date[date].new += 1;
+      }
+      emails_all[email] = 0;
+    }
+  }
+  
+  var raw_data = {
+    cols: [{id: "date", label: "Date", type: "string"},
+           {id: "old", label: "Old Customers", type: "number"},
+           {id: "new", label: "New Customers", type: "number"}],
+    rows: []
+  };
+  for (var date in customer_by_date) {
+    var row = {c: [{v:date}, {v:customer_by_date[date].old},
+                             {v:customer_by_date[date].new}]};
+    raw_data.rows.push(row);
+  }
+  var data = new google.visualization.DataTable(raw_data);
+
+  var options = {
+    title: 'Customers (exclude pending orders)',
+    isStacked: true,
+    connectSteps: false,
+    colors: ['#cc3300', '#33cc00'],
+    legend: { position: 'bottom' },
+  };
+
+  var chart = new google.visualization.SteppedAreaChart(document.getElementById('new-customers-chart'));
+  chart.draw(data, options);
+}
+
+function drawChartRetention() {
+  var invoices_by_email = {};
+  var invoices_by_return = [];
+
+  invoices.forEach(function(invoice) {
+    if (invoice.status === "PEND") {
+      return;
+    }
+    var email = invoice.email;
+    if (!(email in invoices_by_email)) {
+      invoices_by_email[email] = 0;
+    }
+    invoices_by_email[email] += 1;
+  });
+
+  for (var email in invoices_by_email) {
+    var times_returned = invoices_by_email[email];
+    if (invoices_by_return[times_returned] === undefined) {
+      invoices_by_return[times_returned] = 1;
+    }
+    else {
+      invoices_by_return[times_returned] += 1;
+    }
+  }
+
+  var raw_data = {
+    cols: [{id: "times_returned", label: "Times Returned", type: "string"},
+           {id: "customers_returned", label: "Customers Returned", type: "number"}],
+    rows: []
+  };
+  for (var times_returned in invoices_by_return) {
+    var row = {c: [{v:times_returned}, {v:invoices_by_return[times_returned]}]};
+    raw_data.rows.push(row);
+  }
+  var data = new google.visualization.DataTable(raw_data);
+
+  var options = {
+    title: 'Returning Customers (exclude pending orders)',
+    pieHole: 0.4,
+  };
+
+  var chart = new google.visualization.PieChart(document.getElementById('retention-chart'));
+  chart.draw(data, options);
+}
+
+</script>
+</head>
+<body>
+  <div class="container">
+    <h1>Fruitex Key Stats</h1>
+      <div id="key-stat"></div>
+  </div>
+
+  <br />
+  <div id="sales-chart" style="width: 1200px; height: 500px;"></div>
+  <br />
+  <div id="order-status-chart" style="width: 1200px; height: 500px;"></div>
+  <br />
+  <div id="new-customers-chart" style="width: 1200px; height: 500px;"></div>
+  <br />
+  <div id="retention-chart" style="width: 1200px; height: 500px;"></div>
+</body>
+</html>
