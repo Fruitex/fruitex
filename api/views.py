@@ -47,6 +47,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = UserSerializer
   ordering_fields = ['date_joined', 'last_login']
 
+  def dispatch(self, request, *args, **kwargs):
+        if kwargs.get('pk') == 'current' and request.user.is_authenticated():
+            kwargs['pk'] = request.user.pk
+
+        return super(UserViewSet, self).dispatch(request, *args, **kwargs)
+
 # Shop
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Store.objects.all()
