@@ -1,0 +1,15 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block ng_app %}account{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/account.css" %}"/>
+{% endblock %}
+
+{% block ng_script %}
+<script type="text/javascript" src="{% static "ng/account/directives.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/account/resources.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/account/controllers.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/account/index.js" %}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+<div ng-controller="Invoices">
+  <div class="page-header">
+    <h3><i class="glyphicon glyphicon-time"></i> Your Invoices</h3>
+  </div>
+  <div invoice-list>
+  </div>
+</div>
+{% endblock %}
