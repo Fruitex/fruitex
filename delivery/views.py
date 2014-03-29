@@ -28,7 +28,7 @@ def summary(request):
         divided[divider] = [delivery_window]
     return divided
 
-  datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
+  datetime_threshold = make_aware(datetime.now() - timedelta(days=20), get_default_timezone())
   delivery_windows = DeliveryWindow.objects.filter(start__gt=datetime_threshold).order_by('-start', 'store__id')
   delivery_windows = filter(lambda dw: len(dw.waiting_orders) != 0, delivery_windows)
 
@@ -85,7 +85,7 @@ def destinations(request, ids):
 @login_required
 @user_passes_test(can_user_view_delivery)
 def statistics(request):
-  datetime_threshold = make_aware(datetime.now() - timedelta(days=60), get_default_timezone())
+  datetime_threshold = make_aware(datetime.now() - timedelta(days=30), get_default_timezone())
   orders = Order.objects.filter(when_created__gt=datetime_threshold).order_by('-delivery_window__start', 'delivery_window__id', 'status')
   dates = set(map(lambda order: localtime(order.delivery_window.start).date(), orders))
   dates = sorted(list(dates), reverse=True)
@@ -116,3 +116,9 @@ def statistics(request):
     'stats': stats,
   })
   return HttpResponse(template.render(context))
+
+@login_required
+@user_passes_test(can_user_view_delivery)
+def charts(request):
+  template = loader.get_template('delivery/charts.html')
+  return HttpResponse(template.render(Context()))
