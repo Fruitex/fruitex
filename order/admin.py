@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.util import flatten_fieldsets
 from order.models import Invoice, Payment, DeliveryWindow, Order, OrderItem, Coupon
 from delivery.models import DeliveryBucket
 
@@ -13,15 +14,35 @@ class ReadonlyAdmin(admin.ModelAdmin):
         [field.name for field in self.opts.local_many_to_many]
     ))
 
+class OrderInline(admin.TabularInline):
+  model = Order
+  raw_id_fields = ['invoice']
+  fields = [
+    'status', 'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  readonly_fields = [
+    'invoice', 'comment', 'subtotal', 'tax'
+  ]
+  extra = 0
+
+class PaymentInline(admin.TabularInline):
+  model = Payment
+  fields = [
+    'method', 'status', 'amount', 'when_created', 'when_updated'
+  ]
+  readonly_fields = fields
+  extra = 0
+
 class InvoiceAdmin(ReadonlyAdmin):
   date_hierarchy = 'when_created'
   list_display = [
-    'invoice_num', 'customer_name', 'email', 'status', 'total', 'when_created'
+    'invoice_num', 'customer_name', 'email', 'status', 'total', 'user', 'when_created'
   ]
   list_filter = [ 'status' ]
   raw_id_fields = ['coupon']
   ordering = [ '-when_created' ]
-  search_fields = ['invoice', 'payer', 'customer_name', 'email', 'phone', 'address', 'postcode']
+  search_fields = ['invoice_num', 'customer_name', 'email', 'phone', 'address', 'postcode', 'user__username']
+  inlines = [OrderInline, PaymentInline]
 
 admin.site.register(Invoice, InvoiceAdmin)
 
@@ -32,20 +53,9 @@ class PaymentAdmin(ReadonlyAdmin):
   ]
   list_filter = [ 'method', 'status' ]
   ordering = [ '-when_created' ]
-  search_fields = ['invoice', 'amount']
+  search_fields = ['invoice__invoice_num', 'amount']
 
 admin.site.register(Payment, PaymentAdmin)
-
-class DeliveryWindowOrderInline(admin.TabularInline):
-  model = Order
-  raw_id_fields = ['invoice']
-  fields = [
-    'status', 'invoice', 'comment', 'subtotal', 'tax'
-  ]
-  readonly_fields = [
-    'invoice', 'comment', 'subtotal', 'tax'
-  ]
-  extra = 0
 
 class DeliveryWindowAdmin(ReadonlyAdmin):
   def create_delivery_bucket(self, request, queryset):
@@ -60,9 +70,17 @@ class DeliveryWindowAdmin(ReadonlyAdmin):
   ordering = [ '-start', 'store__id' ]
   search_fields = ['store', 'start', 'end']
   actions = ['create_delivery_bucket']
-  inlines = [DeliveryWindowOrderInline]
+  inlines = [OrderInline]
 
 admin.site.register(DeliveryWindow, DeliveryWindowAdmin)
+
+class OrderItemInline(admin.TabularInline):
+  model = OrderItem
+  fields = [
+    'item', 'quantity', 'allow_sub', 'item_cost', 'item_tax'
+  ]
+  readonly_fields = fields
+  extra = 0
 
 class OrderAdmin(ReadonlyAdmin):
   date_hierarchy = 'when_created'
@@ -73,6 +91,7 @@ class OrderAdmin(ReadonlyAdmin):
   raw_id_fields = ['delivery_window', 'invoice']
   ordering = [ '-when_created' ]
   search_fields = ['id', 'invoice__invoice_num']
+  inlines = [OrderItemInline]
 
 admin.site.register(Order, OrderAdmin)
 
