@@ -1,0 +1,9 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+<div ng-controller="InvoiceDetail" ng-init="init('{{ invoice_num }}')">
+  <div ng-invoice-detail="invoice">
+  </div>
+</div>
+{% endblock %}

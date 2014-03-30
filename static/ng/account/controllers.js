@@ -27,4 +27,32 @@ angular.module('account.controllers', [
       });
     };
   }
+])
+.controller('InvoiceDetail', [
+  '$scope', '$q', 'InvoiceResource', 'OrderResource',
+  function($scope, $q, InvoiceResource, OrderResource) {
+    $scope.invoice = null;
+
+    $scope.init = function(invoice_num) {
+      var invoice;
+
+      InvoiceResource.query({ invoice_num: invoice_num }).$promise
+      .then(function(response) {
+        if (_.size(response.results) < 1) {
+          return;
+        }
+
+        invoice = response.results[0];
+        var orderPromises = _.map(invoice.orders, function(orderId, i) {
+          var order = invoice.orders[i] = OrderResource.get({ id: orderId });
+          return order;
+        });
+
+        return $q.all(orderPromises);
+      })
+      .then(function() {
+        $scope.invoice = invoice;
+      });
+    };
+  }
 ]);

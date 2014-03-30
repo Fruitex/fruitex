@@ -1,0 +1,33 @@
+<div class="width-80">
+  <div class="invoice-summary box">
+    <div class="panel-title title-position">
+      <i class="glyphicon glyphicon-time"></i>
+      <span>Invoice Summary</span>
+      <span class="font-small">{{ invoice.invoice_num }}</span>
+    </div>
+    <table class="table apart">
+      <tbody>
+        <tr>
+          <td>Created at</td>
+          <td>{{ invoice.when_created | date : 'fullDate' }}</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>{{ invoice.total }}</td>
+        </tr>
+        <tr>
+          <td>Destination</td>
+          <td>{{ invoice.customer_name }} at {{ invoice.address }}, {{ invoice.postcode }}</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{ invoice.email }}</td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td>{{ invoice.phone }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
