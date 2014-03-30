@@ -1,24 +1,22 @@
 <div ng-repeat="invoice in invoices">
-  <div>
-    <span class="pull-right">{{ invoice.when_created | date : 'fullDate' }}</span>
-    <span>Invoice #{{ invoice.invoice_num }}</span>
-    <table class="table">
-      <thead>
-        <tr>
-          <td>Order Number</td>
-          <td>Status</td>
-          <td>Store</td>
-          <td>Subtotal</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="order in invoice.orders">
-          <td>#{{ order.id }}</td>
-          <td>{{ order.status }}</td>
-          <td>{{ order.delivery_window.store.name }}</td>
-          <td>{{ order.total }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <span class="pull-right">{{ invoice.when_created | date : 'fullDate' }}</span>
+  <span><a href="{{ invoice.invoice_num }}">Invoice #{{ invoice.invoice_num }}</a></span>
+  <table class="table">
+    <thead>
+      <tr>
+        <td>Order Number</td>
+        <td>Status</td>
+        <td>Store</td>
+        <td>Subtotal</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="order in invoice.orders">
+        <td>#{{ order.id }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.delivery_window.store.name }}</td>
+        <td>{{ order.total }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
