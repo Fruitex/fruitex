@@ -1,35 +1,30 @@
 angular.module('account.controllers', [
   'common.resources',
-  'account.resources',
   'common.directive'
 ])
 .controller('Invoices', [
-  '$scope', '$q', 'UserResource', 'OrderResource', 'UserInvoicesResource',
-  function($scope, $q, UserResource, OrderResource, UserInvoicesResource) {
+  '$scope', '$q', 'InvoiceResource', 'OrderResource',
+  function($scope, $q, InvoiceResource, OrderResource) {
     $scope.invoices = [];
-    $scope.user = UserResource.get({ id: 'current' });
 
-    var invoices;
+    $scope.init = function(userId, username) {
+      var invoices;
 
-    $scope.user.$promise
-      .then(function(user) {
-        return UserInvoicesResource.get({ username: user.username }).$promise;
-      })
-      .then(function(raw) {
-        invoices = raw.results;
-        var orderPromises = [];
-
-        invoices.forEach(function(invoice) {
-          invoice.orders.forEach(function(orderId, i) {
-            var order = OrderResource.get({ id: orderId });
-            invoice.orders[i] = order;
-            orderPromises.push(order.$promise);
+      InvoiceResource.query({ user__username: username }).$promise
+      .then(function(response) {
+        invoices = response.results;
+        var orderPromises = _.flatten(_.map(invoices, function(invoice) {
+          return _.map(invoice.orders, function(orderId, i) {
+            var order = invoice.orders[i] = OrderResource.get({ id: orderId });
+            return order;
           });
-        });
+        }));
+
         return $q.all(orderPromises);
       })
       .then(function() {
         $scope.invoices = invoices;
       });
+    };
   }
 ]);

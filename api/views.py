@@ -32,7 +32,7 @@ class InvoiceFilter(django_filters.FilterSet):
   updated_before = django_filters.DateTimeFilter(name="when_updated", lookup_type='lt')
   class Meta:
     model = Invoice
-    fields = ['status', 'email', 'user__username', 'created_after', 'created_before', 'updated_after', 'updated_before']
+    fields = ['status', 'email', 'user__id', 'user__username', 'created_after', 'created_before', 'updated_after', 'updated_before']
 
 class DeliveryBucketFilter(django_filters.FilterSet):
   after = django_filters.DateTimeFilter(name="end", lookup_type='gt')
