@@ -3,8 +3,12 @@
 {% block title %}Change profile{% endblock %}
 
 {% block content %}
-    <h1>Change profile</h1>
 
+<div class="container width-60 box">
+  <div class="panel-title title-position">
+    <i class="glyphicon glyphicon-adjust"></i>
+    Change Profile
+  </div>
     <form action="." method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -19,4 +23,5 @@
           <a href="{% url 'profile' %}" class="btn btn-default">Back</a>
         </div>
     </form>
+</div>
 {% endblock %}

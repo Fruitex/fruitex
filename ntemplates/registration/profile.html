@@ -3,14 +3,20 @@
 {% block title %}{{ block.super }} | Your profile{% endblock %}
 
 {% block content %}
-  <div class="page-header">
-    <h1>Welcome back, {{ user }}!
-      <small>your profile</small>
-    </h1>
+<div class="container width-60 box">
+  <div class="panel-title title-position">
+    <i class="glyphicon glyphicon-user"></i>
+    Profile
   </div>
-  <table class="table">
+  <table class="table apart">
     <tr>
-      <td>First Name</td>
+      <td>
+        {% if lastname %}
+          First Name
+        {% else %}
+          Name
+        {% endif %}
+      </td>
       <td id="id_firstname">{{firstname}}</td>
     </tr>
     {% if lastname %}
@@ -36,15 +42,20 @@
       <td id="id_postcode">{{postcode}}</td>
     </tr>
   </table>
-  <div class="btn-group">
-    <a href="{% url 'order:cart' %}" class="btn btn-primary" role="button">Go to Cart</a>
-  </div>
 
-  <div class="btn-group">
-    <a href="{% url 'profile_change' %}" class="btn btn-default" role="button">Update profile</a>
-    <a href="{% url 'password_change' %}" class="btn btn-default" role="button">Change password</a>
+  <div class="box-bottom text-right">
+    <div class="btn-group">
+      <a href="{% url 'profile_change' %}" class="btn btn-default bg-mid-green padding-horizontal-3 fg-white">
+        <i class="glyphicon glyphicon-pencil"></i>
+        EDIT
+      </a>
+    </div>
+    <div class="btn-group">
+      <a href="{% url 'password_change' %}" class="btn btn-danger padding-horizontal-3 fg-white">
+        <i class="glyphicon glyphicon-lock"></i>
+        CHANGE PASSWORD
+      </a>
+    </div>
   </div>
-  <div class="btn-group">
-    <a href="{% url 'logout' %}" class="btn btn-default" role="button">Logout</a>
-  </div>
+</div>
 {% endblock %}

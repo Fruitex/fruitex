@@ -43,13 +43,19 @@
     <header>Filters</header>
     <ul>
       {% for key, values in item_metas_filters.items %}
-      <li>
-        <span>{{ key }}</span>
+      <li class="filter" data-key="{{ key }}">
+        <span class="filter-key">
+          <span class="filter-detail pull-right hide">
+            <span class="filter-value"></span>
+            <i class="glyphicon glyphicon-remove-circle filter-remove" data-key="{{ key }}"></i>
+          </span>
+          <span>{{ key }}</span>
+        </span>
         <div>
           <ul>
             {% for value in values %}
             <li class="filter-option" data-option="{&quot;key&quot;:&quot;{{ key }}&quot;,&quot;value&quot;:&quot;{{ value }}&quot;}">
-              <input type="checkbox">{{ value }}
+              <input type="radio">{{ value }}
             </li>
             {% endfor %}
           </ul>
@@ -95,23 +101,35 @@
       var option = $(this).data('option');
       var option_array = get_option_array(option.key);
       if (option_array.indexOf(option.value) >= 0) {
-        $(this).find('input').attr('checked', '');
-        $('.search .filters').append('<span>' + option.key + ': ' + option.value + '</span>');
+        $(this).find('input').attr('checked', true);
+      }
+    });
+
+    $('.filter').each(function() {
+      var key = $(this).data('key');
+      var option_array = get_option_array(key);
+      if (option_array.length > 0) {
+        $(this).find('.filter-value').text(option_array[0]);
+        $(this).find('.filter-detail').removeClass('hide');
       }
     });
 
     $('.filter-option').click(function(e) {
       var option = $(this).data('option');
-      selected_item_metas[option.key] = [option.value];
-      return apply_filter();
-
       var option_array = get_option_array(option.key);
       var index = option_array.indexOf(option.value);
       if (index < 0) {
-        option_array.push(option.value);
-      } else {
-        option_array.splice(index, 1);
+        // Toggle comment for multi-selection filter
+        // option_array.push(option.value);
+        option_array[0] = option.value;
+        apply_filter();
       }
+    });
+
+    $('.filter-remove').click(function(e) {
+      var key = $(this).data('key');
+      var option_array = get_option_array(key);
+      option_array.length = 0;
       apply_filter();
     });
   });

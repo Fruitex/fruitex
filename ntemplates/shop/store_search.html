@@ -9,6 +9,9 @@
   <article data-source="{% url 'shop:store_category_items' store.slug category.id '' %}" data-query="{{ query }}">
   {% endif %}
     <ul></ul>
+    <div class="not-found hide">
+      Sorry. The item you have searched for is unavailable. <em><a href="mailto:support@fruitex.ca" data-uv-trigger="smartvote">Click here to let us know</a>﻿﻿</em>.
+    </div>
     <div class="loading"></div>
   </article>
   <footer>
