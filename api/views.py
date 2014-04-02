@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.renderers import *
+
 import django_filters
 
 from api.serializers import *
@@ -111,6 +113,7 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 
 # Delivery
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
+  renderer_classes = (JSONRenderer, JSONPRenderer, BrowsableAPIRenderer)
   queryset = DeliveryBucket.objects.all()
   serializer_class = DeliveryBucketListSerializer
   filter_class = DeliveryBucketFilter
