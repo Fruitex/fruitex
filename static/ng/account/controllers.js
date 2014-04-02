@@ -33,16 +33,17 @@ angular.module('account.controllers', [
   function($scope, $q, InvoiceResource, OrderResource) {
     $scope.invoice = null;
 
-    $scope.init = function(invoice_num) {
+    $scope.init = function(invoiceId) {
       var invoice;
 
-      InvoiceResource.query({ invoice_num: invoice_num }).$promise
+      InvoiceResource.get({ id:invoiceId }).$promise
       .then(function(response) {
-        if (_.size(response.results) < 1) {
+        if (_.size(response) < 1) {
+          // TODO: handle wrong response
           return;
         }
 
-        invoice = response.results[0];
+        invoice = response;
         var orderPromises = _.map(invoice.orders, function(orderId, i) {
           var order = invoice.orders[i] = OrderResource.get({ id: orderId });
           return order;

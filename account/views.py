@@ -201,10 +201,10 @@ class InvoicesView(LoginRequiredMixin, View):
     invoice_template_name = 'account/invoice.html'
 
     def get(self, request, *args, **kwargs):
-        invoice_num = kwargs['invoice_num']
-        if invoice_num:
+        id = kwargs['id']
+        if id:
             return render(request, self.invoice_template_name, {
-                'invoice_num': invoice_num,
+                'id': id,
             })
         return render(request, self.invoices_template_name)
 

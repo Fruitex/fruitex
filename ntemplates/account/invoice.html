@@ -2,8 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div ng-controller="InvoiceDetail" ng-init="init('{{ invoice_num }}')">
-  <div ng-invoice-detail="invoice">
-  </div>
+<div ng-controller="InvoiceDetail" ng-init="init('{{ id }}')">
+  <div ng-invoice-detail="invoice"></div>
 </div>
 {% endblock %}
