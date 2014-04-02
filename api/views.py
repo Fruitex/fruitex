@@ -1,9 +1,11 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
 import django_filters
 
 from api.serializers import *
 
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from shop.models import *
 from order.models import *
 from delivery.models import *
@@ -62,21 +64,39 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ItemViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Item.objects.all()
-  serializer_class = ItemSerializer
+  serializer_class = ItemListSerializer
   filter_class = ItemFilter
   ordering_fields = ['sold_number']
+
+  def retrieve(self, request, pk=None):
+    queryset = Item.objects.all()
+    item = get_object_or_404(queryset, pk=pk)
+    serializer = ItemSerializer(item)
+    return Response(serializer.data)
 
 # Order
 class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = DeliveryWindow.objects.all()
-  serializer_class = DeliveryWindowSerializer
+  serializer_class = DeliveryWindowListSerializer
+
+  def retrieve(self, request, pk=None):
+    queryset = DeliveryWindow.objects.all()
+    item = get_object_or_404(queryset, pk=pk)
+    serializer = DeliveryWindowSerializer(item)
+    return Response(serializer.data)
 
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Order.objects.all()
-  serializer_class = OrderSerializer
+  serializer_class = OrderListSerializer
   filter_class = OrderFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
+
+  def retrieve(self, request, pk=None):
+    queryset = Order.objects.all()
+    item = get_object_or_404(queryset, pk=pk)
+    serializer = OrderSerializer(item)
+    return Response(serializer.data)
 
 class InvoiceViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Invoice.objects.all()
@@ -92,6 +112,12 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
 # Delivery
 class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = DeliveryBucket.objects.all()
-  serializer_class = DeliveryBucketSerializer
+  serializer_class = DeliveryBucketListSerializer
   filter_class = DeliveryBucketFilter
   ordering = ['-start']
+
+  def retrieve(self, request, pk=None):
+    queryset = DeliveryBucket.objects.all()
+    item = get_object_or_404(queryset, pk=pk)
+    serializer = DeliveryBucketSerializer(item)
+    return Response(serializer.data)

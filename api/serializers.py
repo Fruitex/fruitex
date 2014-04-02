@@ -24,12 +24,20 @@ class CategorySerializer(serializers.ModelSerializer):
   class Meta:
     model = Category
 
+class ItemListSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Item
+
 class ItemSerializer(serializers.ModelSerializer):
   category = CategorySerializer()
   class Meta:
     model = Item
 
 # Order
+class DeliveryWindowListSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = DeliveryWindow
+
 class DeliveryWindowSerializer(serializers.ModelSerializer):
   store = StoreSerializer()
   class Meta:
@@ -44,6 +52,10 @@ class OrderItemSerializer(serializers.ModelSerializer):
   item = ItemSerializer()
   class Meta:
     model = OrderItem
+
+class OrderListSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Order
 
 class OrderSerializer(serializers.ModelSerializer):
   order_items = OrderItemSerializer()
@@ -63,10 +75,13 @@ class DeliveryBucketOrderSerializer(serializers.ModelSerializer):
   class Meta:
     model = DeliveryBucketOrder
 
+class DeliveryBucketListSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = DeliveryBucket
+
 class DeliveryBucketSerializer(serializers.ModelSerializer):
   delivery_bucket_orders = DeliveryBucketOrderSerializer()
   assignor = UserSerializer()
   assignee = UserSerializer()
   class Meta:
     model = DeliveryBucket
-    fields = ['start', 'end', 'assignor', 'assignee', 'delivery_bucket_orders']
