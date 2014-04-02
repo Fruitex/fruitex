@@ -14,4 +14,12 @@ angular.module('common.directive', [])
     },
     templateUrl: '/static/ng/account/templates/invoice-detail.html'
   };
+})
+.directive('ngOrderDetail', function() {
+  return {
+    scope: {
+      order: '=ngOrderDetail'
+    },
+    templateUrl: '/static/ng/account/templates/order-detail.html'
+  };
 });
