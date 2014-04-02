@@ -94,7 +94,7 @@ body> footer {
     min-height: 400px;
 }
 #sec-front .headline {
-    padding: 15% 3em 1em 3em;
+    padding: 18% 3em 1em 3em;
 }
 #sec-front .logo {
     float: left;
@@ -108,16 +108,17 @@ body> footer {
     position: relative;
     width: 100%;
     overflow: hidden;
+    max-height: 20em;
 }
 .sec-common> img {
-    height: auto;
+    height: 100%;
     min-width: 800px;
     width: 100%;
 }
 .sec-common> div {
     position: absolute;
-    font-size: 1vw;
-    top: 2%;
+    font-size: 1.8em;
+    top: 1.8%;
 }
 #sec-slogan1 {
     _background: url('/static/imgs/intro/slogan1.jpg') no-repeat;
@@ -195,12 +196,8 @@ body> footer {
 #gotostore {
     padding-left: 2em;
     padding-right: 2em;
-    background-color: seagreen;
     margin: 1em 0;
     color: wheat;
-}
-#gotostore:hover {
-    opacity: 0.8;
 }
 .popover-title, .popover-content{
     color: black;

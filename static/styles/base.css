@@ -90,7 +90,7 @@ body>footer{
     background: rgb(71, 186, 71);
 }
 .bg-dark-green {
-    background-color: rgb(66,107,29);
+    background-color: rgb(48, 151, 32);
 }
 .bd-mid-green {
     border: 1px solid rgb(178, 217, 113);
@@ -135,4 +135,10 @@ a img {
     position: relative;
     padding: 0 1em;
     top: -0.7em;
+}
+.btn-simple {
+    opacity: 1;
+}
+.btn-simple:hover {
+    opacity: 0.8;
 }
