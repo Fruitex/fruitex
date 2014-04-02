@@ -1,10 +1,10 @@
 angular.module('common.directive', [])
-.directive('ngInvoiceList', function() {
+.directive('ngInvoiceRow', function() {
   return {
     scope: {
-      invoices: '=ngInvoiceList'
+      invoice: '=ngInvoiceRow'
     },
-    templateUrl: '/static/ng/account/templates/invoice-list.html'
+    templateUrl: '/static/ng/account/templates/invoice-row.html'
   };
 })
 .directive('ngInvoiceDetail', function() {
@@ -13,5 +13,5 @@ angular.module('common.directive', [])
       invoice: '=ngInvoiceDetail'
     },
     templateUrl: '/static/ng/account/templates/invoice-detail.html'
-  }
+  };
 });

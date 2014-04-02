@@ -1,6 +1,8 @@
-<div ng-repeat="invoice in invoices">
-  <span class="pull-right">{{ invoice.when_created | date : 'fullDate' }}</span>
-  <span><a href="{{ invoice.invoice_num }}">Invoice #{{ invoice.invoice_num }}</a></span>
+<div class="invoice-row">
+  <div>
+    <span class="pull-right">{{ invoice.when_created | date : 'fullDate' }}</span>
+    <span><a href="{{ invoice.invoice_num }}">Invoice #{{ invoice.invoice_num }}</a></span>
+  </div>
   <table class="table">
     <thead>
       <tr>
