@@ -12,6 +12,13 @@ from shop.models import *
 from order.models import *
 from delivery.models import *
 
+class ReadOnlyListRetrieveModelViewSet(viewsets.ReadOnlyModelViewSet):
+  # derived classes must have a field 'instance_serializer'
+  def retrieve(self, request, pk=None):
+    instance = get_object_or_404(self.queryset, pk=pk)
+    serializer = self.instance_serializer(instance)
+    return Response(serializer.data)
+
 # Filters
 class ItemFilter(django_filters.FilterSet):
   min_sold = django_filters.NumberFilter(name="sold_number", lookup_type='gte')
@@ -64,41 +71,26 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Category.objects.all()
   serializer_class = CategorySerializer
 
-class ItemViewSet(viewsets.ReadOnlyModelViewSet):
+class ItemViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = Item.objects.all()
   serializer_class = ItemListSerializer
+  instance_serializer = ItemSerializer
   filter_class = ItemFilter
   ordering_fields = ['sold_number']
 
-  def retrieve(self, request, pk=None):
-    queryset = Item.objects.all()
-    item = get_object_or_404(queryset, pk=pk)
-    serializer = ItemSerializer(item)
-    return Response(serializer.data)
-
 # Order
-class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
+class DeliveryWindowViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = DeliveryWindow.objects.all()
   serializer_class = DeliveryWindowListSerializer
+  instance_serializer = DeliveryWindowSerializer
 
-  def retrieve(self, request, pk=None):
-    queryset = DeliveryWindow.objects.all()
-    item = get_object_or_404(queryset, pk=pk)
-    serializer = DeliveryWindowSerializer(item)
-    return Response(serializer.data)
-
-class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+class OrderViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = Order.objects.all()
   serializer_class = OrderListSerializer
+  instance_serializer = OrderSerializer
   filter_class = OrderFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
-
-  def retrieve(self, request, pk=None):
-    queryset = Order.objects.all()
-    item = get_object_or_404(queryset, pk=pk)
-    serializer = OrderSerializer(item)
-    return Response(serializer.data)
 
 class InvoiceViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Invoice.objects.all()
@@ -112,15 +104,10 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = CouponSerializer
 
 # Delivery
-class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
+class DeliveryBucketViewSet(ReadOnlyListRetrieveModelViewSet):
   renderer_classes = (JSONRenderer, JSONPRenderer, BrowsableAPIRenderer)
   queryset = DeliveryBucket.objects.all()
   serializer_class = DeliveryBucketListSerializer
+  instance_serializer = DeliveryBucketSerializer
   filter_class = DeliveryBucketFilter
   ordering = ['-start']
-
-  def retrieve(self, request, pk=None):
-    queryset = DeliveryBucket.objects.all()
-    item = get_object_or_404(queryset, pk=pk)
-    serializer = DeliveryBucketSerializer(item)
-    return Response(serializer.data)
