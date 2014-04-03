@@ -1,12 +1,23 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.renderers import *
+
 import django_filters
 
 from api.serializers import *
 
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from shop.models import *
 from order.models import *
 from delivery.models import *
+
+class ReadOnlyListRetrieveModelViewSet(viewsets.ReadOnlyModelViewSet):
+  # derived classes must have a field 'instance_serializer'
+  def retrieve(self, request, pk=None):
+    instance = get_object_or_404(self.queryset, pk=pk)
+    serializer = self.instance_serializer(instance)
+    return Response(serializer.data)
 
 # Filters
 class ItemFilter(django_filters.FilterSet):
@@ -60,20 +71,23 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = Category.objects.all()
   serializer_class = CategorySerializer
 
-class ItemViewSet(viewsets.ReadOnlyModelViewSet):
+class ItemViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = Item.objects.all()
-  serializer_class = ItemSerializer
+  serializer_class = ItemListSerializer
+  instance_serializer = ItemSerializer
   filter_class = ItemFilter
   ordering_fields = ['sold_number']
 
 # Order
-class DeliveryWindowViewSet(viewsets.ReadOnlyModelViewSet):
+class DeliveryWindowViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = DeliveryWindow.objects.all()
-  serializer_class = DeliveryWindowSerializer
+  serializer_class = DeliveryWindowListSerializer
+  instance_serializer = DeliveryWindowSerializer
 
-class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+class OrderViewSet(ReadOnlyListRetrieveModelViewSet):
   queryset = Order.objects.all()
-  serializer_class = OrderSerializer
+  serializer_class = OrderListSerializer
+  instance_serializer = OrderSerializer
   filter_class = OrderFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
@@ -90,8 +104,10 @@ class CouponViewSet(viewsets.ReadOnlyModelViewSet):
   serializer_class = CouponSerializer
 
 # Delivery
-class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
+class DeliveryBucketViewSet(ReadOnlyListRetrieveModelViewSet):
+  renderer_classes = (JSONRenderer, JSONPRenderer, BrowsableAPIRenderer)
   queryset = DeliveryBucket.objects.all()
-  serializer_class = DeliveryBucketSerializer
+  serializer_class = DeliveryBucketListSerializer
+  instance_serializer = DeliveryBucketSerializer
   filter_class = DeliveryBucketFilter
   ordering = ['-start']
