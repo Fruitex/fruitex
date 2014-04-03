@@ -6,36 +6,36 @@ from order.models import *
 from delivery.models import *
 
 # Account
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    fields = ['id', 'url', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined']
+    fields = ['id', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined']
 
 # Shop
-class StoreSerializer(serializers.HyperlinkedModelSerializer):
+class StoreSerializer(serializers.ModelSerializer):
   class Meta:
     model = Store
 
-class StoreCustomizationSerializer(serializers.HyperlinkedModelSerializer):
+class StoreCustomizationSerializer(serializers.ModelSerializer):
   class Meta:
     model = StoreCustomization
 
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
   class Meta:
     model = Category
 
-class ItemSerializer(serializers.HyperlinkedModelSerializer):
+class ItemSerializer(serializers.ModelSerializer):
   category = CategorySerializer()
   class Meta:
     model = Item
 
 # Order
-class DeliveryWindowSerializer(serializers.HyperlinkedModelSerializer):
+class DeliveryWindowSerializer(serializers.ModelSerializer):
   store = StoreSerializer()
   class Meta:
     model = DeliveryWindow
 
-class InvoiceSerializer(serializers.HyperlinkedModelSerializer):
+class InvoiceSerializer(serializers.ModelSerializer):
   total = serializers.Field()
   class Meta:
     model = Invoice
@@ -45,7 +45,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
   class Meta:
     model = OrderItem
 
-class OrderSerializer(serializers.HyperlinkedModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
   order_items = OrderItemSerializer()
   invoice = InvoiceSerializer()
   delivery_window = DeliveryWindowSerializer()
@@ -53,7 +53,7 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Order
 
-class CouponSerializer(serializers.HyperlinkedModelSerializer):
+class CouponSerializer(serializers.ModelSerializer):
   class Meta:
     model = Coupon
 
@@ -63,7 +63,7 @@ class DeliveryBucketOrderSerializer(serializers.ModelSerializer):
   class Meta:
     model = DeliveryBucketOrder
 
-class DeliveryBucketSerializer(serializers.HyperlinkedModelSerializer):
+class DeliveryBucketSerializer(serializers.ModelSerializer):
   delivery_bucket_orders = DeliveryBucketOrderSerializer()
   assignor = UserSerializer()
   assignee = UserSerializer()

@@ -23,6 +23,7 @@
     {% block extra_script %}{% endblock %}
   </head>
   <body>
+    {% include "common/clicktale_top.html" %}
     <header>
       <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
@@ -91,7 +92,7 @@
               </div>
             </div>
             <div class="text-center">
-              <button id="dlg-login-ok" type="button" class="btn btn-simple width-50 bg-dark-green fg-white">OK</button>
+              <button id="dlg-login-ok" type="button" class="btn btn-default width-50 bg-dark-green fg-white">OK</button>
               <a href="{% url 'registration_register' %}" class="btn btn-default width-50 bg-light-green">SIGN UP</a>
             </div>
           </div>
@@ -158,5 +159,6 @@
     {% block page_script %}{% endblock %}
     {% include "common/analytics.html" %}
     {% include "common/uservoice.html" %}
+    {% include "common/clicktale_bottom.html" %}
   </body>
 </html>
