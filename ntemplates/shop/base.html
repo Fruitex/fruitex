@@ -8,8 +8,8 @@
 <link rel="stylesheet" type="text/css" href="{% static "styles/item_detail.css" %}"/>
 {% endblock %}
 
-{% block body_open %}
-  {% include "common/clicktale_top.html" %}
+{% block extra_script %}
+{% include "common/clicktale_top.html" %}
 {% endblock %}
 
 {% block header_content %}
@@ -86,8 +86,5 @@
     }
   });
 </script>
-{% endblock %}
-
-{% block body_close %}
-  {% include "common/clicktale_bottom.html" %}
+{% include "common/clicktale_bottom.html" %}
 {% endblock %}
