@@ -3,6 +3,7 @@ from django.template import loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
 
 from querystring_parser import parser
 
@@ -195,26 +196,10 @@ def checkout(request):
   })
   return HttpResponse(template.render(context))
 
-def show_invoice(request, invoice_num):
-  template = loader.get_template('order/show.html')
-  try:
-    invoice = Invoice.objects.get(invoice_num=invoice_num)
-  except ObjectDoesNotExist:
-    return HttpResponse('Invalid invoice number', status=404)
+def show_invoice(request, id):
+  template_name = 'order/show.html'
 
-  # Check access permission
-  if invoice.user:
-    if not request.user.is_authenticated():
-      return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=' + request.path)
-    if invoice.user.id != request.user.id and request.user.groups.filter(name='driver').count() == 0:
-      return HttpResponseRedirect(reverse('shop:to_default'))
-
-  # Setup context and render
-  context = RequestContext(request, {
-    'invoice': invoice,
-  })
-
-  return HttpResponse(template.render(context))
+  return render(request, template_name, { 'id': id })
 
 # PayPal
 

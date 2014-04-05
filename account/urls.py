@@ -32,9 +32,7 @@ urlpatterns = patterns('account.views',
     url(r'^profile/change/$',
        'profile_change',
        name='profile_change'),
-    url(r'^invoices/(?P<id>\d*)$',
-      'invoices',
-      name='account_invoices'),
+    url(r'^invoices/$', 'invoices', name='account_invoices'),
 )
 
 urlpatterns += auth_urls.urlpatterns
