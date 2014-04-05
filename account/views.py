@@ -197,15 +197,9 @@ profile_change = ProfileChangeView.as_view()
 
 
 class InvoicesView(LoginRequiredMixin, View):
-    invoices_template_name = 'account/invoices.html'
-    invoice_template_name = 'account/invoice.html'
+    template_name = 'account/invoices.html'
 
     def get(self, request, *args, **kwargs):
-        id = kwargs['id']
-        if id:
-            return render(request, self.invoice_template_name, {
-                'id': id,
-            })
-        return render(request, self.invoices_template_name)
+        return render(request, self.template_name)
 
 invoices = InvoicesView.as_view()

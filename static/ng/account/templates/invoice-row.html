@@ -1,7 +1,7 @@
 <div class="invoice-row">
   <div>
     <span class="pull-right">{{ invoice.when_created | date : 'fullDate' }}</span>
-    <span><a href="{{ invoice.id }}">Invoice #{{ invoice.id }}</a></span>
+    <span><a href="{{ invoice.url }}">Invoice #{{ invoice.id }}</a></span>
   </div>
   <table class="table">
     <thead>
