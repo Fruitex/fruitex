@@ -31,4 +31,21 @@ angular.module('common.directive', [])
     },
     templateUrl: '/static/ng/account/templates/order-detail.html'
   };
+})
+.directive('ngOrderStatus', function() {
+  return {
+    scope: {
+      status: '=ngOrderStatus'
+    },
+    controller: function($scope, $log) {
+      $scope.allStatus = {
+        'PEND': 'Pending',
+        'WAIT': 'Waiting',
+        'PURC': 'Purchased',
+        'ONTW': 'On the way',
+        'DELI': 'Delivered'
+      };
+    },
+    templateUrl: '/static/ng/account/templates/order-status.html'
+  };
 });
