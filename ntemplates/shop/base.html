@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block extra_script %}
-{% include "common/clicktale_top.html" %}
+{% if not DEBUG %}
+{%   include "common/clicktale_top.html" %}
+{% endif %}
 {% endblock %}
 
 {% block header_content %}
@@ -86,5 +88,7 @@
     }
   });
 </script>
-{% include "common/clicktale_bottom.html" %}
+{% if not DEBUG %}
+{%   include "common/clicktale_bottom.html" %}
+{% endif %}
 {% endblock %}

@@ -164,7 +164,9 @@
     {% block ng_script %}{% endblock %}
     {% endcompress %}
     {% block page_script %}{% endblock %}
-    {% include "common/analytics.html" %}
-    {% include "common/uservoice.html" %}
+    {% if not DEBUG %}
+    {%   include "common/analytics.html" %}
+    {%   include "common/uservoice.html" %}
+    {% endif %}
   </body>
 </html>
