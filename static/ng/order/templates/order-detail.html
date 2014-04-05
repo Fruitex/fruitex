@@ -9,6 +9,18 @@
   <div ng-order-status="order.status"></div>
   <table class="table apart">
     <tbody>
+      <tr ng-if="order.delivery_buckets.length == 0">
+        <td>Delivery window</td>
+        <td>
+          {{ order.delivery_window.start | date: 'shortTime' }} ~ {{ order.delivery_window.end | date: 'shortTime' }} ({{ order.delivery_window.start | date: 'fullDate' }})
+        </td>
+      </tr>
+      <tr ng-if="order.delivery_buckets.length != 0" ng-init="delivery_bucket=order.delivery_buckets[order.delivery_buckets.length - 1]">
+        <td>Estimated delivery time</td>
+        <td>
+          {{ delivery_bucket.start | date: 'shortTime' }} ~ {{ delivery_bucket.end | date: 'shortTime' }} ({{ delivery_bucket.start | date: 'fullDate' }})
+        </td>
+      </tr>
       <tr>
         <td>Subtotal</td>
         <td>
@@ -19,10 +31,11 @@
           <span>${{ order.total }}</span>
         </td>
       </tr>
-      <tr>
-        <td>Last update</td>
-        <td>{{ order.when_updated | date : 'medium' }}</td>
-      </tr>
     </tbody>
   </table>
+  <div class="order-items">
+    <div ng-repeat="order_item in order.order_items">
+      <div ng-order-item-row="order_item"></div>
+    </div>
+  </div>
 </div>
