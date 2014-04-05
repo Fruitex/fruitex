@@ -43,7 +43,7 @@ class InvoiceFilter(django_filters.FilterSet):
   updated_before = django_filters.DateTimeFilter(name="when_updated", lookup_type='lt')
   class Meta:
     model = Invoice
-    fields = ['status', 'email', 'user__username', 'created_after', 'created_before', 'updated_after', 'updated_before']
+    fields = ['status', 'email', 'user__id', 'user__username', 'created_after', 'created_before', 'updated_after', 'updated_before']
 
 class DeliveryBucketFilter(django_filters.FilterSet):
   after = django_filters.DateTimeFilter(name="end", lookup_type='gt')
@@ -57,6 +57,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
   ordering_fields = ['date_joined', 'last_login']
+
+  def dispatch(self, request, *args, **kwargs):
+    if kwargs.get('pk') == 'current' and request.user.is_authenticated():
+        kwargs['pk'] = request.user.pk
+
+    return super(UserViewSet, self).dispatch(request, *args, **kwargs)
 
 # Shop
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):

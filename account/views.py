@@ -5,9 +5,9 @@ Views which allow users to create and activate accounts.
 
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, View
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.utils.decorators import method_decorator
@@ -194,3 +194,18 @@ class ProfileChangeView(LoginRequiredMixin, FormView):
         return redirect(reverse('profile'))
 
 profile_change = ProfileChangeView.as_view()
+
+
+class InvoicesView(LoginRequiredMixin, View):
+    invoices_template_name = 'account/invoices.html'
+    invoice_template_name = 'account/invoice.html'
+
+    def get(self, request, *args, **kwargs):
+        id = kwargs['id']
+        if id:
+            return render(request, self.invoice_template_name, {
+                'id': id,
+            })
+        return render(request, self.invoices_template_name)
+
+invoices = InvoicesView.as_view()

@@ -44,6 +44,8 @@ class DeliveryWindowSerializer(serializers.ModelSerializer):
     model = DeliveryWindow
 
 class InvoiceSerializer(serializers.ModelSerializer):
+  orders = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+  user = UserSerializer()
   total = serializers.Field()
   class Meta:
     model = Invoice
@@ -62,6 +64,7 @@ class OrderSerializer(serializers.ModelSerializer):
   invoice = InvoiceSerializer()
   delivery_window = DeliveryWindowSerializer()
   delivery_buckets = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='deliverybucket-detail')
+  total = serializers.Field()
   class Meta:
     model = Order
 
