@@ -3,7 +3,8 @@
     <h4>
       <i class="glyphicon glyphicon-list"></i>
       <span>Order</span>
-      <span class="small">#{{ order.id }}</span>
+      <span class="small">#{{ order.id || 'Loading...' }}</span>
     </h4>
   </div>
+  <div ng-order-status="order.status"></div>
 </div>
