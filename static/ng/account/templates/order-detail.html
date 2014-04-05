@@ -7,4 +7,22 @@
     </h4>
   </div>
   <div ng-order-status="order.status"></div>
+  <table class="table apart">
+    <tbody>
+      <tr>
+        <td>Subtotal</td>
+        <td>
+          <span>${{ order.subtotal }}</span>
+          <span>+</span>
+          <span>${{ order.tax }}(tax)</span>
+          <span>=</span>
+          <span>${{ order.total }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>Last update</td>
+        <td>{{ order.when_updated | date : 'medium' }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
