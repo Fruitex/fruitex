@@ -1,0 +1,30 @@
+<div>
+  <div ng-click="toggle()" class="text-center">
+    <div ng-if="expanded">Show item list</div>
+    <div ng-if="!expanded">Hide item list</div>
+  </div>
+  <table class="table apart" ng-if="expanded">
+    <thead>
+      <tr>
+        <td></td>
+        <td>Name</td>
+        <td>Quantity</td>
+        <td>Substitution</td>
+        <td>Cost</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="orderItem in orderItems">
+        <td>
+          <img ng-src="/static/store_imgs/{{ orderItem.item.sku }}.JPG">
+        </td>
+        <td>{{ orderItem.item.name }}</td>
+        <td>{{ orderItem.quantity }}</td>
+        <td>
+          <input type="checkbox" ng-model="orderItem.allow_sub" disabled>
+        </td>
+        <td>${{ orderItem.item_cost }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

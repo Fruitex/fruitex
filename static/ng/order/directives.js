@@ -40,4 +40,18 @@ angular.module('order.directive', [])
     },
     templateUrl: '/static/ng/order/templates/order-status.html'
   };
+})
+.directive('ngOrderItemsTable', function() {
+  return {
+    scope: {
+      orderItems: '=ngOrderItemsTable'
+    },
+    controller: function($scope, $log) {
+      $scope.expanded = false;
+      $scope.toggle = function() {
+        $scope.expanded = !$scope.expanded;
+      };
+    },
+    templateUrl: '/static/ng/order/templates/order-items-table.html'
+  };
 });
