@@ -8,6 +8,10 @@
 <link rel="stylesheet" type="text/css" href="{% static "styles/item_detail.css" %}"/>
 {% endblock %}
 
+{% block extra_script %}
+{% include "common/clicktale_top.html" %}
+{% endblock %}
+
 {% block header_content %}
 <ul class="nav navbar-nav">
   <li class="dropdown">
@@ -82,4 +86,5 @@
     }
   });
 </script>
+{% include "common/clicktale_bottom.html" %}
 {% endblock %}
