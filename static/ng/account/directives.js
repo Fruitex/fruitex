@@ -12,6 +12,15 @@ angular.module('common.directive', [])
     scope: {
       invoice: '=ngInvoiceDetail'
     },
+    controller: function($scope, $log) {
+      $scope.allStatus = {
+        'PEND': 'Pending',
+        'PAID': 'Paid',
+        'FLAG': 'Paid (Flagged)',
+        'CANC': 'Cancelled',
+        'POD': 'Pay on delivery'
+      };
+    },
     templateUrl: '/static/ng/account/templates/invoice-detail.html'
   };
 })
