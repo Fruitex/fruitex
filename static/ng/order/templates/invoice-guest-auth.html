@@ -1,0 +1,7 @@
+<div>
+  <div>Enter your email address to view your order...</div>
+  <div ng-if="error" class="text-danger">{{ error }}</div>
+  <input type="text" ng-model="email" ng-change="change()" ng-enter="auth()" placeholder="Your email address">
+  <input type="button" ng-click="auth()" value="Go">
+</div>
+
