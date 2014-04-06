@@ -3,6 +3,7 @@
 
 {% block content %}
 <div ng-controller="InvoiceDetail" ng-init="init('{{ id }}')">
-  <div ng-invoice-detail="invoice"></div>
+  <div ng-invoice-guest-auth="authorize(email)" ng-if="!invoice.user"></div>
+  <div ng-invoice-detail="invoice" ng-if="invoice.user"></div>
 </div>
 {% endblock %}

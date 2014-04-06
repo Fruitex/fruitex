@@ -5,7 +5,11 @@ angular.module('order.controllers', [
 .controller('InvoiceDetail', [
   '$scope', '$q', 'InvoiceResource', 'OrderResource',
   function($scope, $q, InvoiceResource, OrderResource) {
-    $scope.invoice = null;
+    $scope.authorize = function(email) {
+      var result = email == $scope.invoice.email;
+      if (result) { $scope.invoice.user = email; }
+      return result;
+    };
 
     $scope.init = function(invoiceId) {
       $scope.invoice = InvoiceResource.get({ id:invoiceId });
