@@ -41,10 +41,10 @@ angular.module('order.directive', [])
     templateUrl: '/static/ng/order/templates/order-status.html'
   };
 })
-.directive('ngOrderItemsTable', function() {
+.directive('ngOrderItems', function() {
   return {
     scope: {
-      orderItems: '=ngOrderItemsTable'
+      orderItems: '=ngOrderItems'
     },
     controller: function($scope, $log) {
       $scope.expanded = false;
@@ -52,6 +52,6 @@ angular.module('order.directive', [])
         $scope.expanded = !$scope.expanded;
       };
     },
-    templateUrl: '/static/ng/order/templates/order-items-table.html'
+    templateUrl: '/static/ng/order/templates/order-items.html'
   };
 });
