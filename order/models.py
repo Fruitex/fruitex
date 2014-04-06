@@ -145,6 +145,9 @@ class Order(models.Model):
   def _get_order_items(self):
     return OrderItem.objects.filter(order__id=self.id)
 
+  def _get_total(self):
+    return self.subtotal + self.tax;
+
   def set_status(self, status):
     if self.status == self.STATUS_PENDING and status == self.STATUS_WAITING:
       for order_item in self.order_items:
@@ -171,6 +174,7 @@ class Order(models.Model):
   order_items = property(_get_order_items)
   subtotal = models.DecimalField(max_digits=16, decimal_places=2)
   tax = models.DecimalField(max_digits=16, decimal_places=2)
+  total = property(_get_total)
   delivery_window = models.ForeignKey('DeliveryWindow', related_name='orders', on_delete=models.PROTECT)
   comment = models.TextField(blank=True)
 

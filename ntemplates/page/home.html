@@ -12,6 +12,12 @@
 <link rel="stylesheet" type="text/css" href="{% static "styles/home.css" %}"/>
 {% endblock %}
 
+{% block extra_script %}
+{% if not DEBUG %}
+{%   include "common/clicktale_top.html" %}
+{% endif %}
+{% endblock %}
+
 {% block header_content %}
 {% endblock %}
 
@@ -216,4 +222,7 @@
     };
   });
 </script>
+{% if not DEBUG %}
+{%   include "common/clicktale_bottom.html" %}
+{% endif %}
 {% endblock %}
