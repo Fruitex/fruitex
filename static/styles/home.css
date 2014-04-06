@@ -1,3 +1,16 @@
+* {
+  font-family: 'Open Sans', 'Noto Sans', sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+#main_title {
+  font-size: 48px;
+}
+
+.subtitle {
+  font-size: 42px;
+}
 .container {
     background-color: #c1e2b3;
 }
@@ -142,7 +155,7 @@ body> footer {
     _background: url('/static/imgs/intro/slogan3.jpg') no-repeat;
 }
 #sec-slogan3 div {
-    max-width: 350px;
+    max-width: 500px;
     position: absolute;
     right: 4em;
     padding-top: 10%;
@@ -173,42 +186,71 @@ body> footer {
     color: black;
     text-align: left;
 }
+
 #sec-footer {
     background-color: #c1e2b3;
     height: 15em;
-    padding: 0 2em;
+    margin-top: 5em;
     word-break: break-all;
 }
+
 #sec-footer .feature {
     width: 32%;
     height: 100%;
     padding: 2em;
     float: left;
 }
+
+#sec-footer .feature img {
+  width: 50%;
+  max-width: 10em;
+}
 #sec-footer .feature div {
     text-align: justify;
     padding: 0 1em;
 }
 #sec-footer .feature p {
-    font-size: x-small;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 15em;
 }
+
+#sec-footer h4 {
+    text-align: center
+}
+
 #gotostore {
-    padding-left: 2em;
-    padding-right: 2em;
-    background-color: seagreen;
+    background-color: #309720;
     margin: 1em 0;
-    color: wheat;
+    color: white;
+    border:none !important;
+    font-size: 20px;
 }
+
 #gotostore:hover {
     opacity: 0.8;
 }
+
 .popover-title, .popover-content{
     color: black;
 }
+
+.shop-btn {
+  border: none !important;
+  color: white !important;
+  background-color: #1e850f;
+  margin: 1em;
+}
+
+.shop-btn:hover {
+  color: black !important;
+}
+
 @media screen and (max-width: 650px) {
     #sec-footer .feature {
         width: 100%;
-        height: 100%;
+        height: 8em;
         background-color: inherit;
         float: left;
     }
@@ -218,10 +260,15 @@ body> footer {
         padding: 0 1em;
     }
     #sec-footer .feature div {
+        max-width: 30em;
         text-align: justify;
         padding: 0 1em;
     }
     #sec-footer .feature p {
         font-size: x-small;
+        max-width: none;
+    }
+    #sec-footer h4 {
+        text-align: left;
     }
 }
