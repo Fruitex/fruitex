@@ -28,7 +28,7 @@
       <img src="/static/imgs/intro/logo_white.png" alt="rocket" width="60%" >
     </div>
     <div class="headline">
-      <h1><b>Groceries Delivered in 2 Hours.</b></h1>
+      <p id="main_title">Groceries Delivered in 2 Hours.</p>
       <h3>From Sobeys, Shoppers and other local stores.</h3>
       <div class="form-inline">
         <input id="postcode" type="text" placeholder="Postal Code" class="form-control">
@@ -42,21 +42,21 @@
   <section id="sec-slogan1" class="sec-common">
     <img src="{% static 'imgs/intro/slogan1.jpg' %}">
     <div>
-      <h2>Save time.</h2>
+      <p class="subtitle">Save time.</p>
       <h4>Shop on your own schedule. And get your delivery today, or tomorrow.</h4>
     </div>
   </section>
   <section id="sec-slogan2" class="sec-common">
     <img src="{% static 'imgs/intro/slogan2.jpg' %}">
     <div>
-      <h2>Fresh.</h2>
+      <p class="subtitle">Fresh.</p>
       <h4>Our professional shopper knows how to pick high quality items.</h4>
     </div>
   </section>
   <section id="sec-slogan3" class="sec-common">
     <img src="{% static 'imgs/intro/slogan3.jpg' %}">
     <div>
-      <h2>Cost-effective.</h2>
+      <p class="subtitle">Cost-effective.</p>
       <h4>For only $0.99 we deliver to anywhere in the city.</h4>
     </div>
   </section>
@@ -66,7 +66,7 @@
       <div class="inner">
         <h3>Browse Over 5000 Grocery Items Now.</h3>
         <p class="text-center">
-          <a href="{% url 'shop:store_home' stores.0.slug %}" class="btn btn-default bg-mid-green">SHOP FRUITEX NOW</a>
+          <a href="{% url 'shop:store_home' stores.0.slug %}" class="shop-btn btn btn-default bg-mid-green">SHOP FRUITEX NOW</a>
         </p>
       </div>
     </div>
@@ -80,21 +80,21 @@
   </section>
   <section id="sec-footer">
     <div class="feature">
-      <img src="/static/imgs/intro/clock.png" alt="delivery" width="40%">
+      <img src="/static/imgs/intro/clock.png" alt="delivery" style="width: 40%; max-width: 7em">
       <div>
         <h4><b>Same Day Delivery</b></h4>
         <p>Submit your order at noon and get your delivery before dinner.</p>
       </div>
     </div>
     <div class="feature">
-      <img src="/static/imgs/intro/creditcard.png" alt="delivery" width="40%">
+      <img src="/static/imgs/intro/creditcard.png" alt="delivery" style="width: 40%; max-width: 7em">
       <div>
         <h4><b>Pay On Delivery.</b></h4>
         <p>Pay online with your PayPal or offline with your credit card.</p>
       </div>
     </div>
     <div class="feature">
-      <img src="/static/imgs/intro/meal.png" alt="delivery" width="60%">
+      <img src="/static/imgs/intro/meal.png" alt="delivery" style="width: 60%; max-width: 10em">
       <div>
         <h4><b>Fresh Guaranteed</b></h4>
         <p>You can return your item and have full refund upon delivery</p>
