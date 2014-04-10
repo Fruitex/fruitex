@@ -1,6 +1,8 @@
-<ul class="order-status-indicator">
-  <li ng-repeat="(key, value) in allStatus" ng-class="{ 'active': key == status }">
-    <span class="connector"></span>
-    <span class="stepname">{{ value }}</span>
-  </li>
-</ul>
+<div class="order-status">
+  <ul class="order-status-indicator clearfix">
+    <li ng-repeat="(key, value) in allStatus" ng-class="{ 'active': key == status }">
+      <span class="connector"></span>
+      <span class="stepname">{{ value }}</span>
+    </li>
+  </ul>
+</div>

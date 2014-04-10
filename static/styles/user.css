@@ -5,14 +5,13 @@ table.apart tr:nth-child(1) td {
     border-top: 0;
 }
 
-table.table thead>tr>td {
+.table thead {
     font-weight: bold;
 }
 .box {
+    background: #FFFFFF;
     margin: 2em auto;
-    padding: 1em 3em;
-    border: 0px solid #d3d3d3;
-    box-shadow: 0 0 0 1px darkgray;
+    border: 1px solid #C5C2C2;
 }
 
 .box-bottom {
@@ -28,7 +27,7 @@ table.table thead>tr>td {
 }
 
 .title-position {
-    margin: 0 0 1.5em -2em;
+    margin-bottom: 1em;
     padding: 1em;
 }
 
