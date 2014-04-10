@@ -5,6 +5,9 @@ table.apart tr:nth-child(1) td {
     border-top: 0;
 }
 
+table.table thead>tr>td {
+    font-weight: bold;
+}
 .box {
     margin: 2em auto;
     padding: 1em 3em;
@@ -20,7 +23,15 @@ table.apart tr:nth-child(1) td {
     padding: .5em 3em;
 }
 
+.padding-horizontal-half {
+    padding: 0 .5em;
+}
+
 .title-position {
     margin: 0 0 1.5em -2em;
     padding: 1em;
+}
+
+.title-margin-space-2 {
+    margin: 2em 0;
 }
