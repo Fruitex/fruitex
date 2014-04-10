@@ -15,6 +15,6 @@ router.register(r'invoices', views.InvoiceViewSet)
 router.register(r'delivery_windows', views.DeliveryWindowViewSet)
 router.register(r'coupons', views.CouponViewSet)
 # Delivery
-router.register(r'delivery_bucket', views.DeliveryBucketViewSet)
+router.register(r'delivery_buckets', views.DeliveryBucketViewSet)
 
 urlpatterns = router.urls
