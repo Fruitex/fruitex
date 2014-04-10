@@ -21,13 +21,14 @@ angular.module('order.directive', ['common.directives'])
       invoice: '=ngInvoiceDetail'
     },
     controller: function($scope, $log) {
-      $scope.allStatus = {
-        'PEND': 'Pending',
-        'PAID': 'Paid',
-        'FLAG': 'Paid (Flagged)',
-        'CANC': 'Cancelled',
-        'POD': 'Pay on delivery'
-      };
+      $scope.statusList = [
+        ['PEND', 'Pending'],
+        ['PAID', 'Paid'],
+        ['FLAG', 'Paid (Flagged)'],
+        ['CANC', 'Cancelled'],
+        ['POD', 'Pay on delivery']
+      ];
+      $scope.allStatus = _.object($scope.statusList);
     },
     templateUrl: '/static/ng/order/templates/invoice-detail.html'
   };
@@ -46,13 +47,14 @@ angular.module('order.directive', ['common.directives'])
       status: '=ngOrderStatus'
     },
     controller: function($scope, $log) {
-      $scope.allStatus = {
-        'PEND': 'Pending',
-        'WAIT': 'Waiting',
-        'PURC': 'Purchased',
-        'ONTW': 'On the way',
-        'DELI': 'Delivered'
-      };
+      $scope.statusList = [
+        ['PEND', 'Pending'],
+        ['WAIT', 'Waiting'],
+        ['PURC', 'Purchased'],
+        ['ONTW', 'On the way'],
+        ['DELI', 'Delivered']
+      ];
+      $scope.allStatus = _.object($scope.statusList);
     },
     templateUrl: '/static/ng/order/templates/order-status.html'
   };
