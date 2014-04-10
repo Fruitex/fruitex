@@ -1,47 +1,48 @@
-<div>
-  <div class="page-header">
-    <h3>
-      <i class="glyphicon glyphicon-time"></i>
-      <span>Invoice</span>
-      <span class="small">#{{ invoice.id }}</span>
+<div class="container header-padding width-80">
+  <div class="box">
+    <div class="panel-title title-position">
+      <i class="glyphicon glyphicon-gift padding-horizontal-half"></i>
+      Invoice
+      <span class="small text-muted">#{{ invoice.id }}</span>
       <div class="pull-right">
-        <span class="small">Created on {{ invoice.when_created | date : 'fullDate' }}</span>
+        <span class="small text-muted">Created on {{ invoice.when_created | date : 'fullDate' }}</span>
       </div>
-    </h3>
-  </div>
-  <div class="invoice-summary">
-    <table class="table apart">
-      <tbody>
-        <tr>
-          <td>Destination</td>
-          <td>{{ invoice.customer_name }} at {{ invoice.address }}, {{ invoice.postcode }}</td>
-        </tr>
-        <tr>
-          <td>Phone</td>
-          <td>{{ invoice.phone }}</td>
-        </tr>
-        <tr>
-          <td>Payment Status</td>
-          <td>{{ allStatus[invoice.status] }}</td>
-        </tr>
-        <tr>
-          <td>Total Cost</td>
-          <td>
-            <span>${{ invoice.subtotal }}</span>
-            <span>+</span>
-            <span>${{ invoice.tax }}(tax)</span>
-            <span>+</span>
-            <span>${{ invoice.delivery }}(delivery)</span>
-            <span>=</span>
-            <span>${{ invoice.total }}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>Last update</td>
-          <td>{{ invoice.when_updated | date : 'medium' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
+    <div class="invoice-summary icon-list">
+      <p>
+        <i class="glyphicon glyphicon-map-marker padding-horizontal-half"></i>
+        <span class="name">Destination</span>
+        <span class="detail">{{ invoice.customer_name }} at {{ invoice.address }}, {{ invoice.postcode }}</span>
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-credit-card padding-horizontal-half"></i>
+        <span class="name">Payment Method</span>
+        <span class="detail">{{ allStatus[invoice.status] }}</span>
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-earphone padding-horizontal-half"></i>
+        <span class="name">Phone</span>
+        <span class="detail">{{ invoice.phone }}</span>
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-usd padding-horizontal-half"></i>
+        <span class="name">Total Cost</span>
+        <span class="detail">
+          <span>${{ invoice.subtotal }}</span>
+          <span>+</span>
+          <span>${{ invoice.tax }}(tax)</span>
+          <span>+</span>
+          <span>${{ invoice.delivery }}(delivery)</span>
+          <span>=</span>
+          <span>${{ invoice.total }}</span>
+        </span>
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-time padding-horizontal-half"></i>
+        <span class="name">Last Updated</span>
+        <span class="detail">{{ invoice.when_updated | date : 'medium' }}</span>
+      </p>
+    </div>
   </div>
   <div ng-repeat="order in invoice.orders">
     <div ng-order-detail="order"></div>
