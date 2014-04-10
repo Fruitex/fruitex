@@ -199,3 +199,68 @@
     font-weight: 900;
     font-size: 2em;
 }
+table.table thead>tr>td {
+    font-weight: bold;
+}
+.icon-list {
+    margin: 0 auto;
+}
+.icon-list span.name {
+    font-weight: bold;
+}
+.icon-list span.detail {
+    padding-left: 2em;
+}
+ul.order-status-indicator {
+    list-style-type: none;
+    padding-left: 10%;
+    white-space: nowrap;
+    height: 6em;
+}
+ul.order-status-indicator>li {
+    float: left;
+    margin-right: 2em;
+    text-align: center;
+    position: relative;
+    width: 100px;
+}
+ul.order-status-indicator>li .connector {
+    border: 5px solid #52c949;
+    border-radius: 50%;
+    background-color: #52c949;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-top: 10px;
+}
+ul.order-status-indicator>li .connector:after {
+    content: "";
+    display: block;
+    background: #52c949;
+    height: 5px;
+    width: 130px;
+    position: absolute;
+    left: 50%;
+}
+ul.order-status-indicator>li:last-of-type .connector:after {
+    display: none;
+}
+ul.order-status-indicator>li .stepname {
+    display: table-cell;
+    font-size: small;
+    vertical-align: bottom;
+    text-align: center;
+    width: 100px;
+}
+ul.order-status-indicator>li.active .connector {
+    background-image: url('/static/imgs/intro/rocket_icon.png');
+    background-size: contain;
+    background-position: center;
+    height: 26px;
+    width: 26px;
+    margin-top: 5px;
+}
+ul.order-status-indicator>li.active .stepname {
+    color: #52c949;
+    font-size: larger;
+}
