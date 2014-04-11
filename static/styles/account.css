@@ -8,10 +8,14 @@ table.apart tr:nth-child(1) td {
 .table thead {
     font-weight: bold;
 }
+.table tbody>tr:not(:first-child) td {
+    border-top: 0;
+}
 .box {
     background: #FFFFFF;
     margin: 2em auto;
     border: 1px solid #C5C2C2;
+    border-radius: 0;
 }
 
 .box-bottom {
@@ -33,4 +37,13 @@ table.apart tr:nth-child(1) td {
 
 .title-margin-space-2 {
     margin: 2em 0;
+}
+.invoice-row .panel-heading {
+    border-bottom: 0;
+}
+.invoice-row .table {
+    border-bottom: 1px solid #C5C2C2;
+}
+.invoice-row .table>tbody>tr>td {
+    border-color: #C5C2C2;
 }
