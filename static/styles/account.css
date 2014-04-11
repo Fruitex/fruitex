@@ -8,9 +8,7 @@ table.apart tr:nth-child(1) td {
 .table thead {
     font-weight: bold;
 }
-.table tbody>tr:not(:first-child) td {
-    border-top: 0;
-}
+
 .box {
     background: #FFFFFF;
     margin: 2em auto;
@@ -46,4 +44,7 @@ table.apart tr:nth-child(1) td {
 }
 .invoice-row .table>tbody>tr>td {
     border-color: #C5C2C2;
+}
+.invoice-row .table tbody>tr:not(:first-child) td {
+    border-top: 0;
 }
