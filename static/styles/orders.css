@@ -102,3 +102,6 @@ ul.order-status-indicator>li.active .stepname {
     width: 60px;
     max-height: 60px;
 }
+.guest-auth-form {
+    padding: 0 2em 1em 2em;
+}

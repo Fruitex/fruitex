@@ -1,7 +1,16 @@
-<div>
-  <div>Enter your email address to view your order...</div>
-  <div ng-if="error" class="text-danger">{{ error }}</div>
-  <input type="text" ng-model="email" ng-change="change()" ng-enter="auth()" placeholder="Your email address">
-  <input type="button" ng-click="auth()" value="Go">
+<div class="container width-60 box">
+  <div class="panel-title title-position">
+    <i class="glyphicon glyphicon-envelope padding-horizontal-half"></i>
+    <span>Enter your email address to view your order...</span>
+  </div>
+  <form class="form-inline guest-auth-form">
+    <div class="form-group" ng-class="{ 'has-error' : error }">
+      <input class="form-control" type="text" name="email" ng-model="email" ng-change="change()" ng-enter="auth()" placeholder="Your email address">
+    </div>
+    <div class="form-group">
+      <input class="btn btn-primary" type="button" ng-click="auth()" value="Go">
+    </div>
+    <label ng-if="error" class="text-danger">{{ error }}</label>
+  </form>
 </div>
 
