@@ -15,7 +15,7 @@
   </a>
   <h5>{{ invoice.address }}, {{ invoice.postcode }}</h5>
   <h5>{{ invoice.phone }}</h5>
-  <h5><a href="{% url 'order:show' invoice.invoice_num %}">Invoice Details</a></h5>
+  <h5><a href="{% url 'order:show' invoice.id %}">Invoice Details</a></h5>
 </div>
 {% endfor %}
 
