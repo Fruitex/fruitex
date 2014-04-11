@@ -1,11 +1,11 @@
 <div class="container width-80">
   <div class="box">
     <div class="panel-title title-position">
-      <i class="glyphicon glyphicon-envelope padding-horizontal-half"></i>
+      <i class="glyphicon glyphicon-transfer padding-horizontal-half"></i>
       Invoice
       <span class="small text-muted">#{{ invoice.id }}</span>
       <div class="pull-right">
-        <span class="small text-muted">Created on {{ invoice.when_created | date : 'fullDate' }}</span>
+        <span class="small text-muted">Created at {{ invoice.when_created | date : 'h:mm a, MMM d' }}</span>
       </div>
     </div>
     <div class="invoice-summary icon-list">
