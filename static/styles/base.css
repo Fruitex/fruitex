@@ -9,6 +9,7 @@ body>header {
     position: fixed;
     width: 100%;
     z-index: 999;
+    top: 0;
 }
 body>footer{
     height: 50px;
@@ -66,8 +67,8 @@ body>footer{
 .clear-padding {
     padding: 0!important;
 }
-.header-padding {
-    padding-top: 60px;
+.header-margin {
+    margin-top: 60px;
 }
 .straighten-border {
     border-radius: 0!important;
