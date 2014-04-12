@@ -20,7 +20,7 @@
       <tbody>
         <tr ng-repeat="order in invoice.orders">
           <td>#{{ order.id || 'Loading...' }}</td>
-          <td>{{ order.status }}</td>
+          <td ng-class="{ 'PEND':'text-danger', 'WAIT':'text-success' }[order.status]">{{ orderStatus[order.status] }}</td>
           <td>{{ order.delivery_window.store.name }}</td>
           <td>{{ order.items.length }}</td>
           <td>$ {{ order.total }}</td>
