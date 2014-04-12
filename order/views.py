@@ -201,6 +201,27 @@ def show_invoice(request, id):
 
   return render(request, template_name, { 'id': id })
 
+def show_invoice_num(request, invoice_num):
+  template = loader.get_template('order/invoice.html')
+  try:
+    invoice = Invoice.objects.get(invoice_num=invoice_num)
+  except ObjectDoesNotExist:
+    return HttpResponse('Invalid invoice number', status=404)
+
+  # Check access permission
+  if invoice.user:
+    if not request.user.is_authenticated():
+      return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=' + request.path)
+    if invoice.user.id != request.user.id and request.user.groups.filter(name='driver').count() == 0:
+      return HttpResponseRedirect(reverse('shop:to_default'))
+
+  # Setup context and render
+  context = RequestContext(request, {
+    'invoice': invoice,
+  })
+
+  return HttpResponse(template.render(context))
+
 # PayPal
 
 def payment_paypal_execute(request, id):
