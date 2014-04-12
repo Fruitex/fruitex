@@ -1,0 +1,135 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load tz %}
+
+{% localtime on %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/confirm.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/itemlist.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'styles/input_validator.css' %}"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'javascript/lib/underscore.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/lib/jquery.tmpl.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/jquery.cookie.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/input_validator.js' %}"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id='order-confirm-wrapper'>
+  <p id="order-confirm-header">You Order</p>
+  <p id="order-confirm-invoice">Your Invoice#: {{ invoice.invoice_num }}</p>
+  <div id="order-confirm-item-list">
+    {% for order in invoice.orders.all %}
+      {% for order_item in order.order_items.all %}
+      <div class="item-in-cart">
+        <div>
+          <img class="item-in-cart-img" src="{% static 'store_imgs/' %}{{ order_item.item.sku }}.JPG">
+        </div>
+        <div class="item-info-left">
+          <div class="item-in-cart-name">{{ order_item.item.name }}</div>
+          <div class="item-in-cart-store">From: {{ order_item.item.category.store.name }}</div>
+          <div>
+            <label>
+              <input type="checkbox" {% if order_item.allow_sub %} checked="" {% endif %} disabled="disabled">
+              Allow substitution
+            </label>
+          </div>
+        </div>
+        <div class="item-in-cart-count">Quatity: {{ order_item.quantity }}</div>
+        <div class="item-in-cart-price">$ {{ order_item.item_cost|floatformat:2 }}</div>
+      </div>
+      {% endfor %}
+      <div class="order-confirm-store-summary">
+        <div>Delivery: {{ order.delivery_window }}</div>
+        <div>Status: {{ order.get_status_display }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  <table id='order-confirm-table'>
+    <tbody>
+    <tr>
+      <td>
+        Payment Status:
+      </td>
+      <td>
+        {{ invoice.get_status_display }}
+      </td>
+    </tr>
+<!--     <tr>
+      <td>
+        Delivery Fee:
+      </td>
+      <td>
+        ${{ invoice.delivery|floatformat:2 }}
+      </td>
+    </tr> -->
+    <tr>
+      <td>
+        Total Cost (Tax Inc.):
+      </td>
+      <td>
+        ${{ invoice.total|floatformat:2 }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Name:
+      </td>
+      <td>
+        {{ invoice.customer_name }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Address:
+      </td>
+      <td>
+        {{ invoice.address }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        ZIP:
+      </td>
+      <td>
+        {{ invoice.postcode }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Phone:
+      </td>
+      <td>
+        {{ invoice.phone }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Email:
+      </td>
+      <td>
+        {{ invoice.email }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Comment:
+      </td>
+      <td>
+        {{ invoice.orders.all.0.comment|linebreaksbr }}
+      </td>
+    </tr>
+  </tbody>
+  </table>
+</div>
+{% if invoice.status == "PEND" %}
+<!-- TODO: Add pay button -->
+{% endif %}
+{% endblock %}
+
+{% endlocaltime %}
