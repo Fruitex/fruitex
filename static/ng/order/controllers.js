@@ -3,8 +3,8 @@ angular.module('order.controllers', [
   'order.directive'
 ])
 .controller('InvoiceDetail', [
-  '$scope', '$q', 'InvoiceResource', 'OrderResource',
-  function($scope, $q, InvoiceResource, OrderResource) {
+  '$scope', '$q', 'FruitexAPI',
+  function($scope, $q, FruitexAPI) {
     $scope.authorize = function(email) {
       var result = email == $scope.invoice.email;
       if (result) { $scope.invoice.user = email; }
@@ -12,7 +12,7 @@ angular.module('order.controllers', [
     };
 
     $scope.init = function(invoiceId) {
-      $scope.invoice = InvoiceResource.get({ id:invoiceId });
+      $scope.invoice = FruitexAPI.invoices.get({ id:invoiceId });
       $scope.invoice.$promise
       .then(function(invoice) {
         if (_.size(invoice) < 1) {
@@ -21,7 +21,7 @@ angular.module('order.controllers', [
         }
 
         _.each(invoice.orders, function(orderId, i) {
-          invoice.orders[i] = OrderResource.get({ id: orderId });
+          invoice.orders[i] = FruitexAPI.orders.get({ id: orderId });
         });
       });
     };
