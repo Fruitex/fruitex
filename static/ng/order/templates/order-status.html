@@ -1,6 +1,6 @@
 <div class="order-status">
   <ul class="order-status-indicator clearfix">
-    <li ng-repeat="statusRow in statusList" ng-class="{ 'active': statusRow[0] == status }">
+    <li ng-repeat="statusRow in orderStatusList" ng-class="{ 'active': statusRow[0] == status }">
       <span class="connector"></span>
       <span class="stepname">{{ statusRow[1] }}</span>
     </li>

@@ -1,4 +1,4 @@
-angular.module('order.directive', ['common.directives'])
+angular.module('order.directive', ['common.directives', 'common.constants'])
 .directive('ngInvoiceGuestAuth', function() {
   return {
     scope: {
@@ -15,20 +15,13 @@ angular.module('order.directive', ['common.directives'])
     templateUrl: '/static/ng/order/templates/invoice-guest-auth.html'
   };
 })
-.directive('ngInvoiceDetail', function() {
+.directive('ngInvoiceDetail', function(FruitexConstants) {
   return {
     scope: {
       invoice: '=ngInvoiceDetail'
     },
     controller: function($scope, $log) {
-      $scope.statusList = [
-        ['PEND', 'Pending'],
-        ['PAID', 'Paid'],
-        ['FLAG', 'Paid (Flagged)'],
-        ['CANC', 'Cancelled'],
-        ['POD', 'Pay on delivery']
-      ];
-      $scope.allStatus = _.object($scope.statusList);
+      $scope.invoiceStatus = FruitexConstants.invoices.status;
     },
     templateUrl: '/static/ng/order/templates/invoice-detail.html'
   };
@@ -41,20 +34,13 @@ angular.module('order.directive', ['common.directives'])
     templateUrl: '/static/ng/order/templates/order-detail.html'
   };
 })
-.directive('ngOrderStatus', function() {
+.directive('ngOrderStatus', function(FruitexConstants) {
   return {
     scope: {
       status: '=ngOrderStatus'
     },
     controller: function($scope, $log) {
-      $scope.statusList = [
-        ['PEND', 'Pending'],
-        ['WAIT', 'Waiting'],
-        ['PURC', 'Purchased'],
-        ['ONTW', 'On the way'],
-        ['DELI', 'Delivered']
-      ];
-      $scope.allStatus = _.object($scope.statusList);
+      $scope.orderStatusList = FruitexConstants.orders.statusList;
     },
     templateUrl: '/static/ng/order/templates/order-status.html'
   };
