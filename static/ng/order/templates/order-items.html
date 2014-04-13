@@ -1,0 +1,31 @@
+<div class="order-items">
+  <table class="table" ng-if="expanded">
+    <thead>
+      <tr class="text-center">
+        <td></td>
+        <td>Name</td>
+        <td>Quantity</td>
+        <td>Substitution</td>
+        <td>Cost</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="orderItem in orderItems">
+        <td class="text-center">
+          <img ng-src="/static/store_imgs/{{ orderItem.item.sku }}.JPG">
+        </td>
+        <td>{{ orderItem.item.name }}</td>
+        <td class="text-center">{{ orderItem.quantity }}</td>
+        <td class="text-center">
+          <div ng-if="orderItem.allow_sub" class="text-success">Allow</div>
+          <div ng-if="!orderItem.allow_sub" class="text-danger">Not allow</div>
+        </td>
+        <td class="text-center">$ {{ orderItem.item_cost }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-click="toggle()" class="toggle-strip text-center">
+    <div ng-if="!expanded">Show item list</div>
+    <div ng-if="expanded">Hide item list</div>
+  </div>
+</div>

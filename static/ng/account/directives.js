@@ -1,25 +1,12 @@
-angular.module('common.directive', [])
-.directive('ngInvoiceRow', function() {
+angular.module('account.directive', ['common.constants'])
+.directive('ngInvoiceRow', function(FruitexConstants) {
   return {
     scope: {
       invoice: '=ngInvoiceRow'
     },
+    controller: function($scope, $log) {
+      $scope.orderStatus = FruitexConstants.orders.status;
+    },
     templateUrl: '/static/ng/account/templates/invoice-row.html'
-  };
-})
-.directive('ngInvoiceDetail', function() {
-  return {
-    scope: {
-      invoice: '=ngInvoiceDetail'
-    },
-    templateUrl: '/static/ng/account/templates/invoice-detail.html'
-  };
-})
-.directive('ngOrderDetail', function() {
-  return {
-    scope: {
-      order: '=ngOrderDetail'
-    },
-    templateUrl: '/static/ng/account/templates/order-detail.html'
   };
 });

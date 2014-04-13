@@ -1,0 +1,50 @@
+table.apart td:nth-child(2) {
+    text-align: right;
+}
+table.apart tr:nth-child(1) td {
+    border-top: 0;
+}
+
+.table thead {
+    font-weight: bold;
+}
+
+.box {
+    background: #FFFFFF;
+    margin: 2em auto;
+    border: 1px solid #C5C2C2;
+    border-radius: 0;
+}
+
+.box-bottom {
+    padding-bottom: 2em;
+}
+
+.padding-horizontal-3 {
+    padding: .5em 3em;
+}
+
+.padding-horizontal-half {
+    padding: 0 .5em;
+}
+
+.title-position {
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.title-margin-space-2 {
+    margin: 2em 0;
+}
+.invoice-row .panel-heading {
+    border-bottom: 0;
+}
+.invoice-row .table {
+    border-bottom: 1px solid #C5C2C2;
+}
+.invoice-row .table>tbody>tr>td {
+    border-color: #C5C2C2;
+}
+.invoice-row .table tbody>tr:not(:first-child) td {
+    border-top: 0;
+}
