@@ -1,10 +1,8 @@
+<a href="{{ invoice.url }}">
 <div class="panel panel-default invoice-row box">
-
   <div class="panel-heading">
-    <a href="{{ invoice.url }}">
-      <span><strong>Invoice</strong> #{{ invoice.id }}</span>
-      <span class="pull-right text-muted">{{ invoice.when_created | date : 'fullDate' }}</span>
-    </a>
+    <span><strong>Invoice</strong> #{{ invoice.id }}</span>
+    <span class="pull-right text-muted">{{ invoice.when_created | date : 'fullDate' }}</span>
   </div>
   <div class="panel-body">
     <table class="table text-center">
@@ -39,3 +37,4 @@
     </div>
   </div>
 </div>
+</a>

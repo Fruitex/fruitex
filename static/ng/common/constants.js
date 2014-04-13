@@ -16,7 +16,7 @@ angular.module('common.constants', [])
   this.orders = {
     statusList: [
       ['PEND', 'Pending'],
-      ['WAIT', 'Waiting'],
+      ['WAIT', 'Submitted'],
       ['PURC', 'Purchased'],
       ['ONTW', 'On the way'],
       ['DELI', 'Delivered']
