@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^account/', include('account.urls')),
 
     # API
-    url(r'^api/', include('api.urls')),
+    url(r'^api/', include('fruitex.api.urls')),
 
     # Pages
     url(r'^error', 'fruitex.views.error'),
