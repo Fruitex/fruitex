@@ -45,8 +45,3 @@ class InvoiceViewSet(ReadOnlyModelViewSet):
   filter_class = InvoiceFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
-
-class CouponViewSet(ReadOnlyModelViewSet):
-  model = Coupon
-  serializer_class = CouponSerializer
-

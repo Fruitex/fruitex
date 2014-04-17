@@ -30,7 +30,3 @@ class OrderSerializer(serializers.ModelSerializer):
   total = serializers.Field()
   class Meta:
     model = Order
-
-class CouponSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Coupon
