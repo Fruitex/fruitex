@@ -44,6 +44,11 @@ class OrderViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
+class OrderItemViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
+  model = OrderItem
+  parent_model = Order
+  serializer_class = OrderItemSerializer
+
 class DeliveryWindowViewSet(ReadOnlyModelViewSet):
   model = DeliveryWindow
   serializer_class = DeliveryWindowSerializer

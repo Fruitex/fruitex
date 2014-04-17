@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url, include
 from drf_toolbox import routers
 from account.api.views import UserViewSet
 from shop.api.views import StoreViewSet, CategoryViewSet, ItemViewSet
-from order.api.views import OrderViewSet, InvoiceViewSet, DeliveryWindowViewSet
+from order.api.views import InvoiceViewSet, OrderViewSet, OrderItemViewSet, DeliveryWindowViewSet
 from delivery.api.views import DeliveryBucketViewSet
 
 router = routers.Router()
@@ -19,6 +19,8 @@ router.register(r'items', ItemViewSet)
 router.register(r'invoices', InvoiceViewSet)
 router.register(r'invoices/orders', OrderViewSet)
 router.register(r'orders', OrderViewSet)
+router.register(r'orders/order_items', OrderItemViewSet)
+router.register(r'order_items', OrderItemViewSet)
 router.register(r'delivery_windows', DeliveryWindowViewSet)
 # Delivery
 router.register(r'delivery_buckets', DeliveryBucketViewSet)
