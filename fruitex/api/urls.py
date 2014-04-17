@@ -4,7 +4,7 @@ from drf_toolbox import routers
 from account.api.views import UserViewSet
 from shop.api.views import StoreViewSet, CategoryViewSet, ItemViewSet
 from order.api.views import InvoiceViewSet, OrderViewSet, OrderItemViewSet, DeliveryWindowViewSet
-from delivery.api.views import DeliveryBucketViewSet
+from delivery.api.views import DeliveryBucketViewSet, DeliveryBucketOrderViewSet
 
 router = routers.Router()
 # Account
@@ -24,6 +24,7 @@ router.register(r'order_items', OrderItemViewSet)
 router.register(r'delivery_windows', DeliveryWindowViewSet)
 # Delivery
 router.register(r'delivery_buckets', DeliveryBucketViewSet)
+router.register(r'delivery_buckets/orders', DeliveryBucketOrderViewSet)
 
 urlpatterns = patterns('',
   url(r'', include(router.urls)),
