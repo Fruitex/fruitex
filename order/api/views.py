@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from order.api.permissions import InvoicePermission
 import django_filters
 
 from order.models import *
@@ -39,6 +40,7 @@ class OrderViewSet(ReadOnlyModelViewSet):
 class InvoiceViewSet(ReadOnlyModelViewSet):
   model = Invoice
   serializer_class = InvoiceSerializer
+  permission_classes = [InvoicePermission]
   filter_class = InvoiceFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
