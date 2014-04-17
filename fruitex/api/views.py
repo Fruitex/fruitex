@@ -1,9 +1,14 @@
 from rest_framework import viewsets
+import re
+
+def convert_camel(name):
+  s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+  return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 class ChildModelViewSetMixin(viewsets.ReadOnlyModelViewSet):
   def list(self, request, *args, **kwargs):
     if self.parent_model:
-      parent__name = self.parent_model.__name__.lower()
+      parent__name = convert_camel(self.parent_model.__name__)
       key = parent__name + '__pk'
       parent__pk = kwargs.get(key)
     if parent__pk:
