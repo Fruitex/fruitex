@@ -4,7 +4,7 @@ import django_filters
 from fruitex.api.views import ChildModelViewSetMixin
 from order.api.permissions import InvoicePermission, OrderPermission, DeliveryWindowPermission
 from order.models import *
-from order.api.serializer import *
+from order.api.serializers import *
 
 # Filters
 class OrderFilter(django_filters.FilterSet):

@@ -3,7 +3,7 @@ import django_filters
 
 from fruitex.api.views import ChildModelViewSetMixin
 from shop.models import *
-from shop.api.serializer import *
+from shop.api.serializers import *
 
 # Filters
 class ItemFilter(django_filters.FilterSet):

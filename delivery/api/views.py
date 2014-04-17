@@ -3,7 +3,7 @@ from rest_framework import viewsets, renderers
 import django_filters
 
 from delivery.models import *
-from delivery.api.serializer import *
+from delivery.api.serializers import *
 
 # Filters
 class DeliveryBucketFilter(django_filters.FilterSet):

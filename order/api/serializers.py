@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from account.api.serializer import UserSerializer
-from shop.api.serializer import StoreSerializer, ItemSerializer
+from account.api.serializers import UserSerializer
+from shop.api.serializers import StoreSerializer, ItemSerializer
 from order.models import *
 
 # Serializers
