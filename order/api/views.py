@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from order.api.permissions import InvoicePermission, OrderPermission, DeliveryWindowPermission
 import django_filters
 
+from fruitex.api.views import ChildModelViewSetMixin
+from order.api.permissions import InvoicePermission, OrderPermission, DeliveryWindowPermission
 from order.models import *
 from order.api.serializer import *
 
@@ -26,19 +27,20 @@ class InvoiceFilter(django_filters.FilterSet):
 
 
 # Views
-class OrderViewSet(ReadOnlyModelViewSet):
-  model = Order
-  serializer_class = OrderSerializer
-  permission_classes = [OrderPermission]
-  filter_class = OrderFilter
-  ordering = ['-when_created']
-  ordering_fields = ['when_created', 'when_updated', 'subtotal']
-
 class InvoiceViewSet(ReadOnlyModelViewSet):
   model = Invoice
   serializer_class = InvoiceSerializer
   permission_classes = [InvoicePermission]
   filter_class = InvoiceFilter
+  ordering = ['-when_created']
+  ordering_fields = ['when_created', 'when_updated', 'subtotal']
+
+class OrderViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
+  model = Order
+  parent_model = Invoice
+  serializer_class = OrderSerializer
+  permission_classes = [OrderPermission]
+  filter_class = OrderFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
 

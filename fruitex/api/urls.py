@@ -16,8 +16,9 @@ router.register(r'categories', CategoryViewSet)
 router.register(r'categories/items', ItemViewSet)
 router.register(r'items', ItemViewSet)
 # Order
-router.register(r'orders', OrderViewSet)
 router.register(r'invoices', InvoiceViewSet)
+router.register(r'invoices/orders', OrderViewSet)
+router.register(r'orders', OrderViewSet)
 router.register(r'delivery_windows', DeliveryWindowViewSet)
 # Delivery
 router.register(r'delivery_buckets', DeliveryBucketViewSet)
