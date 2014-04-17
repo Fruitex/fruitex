@@ -1,3 +1,5 @@
+from django.conf.urls import patterns, url, include
+
 from drf_toolbox import routers
 from account.api.views import UserViewSet
 from shop.api.views import StoreViewSet, CategoryViewSet, ItemViewSet
@@ -21,4 +23,7 @@ router.register(r'coupons', CouponViewSet)
 # Delivery
 router.register(r'delivery_buckets', DeliveryBucketViewSet)
 
-urlpatterns = router.urls
+urlpatterns = patterns('',
+  url(r'', include(router.urls)),
+  url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+)
