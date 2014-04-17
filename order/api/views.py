@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from order.api.permissions import InvoicePermission
+from order.api.permissions import InvoicePermission, OrderPermission
 import django_filters
 
 from order.models import *
@@ -33,6 +33,7 @@ class DeliveryWindowViewSet(ReadOnlyModelViewSet):
 class OrderViewSet(ReadOnlyModelViewSet):
   model = Order
   serializer_class = OrderSerializer
+  permission_classes = [OrderPermission]
   filter_class = OrderFilter
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
