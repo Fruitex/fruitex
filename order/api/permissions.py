@@ -8,10 +8,6 @@ def is_owner(request, obj):
 
 
 class InvoicePermission(permissions.BasePermission):
-  """
-  Permission check for user property
-  """
-
   def has_permission(self, request, view):
     return view.action == 'retrieve' or is_driver(request)
 
@@ -19,12 +15,12 @@ class InvoicePermission(permissions.BasePermission):
     return obj.user is None or is_driver(request) or is_owner(request, obj)
 
 class OrderPermission(InvoicePermission):
-  """
-  Permission check for user property
-  """
-
   def has_permission(self, request, view):
     return view.action == 'retrieve' or is_driver(request)
 
   def has_object_permission(self, request, view, obj):
     return super(OrderPermission, self).has_object_permission(request, view, obj.invoice)
+
+class DeliveryWindowPermission(permissions.BasePermission):
+  def has_permission(self, request, view):
+    return is_driver(request)
