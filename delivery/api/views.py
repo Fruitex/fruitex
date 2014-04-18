@@ -5,6 +5,7 @@ import django_filters
 from fruitex.api.views import ChildModelViewSetMixin
 from delivery.models import *
 from delivery.api.serializers import *
+from delivery.api.permissions import *
 
 # Filters
 class DeliveryBucketFilter(django_filters.FilterSet):
@@ -23,6 +24,7 @@ class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
     renderers.BrowsableAPIRenderer)
   model = DeliveryBucket
   serializer_class = DeliveryBucketSerializer
+  permission_classes = [DeliveryBucketPermission]
   filter_class = DeliveryBucketFilter
   ordering = ['-start']
 
@@ -34,3 +36,4 @@ class DeliveryBucketOrderViewSet(ChildModelViewSetMixin, viewsets.ReadOnlyModelV
   model = DeliveryBucketOrder
   parent_model = DeliveryBucket
   serializer_class = DeliveryBucketOrderSerializer
+  permission_classes = [DeliveryBucketOrderPermission]
