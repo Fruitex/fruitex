@@ -127,4 +127,4 @@ Key | Type | Description | Example
 
 #### Permissions
 
-- `driver` only
+- `driver` or `manager`
