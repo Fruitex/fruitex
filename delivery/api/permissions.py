@@ -19,4 +19,4 @@ class DeliveryBucketPermission(permissions.BasePermission):
 
 class DeliveryBucketOrderPermission(permissions.BasePermission):
   def has_permission(self, request, view):
-    return is_driver(request)
+    return is_manager(request) or is_driver(request)
