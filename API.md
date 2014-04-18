@@ -62,8 +62,8 @@ Resource | Method | Status | Description
 [/delivery_windows](#) | GET | *Implemented* | Returns a list of delivery windows.
 [/delivery_windows/{id}](#) | GET | *Implemented* | Returns the delivery window with given id.
 [/delivery_buckets](#delivery-buckets) | GET | *Implemented* | Returns a list of delivery buckets in reverse chronological order.
-[/delivery_buckets/{id}](#) | GET | *Implemented* | Returns the delivery bucket with given id.
-[/delivery_buckets/{id}/orders](#) | GET | *Implemented* | Returns the delivery bucket orders with given delivery bucket id.
+[/delivery_buckets/{id}](#delivery-buckets) | GET | *Implemented* | Returns the delivery bucket with given id.
+[/delivery_buckets/{id}/orders](#delivery-bucket-orders) | GET | *Implemented* | Returns the delivery bucket orders with given delivery bucket id.
 
 
 ## API Details
@@ -120,3 +120,9 @@ Key | Type | Description | Example
 
 - list: `manager` only
 - retrieve: `manager` or `assignee`
+
+### Delivery Bucket Orders
+
+#### Permissions
+
+- `driver` only
