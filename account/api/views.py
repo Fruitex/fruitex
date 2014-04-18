@@ -28,6 +28,8 @@ class CurrentUserView(generics.RetrieveAPIView):
 class CurrentUserInvoicesView(generics.ListAPIView):
   serializer_class = InvoiceSerializer
   permission_classes = [permissions.IsAuthenticated]
+  ordering = ['-when_created']
+  ordering_fields = ['when_created', 'when_updated']
 
   def get_queryset(self):
     return Invoice.objects.filter(user=self.request.user)
