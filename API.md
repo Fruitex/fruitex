@@ -24,7 +24,9 @@ Resource | Method | Status | Description
 --- | --- | --- | ---
 [/users](#users) | GET | *Implemented* | Returns a list of users.
 [/users/{id}](#) | GET | *Implemented* | Returns the user with given id.
-[/users/current](#) | GET | *[Implemented](https://github.com/Fruitex/fruitex/commit/3e3666f387605aa152bbfa7fedd2a206147f8c02)* | Returns the current user.
+[/users/current](#) | GET | *Implemented* | Returns the current user.
+[/users/current/invoices](#) | GET | *Implemented* | Returns the current user's invoices.
+[/users/current/delivery_buckets](#) | GET | *Implemented* | Returns the current user's delivery buckets.
 
 ### Shop
 
