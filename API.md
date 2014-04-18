@@ -1,3 +1,6 @@
+# Fruitex API v1.0
+
+
 ## Overview
 
 ### Pagination
@@ -11,11 +14,6 @@ All requests support a human-friendly format `api` and an application-friendly f
 
 ### Ordering
 Reverse ordering is allowed by adding a minus sign `-` before the parameter value. E.g. `/invoices/?ordering=-when_created` will return all invoices in reverse chronological order. Multiple ordering is also allowed. Parameter values are comma separated as follows: `/invoices/?ordering=-when_created,total`.
-
-
-
-***
-
 
 
 ## URL Schemas
@@ -63,13 +61,9 @@ Resource | Method | Status | Description
 --- | --- | --- | ---
 [/delivery_windows](#) | GET | *Implemented* | Returns a list of delivery windows.
 [/delivery_windows/{id}](#) | GET | *Implemented* | Returns the delivery window with given id.
-[/delivery_buckets](#) | GET | *Implemented* | Returns a list of delivery buckets in reverse chronological order.
+[/delivery_buckets](#delivery-buckets) | GET | *Implemented* | Returns a list of delivery buckets in reverse chronological order.
 [/delivery_buckets/{id}](#) | GET | *Implemented* | Returns the delivery bucket with given id.
 [/delivery_buckets/{id}/orders](#) | GET | *Implemented* | Returns the delivery bucket orders with given delivery bucket id.
-
-
-***
-
 
 
 ## API Details
@@ -119,3 +113,10 @@ Key | Type | Description | Example
 #### Fields
 
 `TODO`
+
+### Delivery Buckets
+
+#### Permissions
+
+- list: `manager` only
+- retrieve: `manager` or `assignee`
