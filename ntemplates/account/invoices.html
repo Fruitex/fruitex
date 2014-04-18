@@ -7,7 +7,7 @@
     <i class="glyphicon glyphicon-dashboard padding-horizontal-half"></i>
     Your Invoices
   </div>
-  <div ng-controller="UserInvoices" ng-init="init({{ user.id }}, '{{ user.username }}', '{% url 'order:show' '' %}')">
+  <div ng-controller="UserInvoices" ng-init="init('{% url 'order:show' '' %}')">
     <div class="invoices" ng-invoice-list="invoices">
       <div ng-repeat="invoice in invoices">
         <div ng-invoice-row="invoice"></div>
