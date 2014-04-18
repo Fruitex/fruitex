@@ -1,16 +1,20 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework import permissions
 
 from account.api.serializers import *
 
 # Views
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-  queryset = User.objects.all()
+  model = User
   serializer_class = UserSerializer
   ordering_fields = ['date_joined', 'last_login']
 
-  def dispatch(self, request, *args, **kwargs):
-    if kwargs.get('pk') == 'current' and request.user.is_authenticated():
-        kwargs['pk'] = request.user.pk
+class CurrentUserView(generics.RetrieveAPIView):
+  model = User
+  serializer_class = UserSerializer
+  permission_classes = [permissions.IsAuthenticated]
 
-    return super(UserViewSet, self).dispatch(request, *args, **kwargs)
+  def get_object(self):
+    return self.request.user

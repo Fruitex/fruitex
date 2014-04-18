@@ -1,11 +1,12 @@
 from django.conf.urls import patterns, url, include
 
 from drf_toolbox import routers
-from account.api.views import UserViewSet
+from account.api.views import UserViewSet, CurrentUserView
 from shop.api.views import StoreViewSet, CategoryViewSet, ItemViewSet
 from order.api.views import InvoiceViewSet, OrderViewSet, OrderItemViewSet, DeliveryWindowViewSet
 from delivery.api.views import DeliveryBucketViewSet, DeliveryBucketOrderViewSet
 
+# General resources
 router = routers.Router()
 # Account
 router.register(r'users', UserViewSet)
@@ -26,7 +27,14 @@ router.register(r'delivery_windows', DeliveryWindowViewSet)
 router.register(r'delivery_buckets', DeliveryBucketViewSet)
 router.register(r'delivery_buckets/orders', DeliveryBucketOrderViewSet)
 
+
+# Current user resources
+user_urlpatterns = patterns('',
+  url(r'', CurrentUserView.as_view()),
+)
+
 urlpatterns = patterns('',
   url(r'', include(router.urls)),
+  url(r'users/current', include(user_urlpatterns)),
   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
