@@ -7,8 +7,8 @@ angular.module('account.controllers', [
   function($scope, $q, FruitexAPI) {
     $scope.invoices = [];
 
-    $scope.init = function(userId, username, invoiceUrlBase) {
-      FruitexAPI.invoices.query({ user__username: username }).$promise
+    $scope.init = function(invoiceUrlBase) {
+      FruitexAPI.current.invoices.get().$promise
       .then(function(response) {
         var invoices = $scope.invoices = response.results;
         _.each(invoices, function(invoice) {

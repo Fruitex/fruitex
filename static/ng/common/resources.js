@@ -12,4 +12,8 @@ angular.module('common.resources', ['ngResource'])
 
   /* Users */
   this.users = $resource(this.baseUrl + '/users/:id', {id: '@id'});
+
+  /* Current user */
+  this.current = $resource(this.baseUrl + '/users/current');
+  this.current.invoices = $resource(this.baseUrl + '/users/current/invoices');
 });
