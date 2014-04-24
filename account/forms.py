@@ -8,7 +8,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from account.auth_settings import ACCOUNT_SETTING
-from account.models import RegistrationProfile
+from account.models import RegistrationProfile, UserProfile
 
 import re
 
@@ -177,6 +177,10 @@ class RegistrationFormNoFreeEmail(RegistrationForm):
 
 
 class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = []
+
     firstname = forms.CharField(label=_('First name'), required=False)
     lastname = forms.CharField(label=_('Last name'), required=False)
     email = forms.EmailField(label=_('E-mail'))
