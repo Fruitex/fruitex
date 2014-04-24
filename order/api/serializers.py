@@ -17,14 +17,15 @@ class InvoiceSerializer(serializers.ModelSerializer):
   class Meta:
     model = Invoice
 
+class OrderItemSerializer(serializers.ModelSerializer):
+  item = ItemSerializer()
+  class Meta:
+    model = OrderItem
+
 class OrderSerializer(serializers.ModelSerializer):
+  order_items = OrderItemSerializer()
   invoice = InvoiceSerializer()
   total = serializers.Field()
   delivery_window = DeliveryWindowSerializer()
   class Meta:
     model = Order
-
-class OrderItemSerializer(serializers.ModelSerializer):
-  item = ItemSerializer()
-  class Meta:
-    model = OrderItem
