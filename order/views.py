@@ -255,6 +255,9 @@ def payment_paypal_cancel(request, id):
     payments = invoice.payments.all()
     for payment in payments:
       payment.set_status(Payment.STATUS_CANCELLED)
+    if invoice.coupon:
+      invoice.coupon.used = False;
+      invoice.coupon.save()
   return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
 # API
