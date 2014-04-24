@@ -88,6 +88,9 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$g#^s^ia86s3txxw5_jv9uyz*4&meni$n(f%6lz5c9b-n3cu)-'
 
+# Use PickleSerializer instead of default JSONSerializer for compatibility issue
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -148,11 +151,23 @@ INSTALLED_APPS = (
     'delivery',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'fruitex.context_processors.debug_flags',
+)
+
 REST_FRAMEWORK = {
     # Use hyperlinked styles by default.
     # Only used if the `serializer_class` attribute is not set on a view.
     'DEFAULT_MODEL_SERIALIZER_CLASS':
-        'rest_framework.serializers.HyperlinkedModelSerializer',
+        'rest_framework.serializers.ModelSerializer',
 
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

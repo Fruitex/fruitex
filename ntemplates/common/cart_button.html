@@ -51,7 +51,7 @@
       self.viewToggleCart();
     });
     this.$cart_checkout.click(function(evt) {
-      if(this.hasClass("disabled")) {
+      if($(this).hasClass("disabled")) {
         evt.preventDefault();
         evt.stopPropagation();
       }

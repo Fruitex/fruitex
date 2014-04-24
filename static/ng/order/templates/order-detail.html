@@ -1,0 +1,33 @@
+<div class="box order-detail">
+  <div class="panel-title title-position">
+    <i class="glyphicon glyphicon-list padding-horizontal-half"></i>
+    <span>Order</span>
+    <span class="small text-muted">#{{ order.id || 'Loading...' }}</span>
+    <div class="pull-right">
+      <span class="small text-muted">Last updated {{ order.when_updated | date : 'h:mm a, MMM d' }}</span>
+    </div>
+  </div>
+  <div ng-order-status="order.status"></div>
+  <div class="clearfix"></div>
+  <div class="icon-list">
+    <div>
+      <i class="glyphicon glyphicon-time padding-horizontal-half"></i>
+      <span class="name">Delivery window</span>
+      <span class="detail">
+        {{ order.delivery_window.start | date: 'shortTime' }} ~ {{ order.delivery_window.end | date: 'shortTime' }} on {{ order.delivery_window.start | date: 'fullDate' }}
+      </span>
+    </div>
+    <div>
+      <i class="glyphicon glyphicon-usd padding-horizontal-half"></i>
+      <span class="name">Subtotal</span>
+      <span class="detail">
+        <span>$ {{ order.subtotal }}</span>
+        <span>+</span>
+        <span>$ {{ order.tax }}(tax)</span>
+        <span>=</span>
+        <span>$ {{ order.total }}</span>
+      </span>
+    </div>
+  </div>
+  <div ng-order-items="order.order_items"></div>
+</div>

@@ -1,0 +1,40 @@
+<a href="{{ invoice.url }}">
+<div class="panel panel-default invoice-row box">
+  <div class="panel-heading">
+    <span><strong>Invoice</strong> #{{ invoice.id }}</span>
+    <span class="pull-right text-muted">{{ invoice.when_created | date : 'fullDate' }}</span>
+  </div>
+  <div class="panel-body">
+    <table class="table text-center">
+      <thead>
+        <tr>
+          <td>Order Number</td>
+          <td>Status</td>
+          <td>Store</td>
+          <td># of items</td>
+          <td>Subtotal</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="order in invoice.orders">
+          <td>#{{ order.id || 'Loading...' }}</td>
+          <td ng-class="{ 'PEND':'text-danger', 'WAIT':'text-success' }[order.status]">{{ orderStatus[order.status] }}</td>
+          <td>{{ order.delivery_window.store.name }}</td>
+          <td>{{ order.items.length }}</td>
+          <td>$ {{ order.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right invoice-total">
+      <strong>Total</strong>
+      <span>${{ invoice.subtotal }}</span>
+      <span>+</span>
+      <span>${{ invoice.tax }}(tax)</span>
+      <span>+</span>
+      <span>${{ invoice.delivery }}(delivery)</span>
+      <span>=</span>
+      <span>${{ invoice.total }}</span>
+    </div>
+  </div>
+</div>
+</a>

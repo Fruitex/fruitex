@@ -1,7 +1,7 @@
 <!doctype html>
 {% load static %}
 {% load compress %}
-<html>
+<html ng-app="{% block ng_app %}{% endblock %}">
   <head>
     <meta charset="utf-8"/>
     {% block extra_meta %}{% endblock %}
@@ -16,6 +16,8 @@
     {% block page_css %}{% endblock %}
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.js"></script>
     <script type="text/javascript" src="{% static "javascript/lib/bootstrap.min.js" %}"></script>
     <script type="text/javascript" src="{% static "javascript/lib/jquery.tmpl.min.js" %}"></script>
     <script type="text/javascript" src="{% static "javascript/lib/underscore.min.js" %}"></script>
@@ -50,6 +52,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome!&nbsp;{{ user.first_name }}&nbsp;<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url 'profile' %}">My Profile</a></li>
+                  <li><a href="{% url 'account_invoices' %}">My Invoices</a></li>
                   <li class="divider"></li>
                   <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
@@ -60,7 +63,7 @@
         </div>
       </nav>
     </header>
-    <div class="container clearfix">
+    <div class="container clearfix header-margin">
       {% block content %} {% endblock %}
     </div>
     {% if not user.is_authenticated %}
@@ -155,8 +158,18 @@
     </script>
     {% endif %}
     {% include "common/footer.html" %}
+    {% compress js %}
+    <script type="text/javascript" src="{% static "ng/common/constants.js" %}"></script>
+    <script type="text/javascript" src="{% static "ng/common/resources.js" %}"></script>
+    <script type="text/javascript" src="{% static "ng/common/directives.js" %}"></script>
+    {% endcompress %}
+    {% compress js %}
+    {% block ng_script %}{% endblock %}
+    {% endcompress %}
     {% block page_script %}{% endblock %}
-    {% include "common/analytics.html" %}
-    {% include "common/uservoice.html" %}
+    {% if not DEBUG %}
+    {%   include "common/analytics.html" %}
+    {%   include "common/uservoice.html" %}
+    {% endif %}
   </body>
 </html>

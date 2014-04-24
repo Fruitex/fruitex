@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container width-80">
+  <div class="panel-title title-margin-space-2">
+    <i class="glyphicon glyphicon-dashboard padding-horizontal-half"></i>
+    Your Invoices
+  </div>
+  <div ng-controller="UserInvoices" ng-init="init('{% url 'order:show' '' %}')">
+    <div class="invoices" ng-invoice-list="invoices">
+      <div ng-repeat="invoice in invoices">
+        <div ng-invoice-row="invoice"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

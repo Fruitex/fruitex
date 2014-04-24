@@ -25,7 +25,7 @@
       {% for order in delivery_window.waiting_orders %}
       <li class="orders">
         <div>
-          <a href="{% url 'order:show' order.invoice.invoice_num %}">
+          <a href="{% url 'order:show' order.invoice.id %}">
             Invoice #{{ order.invoice.id }} Order #{{ order.id }}: {{ order.get_status_display }} ({{ order.items.count }} items)
           </a>
         </div>

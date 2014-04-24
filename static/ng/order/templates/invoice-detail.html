@@ -1,0 +1,45 @@
+<div class="container width-80">
+  <div class="box">
+    <div class="panel-title title-position">
+      <i class="glyphicon glyphicon-transfer padding-horizontal-half"></i>
+      Invoice
+      <span class="small text-muted">#{{ invoice.id }}</span>
+      <div class="pull-right">
+        <span class="small text-muted">Created at {{ invoice.when_created | date : 'h:mm a, MMM d' }}</span>
+      </div>
+    </div>
+    <div class="invoice-summary icon-list">
+      <div>
+        <i class="glyphicon glyphicon-map-marker padding-horizontal-half"></i>
+        <span class="name">Destination</span>
+        <span class="detail">{{ invoice.customer_name }} at {{ invoice.address }}, {{ invoice.postcode }}</span>
+      </div>
+      <div>
+        <i class="glyphicon glyphicon-earphone padding-horizontal-half"></i>
+        <span class="name">Phone Number</span>
+        <span class="detail">{{ invoice.phone }}</span>
+      </div>
+      <div>
+        <i class="glyphicon glyphicon-credit-card padding-horizontal-half"></i>
+        <span class="name">Payment Status</span>
+        <span class="detail">{{ invoiceStatus[invoice.status] }}</span>
+      </div>
+      <div>
+        <i class="glyphicon glyphicon-usd padding-horizontal-half"></i>
+        <span class="name">Total Cost</span>
+        <span class="detail">
+          <span>$ {{ invoice.subtotal }}</span>
+          <span>+</span>
+          <span>$ {{ invoice.tax }}(tax)</span>
+          <span>+</span>
+          <span>$ {{ invoice.delivery }}(delivery)</span>
+          <span>=</span>
+          <span>$ {{ invoice.total }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div ng-repeat="order in invoice.orders">
+    <div ng-order-detail="order"></div>
+  </div>
+</div>

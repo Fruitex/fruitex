@@ -1,0 +1,14 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block ng_app %}order{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/orders.css" %}"/>
+{% endblock %}
+
+{% block ng_script %}
+<script type="text/javascript" src="{% static "ng/order/directives.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/order/controllers.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/order/index.js" %}"></script>
+{% endblock %}

@@ -1,3 +1,8 @@
+.container{
+    width: 996px;
+    margin: auto;
+    padding: 56px 0 0 0;
+}
 /* Patch for Bootstrap */
 .navbar .dropdown-menu::after {
   position: absolute;

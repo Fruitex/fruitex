@@ -3,6 +3,7 @@ from django.template import loader, RequestContext
 from django.core import serializers
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
 
 from querystring_parser import parser
 
@@ -161,7 +162,8 @@ def checkout(request):
       if payment_method != Payment.METHODS_PAYPAL:
         Payment.objects.create_payment(invoice, payment_method)
         invoice.set_status(Invoice.STATUS_PAY_ON_DELIVERY)
-        response = HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
+        response = HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+        response.set_cookie('cart', '')
       else:
         raw_payment = paypal.create_raw_payment_for_invoice(invoice, {
           'return_url': request.build_absolute_uri(reverse('order:payment_paypal_execute', kwargs={'id': invoice.id})),
@@ -175,9 +177,8 @@ def checkout(request):
           response = HttpResponseRedirect(redirect_url)
 
     if response is not None:
-      # Clean up checkout_package and cookie cart.
+      # Clean up checkout_package
       request.session['checkout_package'] = None
-      response.set_cookie('cart', '')
       return response
 
   else:
@@ -195,8 +196,13 @@ def checkout(request):
   })
   return HttpResponse(template.render(context))
 
-def show_invoice(request, invoice_num):
-  template = loader.get_template('order/show.html')
+def show_invoice(request, id):
+  template_name = 'order/show.html'
+
+  return render(request, template_name, { 'id': id })
+
+def show_invoice_num(request, invoice_num):
+  template = loader.get_template('order/invoice.html')
   try:
     invoice = Invoice.objects.get(invoice_num=invoice_num)
   except ObjectDoesNotExist:
@@ -233,7 +239,10 @@ def payment_paypal_execute(request, id):
     if raw_payment is not None:
       payment.raw = json.dumps(raw_payment.to_dict())
       payment.set_status(Payment.STATUS_COMPLETED)
-      return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
+      # Clear cookie cart and redirect to show the order.
+      response = HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
+      response.set_cookie('cart', '')
+      return response
   return HttpResponse('Failed to execute your payment. Please contact us for help.')
 
 def payment_paypal_cancel(request, id):
@@ -246,7 +255,10 @@ def payment_paypal_cancel(request, id):
     payments = invoice.payments.all()
     for payment in payments:
       payment.set_status(Payment.STATUS_CANCELLED)
-  return HttpResponseRedirect(reverse('order:show', kwargs={'invoice_num': invoice.invoice_num}))
+    if invoice.coupon:
+      invoice.coupon.used = False;
+      invoice.coupon.save()
+  return HttpResponseRedirect(reverse('order:show', kwargs={'id': invoice.id}))
 
 # API
 

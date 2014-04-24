@@ -26,7 +26,7 @@
   {%   if order.comment %}
   <li>
     <div class="order-title">
-      <a href="{% url 'order:show' order.invoice.invoice_num %}">
+      <a href="{% url 'order:show' order.invoice.id %}">
         Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
       </a>
     </div>
@@ -72,7 +72,7 @@
   {% for order in delivery_window.waiting_orders %}
   <li id="order-{{ order.id }}">
     <div class="order-title">
-      <a href="{% url 'order:show' order.invoice.invoice_num %}">
+      <a href="{% url 'order:show' order.invoice.id %}">
         Order {{ order }}: {{ order.invoice.customer_name }} ({{ order.items.count }} items)
       </a>
     </div>
