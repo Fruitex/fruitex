@@ -88,6 +88,9 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$g#^s^ia86s3txxw5_jv9uyz*4&meni$n(f%6lz5c9b-n3cu)-'
 
+# Use PickleSerializer instead of default JSONSerializer for compatibility issue
+# SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
