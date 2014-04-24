@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 import django_filters
 
-from fruitex.api.views import ChildModelViewSetMixin
+from fruitex.api.views import ChildrenListModelMixin
 from shop.models import *
 from shop.api.serializers import *
 
@@ -18,12 +18,12 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
   model = Store
   serializer_class = StoreSerializer
 
-class CategoryViewSet(ChildModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class CategoryViewSet(ChildrenListModelMixin, viewsets.ReadOnlyModelViewSet):
   model = Category
   parent_model = Store
   serializer_class = CategorySerializer
 
-class ItemViewSet(ChildModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class ItemViewSet(ChildrenListModelMixin, viewsets.ReadOnlyModelViewSet):
   model = Item
   parent_model = Category
   serializer_class = ItemSerializer

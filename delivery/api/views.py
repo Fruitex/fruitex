@@ -2,7 +2,7 @@ from rest_framework import viewsets, renderers
 
 import django_filters
 
-from fruitex.api.views import ChildModelViewSetMixin
+from fruitex.api.views import ChildrenListModelMixin
 from delivery.models import *
 from delivery.api.serializers import *
 from delivery.api.permissions import *
@@ -28,7 +28,7 @@ class DeliveryBucketViewSet(viewsets.ReadOnlyModelViewSet):
   filter_class = DeliveryBucketFilter
   ordering = ['-start']
 
-class DeliveryBucketOrderViewSet(ChildModelViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class DeliveryBucketOrderViewSet(ChildrenListModelMixin, viewsets.ReadOnlyModelViewSet):
   renderer_classes = (
     renderers.JSONRenderer,
     renderers.JSONPRenderer,

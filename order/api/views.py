@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 import django_filters
 
-from fruitex.api.views import ChildModelViewSetMixin
+from fruitex.api.views import ChildrenListModelMixin
 from order.api.permissions import InvoicePermission, OrderPermission, DeliveryWindowPermission
 from order.models import *
 from order.api.serializers import *
@@ -35,7 +35,7 @@ class InvoiceViewSet(ReadOnlyModelViewSet):
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
-class OrderViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
+class OrderViewSet(ChildrenListModelMixin, ReadOnlyModelViewSet):
   model = Order
   parent_model = Invoice
   serializer_class = OrderSerializer
@@ -44,7 +44,7 @@ class OrderViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
   ordering = ['-when_created']
   ordering_fields = ['when_created', 'when_updated', 'subtotal']
 
-class OrderItemViewSet(ChildModelViewSetMixin, ReadOnlyModelViewSet):
+class OrderItemViewSet(ChildrenListModelMixin, ReadOnlyModelViewSet):
   model = OrderItem
   parent_model = Order
   serializer_class = OrderItemSerializer
