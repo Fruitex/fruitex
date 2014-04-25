@@ -12,3 +12,13 @@ def home(request):
 
   template = loader.get_template('page/home.html')
   return HttpResponse(template.render(context))
+
+def faq(request):
+  context = RequestContext(request)
+  template = loader.get_template('page/faq.html')
+  return HttpResponse(template.render(context))
+
+def privacy(request):
+  context = RequestContext(request)
+  template = loader.get_template('page/privacy.html')
+  return HttpResponse(template.render(context))

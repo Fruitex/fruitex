@@ -79,6 +79,18 @@ body>footer{
 .padding-all-1 {
     padding: 1em;
 }
+.padding-topbottom-1 {
+    padding: 1em 0;
+}
+.padding-leftright-1 {
+    padding: 0 1em;
+}
+.padding-horizontal-3 {
+    padding: .5em 3em;
+}
+.padding-horizontal-half {
+    padding: 0 .5em;
+}
 .cursor-hand {
     cursor: pointer;
 }
@@ -102,6 +114,9 @@ body>footer{
 }
 .bd-mid-gray {
     border: 1px solid rgb(190,190,190);
+}
+.no-border {
+    border: none;
 }
 .logo-img {
     position: relative;
@@ -140,4 +155,21 @@ a img {
     position: relative;
     padding: 0 1em;
     top: -0.7em;
+}
+.faq-section {
+    padding: 2em 2em;
+}
+.faq-section>.title {
+    margin: 0 0 1.5em 0;
+}
+.faq-article {
+    margin: 1.5em 0 1.5em 0;
+}
+.faq-article>.title {
+    font-weight: bold;
+    margin: 1.5em 0 0.6em 0;
+}
+
+.faq-article>.content {
+
 }

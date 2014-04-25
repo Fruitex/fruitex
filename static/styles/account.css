@@ -20,14 +20,6 @@ table.apart tr:nth-child(1) td {
     padding-bottom: 2em;
 }
 
-.padding-horizontal-3 {
-    padding: .5em 3em;
-}
-
-.padding-horizontal-half {
-    padding: 0 .5em;
-}
-
 .title-position {
     margin-bottom: 1em;
     padding: 1em;

@@ -1,0 +1,78 @@
+[{
+	"section": "FAQs",
+	"subject": [
+		{"title": "What is Fruitex?",
+			"content": "Fruitex is a local online shopping service that delivers thousands of local products from your local retailers within an hour. "
+		},
+		{"title": "Do you serve my area?",
+			"content": "At the moment, we deliver in the Kitchener-Waterloo Region only. "
+		},
+		{"title": "What stores are supported?",
+			"content": "We currently have Sobeys, Petcetera, Shoppers Drug Mart, University of Waterloo Bookstore, Wilfrid Laurier University Bookstore and Campus Convenience listed on our website. More stores are coming!"
+		}
+	]
+}, {
+	"section": "Inventories and Prices",
+	"subject": [
+		{"title": "Price",
+			"content": "We work very hard to ensure that our prices are consistent with the in-store prices. Our price will be updated weekly to include in-store  promotions and price changes. However, if prices are different, the price displayed on our website is the price that you will be charged. "
+		},
+		{"title": "Inventory",
+			"content": "In the case of an item being out of stock, we will find a substitution for you or refund the item, depending on your preference. "
+		}
+	]
+}, {
+	"section": "Return",
+	"subject": [
+		{"title": "How it works",
+			"content": "Returns are currently free! You can return your order to us for a full refund. Email us at support@fruitex.ca to place a return request. After gathering your information, we will pick up the item, bring it back to the store and process it on your behalf. "
+		},
+		{"title": "Return Policy",
+			"content": "Return policies vary and depend on the retail store that you have ordered from. We will process returns according to the specific retailer’s return policy. Once the store accepts your return, you will receive your refund within 5 business days"
+		}
+	]
+}, {
+	"section": "Delivery Policy",
+	"subject": [
+		{"title": "When and how fast do you deliver?",
+			"content": "During checkout, you can choose from one of the following options (for either the day you have placed your order or the following day): noon- 2pm, 4pm- 6pm, 8pm- 10pm. Placing an order for a certain delivery window will be disabled half an hour before that delivery window begins. "
+		},
+		{"title": "How much does delivery cost?",
+			"content": "Delivery costs $0.99 regardless of how many stores you shop at and how many items you buy. "
+		},
+		{"title": "Where do products come from?",
+			"content": "The products come directly from the stores you shop at on Fruitex.ca "
+		}
+	]
+}, {
+	"section": "About My Order",
+	"subject": [
+		{"title": "How do I pay for my order?",
+			"content": "Currently, we support Paypal and Credit Card online payment. Soon we will support Debit and at-the-door credit transaction."
+		},
+		{"title": "Can I track my order online?",
+			"content": "You can view the status and summary of your order from the link in the email we send you once you place your order. "
+		},
+		{"title": "How do I make a change to my order?",
+			"content": "If your Shopper has not started working on your order, you can email us at support@fruitex.ca or call our customer service number to make changes or to cancel your order."
+		},
+		{"title": "How do I report a problem with my order? ",
+			"content": "We try to make sure that every order is perfect, but sometimes they aren’t. If you have a problem with your order, like a missing or wrong item, please tell us! The best way to let us know about the problem is to email us at support@fruitex.ca or call our customer service number. "
+		},
+		{"title": "When will I receive my refund?",
+			"content": "Refunds take 3-5 business days to process due Paypal’s policy."
+		}
+	]
+}, {
+	"section": "Others",
+	"subject": [
+		{"title": "Who will deliver my order? ",
+			"content": "Your orders will be picked up and delivered by a screened and trained FRUIshopper."
+		},
+		{"title": "Should I tip my shopper?",
+			"content": "Tips are not required, but always appreciated！"
+		}
+	]
+}
+
+]
