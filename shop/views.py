@@ -66,6 +66,11 @@ def limit_to_page(queryset, page=1, per_page=ITEM_PER_PAGE):
 def to_default(request):
   return HttpResponseRedirect('sobeys');
 
+def store_spa(request):
+  template = loader.get_template('shop/store_spa.html')
+  context = RequestContext(request)
+  return HttpResponse(template.render(context))
+
 def store_home(request, store_slug):
   template = loader.get_template('shop/store_home.html')
   context = common_context(request, store_slug)

@@ -11,5 +11,6 @@ config/*
 config/**/*
 !settings.py
 !*.sample.py
+static/libs/*
 static/store_imgs/*
 static/CACHE/*

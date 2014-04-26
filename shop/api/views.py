@@ -17,6 +17,7 @@ class ItemFilter(django_filters.FilterSet):
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
   model = Store
   serializer_class = StoreSerializer
+  filter_fields = ['slug']
 
 class CategoryViewSet(ChildrenListModelMixin, viewsets.ReadOnlyModelViewSet):
   model = Category

@@ -1,0 +1,19 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block ng_app %}shop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "styles/shop.css" %}"/>
+{% endblock %}
+
+{% block content %}
+<div ui-view>
+</div>
+{% endblock %}
+
+{% block ng_script %}
+<script type="text/javascript" src="{% static "ng/shop/directives.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/shop/controllers.js" %}"></script>
+<script type="text/javascript" src="{% static "ng/shop/index.js" %}"></script>
+{% endblock %}

@@ -213,9 +213,6 @@ LOGGING = {
 }
 
 COMPRESS_ENABLED = not DEBUG
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.template.TemplateFilter',
-]
 
 # Account setup
 AUTH_PROFILE_MODULE = 'account.UserProfile'    # enable User.get_profile()

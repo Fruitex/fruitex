@@ -1,0 +1,8 @@
+<div>
+  <div>Please select a store to start:</div>
+  <ul>
+    <li ng-repeat="store in stores">
+      <a ui-sref="home({ slug: store.slug })">{{ store.name }}</a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,25 @@
+{
+  "name": "fruitex",
+  "version": "0.0.0",
+  "homepage": "https://github.com/fruitex/fruitex",
+  "authors": [
+    "Greg Wang <gregwym@gmail.com>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "angular": "~1.2.16",
+    "angular-ui-router": "~0.2.10",
+    "jquery": "~2.1.0",
+    "underscore": "~1.6.0",
+    "angular-bootstrap": "~0.10.0",
+    "angular-resource": "~1.2.16"
+  }
+}
